@@ -1,0 +1,46 @@
+nav {
+	padding: 16px;
+	background-color: #1C1C21;
+	width: 100%;
+
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	justify-content: center;
+	align-content: center;
+
+}
+
+.appHeader {
+	width: 66%;
+	height: 88px;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-content: center;
+
+}
+
+.navBox {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.navBox span{
+	padding: 8px;
+}
+
+.icons {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.icons:hover{
+	color: #F2F2F3;
+}
+.icons:hover svg{
+	fill: #F2F2F3;
+}
