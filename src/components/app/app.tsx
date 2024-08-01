@@ -1,12 +1,10 @@
-import './app.css';
+import React, { useState, useEffect } from 'react';
 import PropTypes from "prop-types";
 import {ingredientType} from '../../utils/types'
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import AppHeader from '../app-header/app-header';
-
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import styles from './app.module.css'
 
 // Определение типа для ингредиента
 interface Ingredient {	
@@ -29,7 +27,7 @@ interface Ingredient {
 // Константа для URL-адреса домена
 const API_URL = 'https://norma.nomoreparties.space/api';
 
-function App() {
+const App = () => {
 	const [ingredients, setIngredients] = useState<Ingredient[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -75,16 +73,12 @@ function App() {
 	
 	return (
 		<>
-			{/* {console.log(ingredients.map(product => product._id))} */}
-			{console.log(ingredients.map(product => product.name))}
-
-		
-			<div>
-			<AppHeader />
-				<div className='mainBox'>
+			<div className={`${styles.app} text_type_main-default`}>
+			   <AppHeader />
+				<div className={styles.mainBox}>
 					{/*  Полученные данные используйте в компонентах BurgerConstructor и BurgerIngredients. */}
-				<BurgerIngredients ingredients={ingredients}/>
-				<BurgerConstructor ingredients={ingredients}/>
+				   <BurgerIngredients ingredients={ingredients}/>
+				   <BurgerConstructor ingredients={ingredients}/>
 				</div>
 			</div>
 	 </>

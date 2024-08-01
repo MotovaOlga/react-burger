@@ -1,3 +1,34 @@
 .ingredientDetails {
-	background-color: #e06262;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+main {
+	width: 520px;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+main p {
+	text-align: center;
+}
+
+main img {
+	width: 480px;
+}
+
+main ul {
+	width: 100%;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	color: var(--text-inactive-color);
+}
+
+main ul li {
+	text-align: center;
 }

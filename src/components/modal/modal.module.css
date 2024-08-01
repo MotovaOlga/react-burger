@@ -6,27 +6,35 @@
 	transform: translate(-50%, -50%);
 	z-index: 1001;
 
-	/* margin: auto;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0; */
-
 	width: 720px;
-	height: 718px;
-	border-radius: 40px;
-	padding: 120px;
-	background-color: #1C1C21;
 
+	border-radius: var(--common-border-radius-s);
+
+	background-color: var(--background);
 	color: var(--text-primary-color);
 }
 
-.buttonClose {
-	position: absolute;
-	top: 60px;
-	right: 40px;
-	margin: 0;
-	
-	color: #F2F2F3;
-	background-color: inherit;
+.modalHeight540 {
+	height: 540px;
+ }
+ 
+ .modalHeight720 {
+	height: 720px;
+ }
+ 
+
+header {
+	display: flex;
+	flex-direction: row;
+   align-items: center;
+	justify-content: space-between;
+}
+
+.title {
+	text-align: left;
+}
+
+.img {
+	display: flex;
+   align-items: center
 }

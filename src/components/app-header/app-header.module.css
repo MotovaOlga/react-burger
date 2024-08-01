@@ -1,6 +1,5 @@
 nav {
-	padding: 16px;
-	background-color: #1C1C21;
+	background-color: var(--background);
 	width: 100%;
 
 	display: flex;
@@ -8,18 +7,16 @@ nav {
 	flex-direction: row;
 	justify-content: center;
 	align-content: center;
-
 }
 
 .appHeader {
-	width: 66%;
+	width: 70%;
 	height: 88px;
 
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-content: center;
-
 }
 
 .navBox {
@@ -37,10 +34,12 @@ nav {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
+	color: var(--text-inactive-color);
 }
 .icons:hover{
-	color: #F2F2F3;
+	color: var(--text-primary-color);
 }
 .icons:hover svg{
-	fill: #F2F2F3;
+	fill:	var(--text-primary-color);
 }
