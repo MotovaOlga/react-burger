@@ -16,3 +16,12 @@ export const ingredientType = PropTypes.shape({
 	productId: PropTypes.string,
 	count: PropTypes.number
 });
+
+// export const IngredientsState =  PropTypes.shape({
+// 	ingredients: PropTypes.ingredientType[],
+// 	loading: PropTypes.boolean,
+// 	error: PropTypes.string | null,
+// });
+
+// export const RootState = PropTypes.shape({
+// });
