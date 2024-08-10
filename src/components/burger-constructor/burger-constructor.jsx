@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect }from 'react';
 import PropTypes from "prop-types";
 import {ingredientType} from '../../utils/types'
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -6,12 +6,13 @@ import styles from './burger-constructor.module.css'
 // import data  from '../../utils/data.js';
 import Modal from '../modal/modal'
 import OrderDetails from '../order-details/order-details'
+import { useSelector } from 'react-redux'
 
-const BurgerConstructor = ({ ingredients }) => {
-	const bun = ingredients.filter((product) => product.type === 'bun')[0] || {};
-	const main1 = ingredients.filter((product) => product.type === 'main')[0] || {};
-	const main2 = ingredients.filter((product) => product.type === 'main')[1] || {};
-	const sauce = ingredients.filter((product) => product.type === 'sauce')[0] || {};
+
+const BurgerConstructor = () => {
+	const [arrBurgerConstructorIngredients, setArrBurgerConstructorIngredients] = useState([]);
+	const [bunsTopBottom, setBunsTopBottom] = useState(null);
+	const [arrMainPart, setArrMainPart] = useState([]);
 	const orderNumber = '034536';
 
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -21,6 +22,36 @@ const BurgerConstructor = ({ ingredients }) => {
 	const onOpen = () => {
 		setIsModalOpen(true);
 	};
+
+	// массив игредиентов BurgerConstructor
+	// setArrBurgerConstructorIngredients(useSelector(state => state.ingredients.ingredients)); 
+	// setArrBurgerConstructorIngredients(useSelector(state => state.burgerConstructor.burgerConstructor)); 
+	// console.log(`arrBurgerConstructorIngredients: ${arrBurgerConstructorIngredients}`)
+	// console.log(`typeof arrBurgerConstructorIngredients: ${typeof arrBurgerConstructorIngredients}`)
+	
+	// useEffect не работает
+	useEffect(() => {
+		console.log(`useEffect`);
+
+		if (arrBurgerConstructorIngredients.length !== 0) {
+		  setBunsTopBottom(arrBurgerConstructorIngredients[0]);
+		  setArrMainPart(arrBurgerConstructorIngredients.slice(1, -1));
+	     console.log(`bunsTopBottom: ${bunsTopBottom}`)
+	     console.log(`arrMainPart: ${arrMainPart}`)
+		}
+		else {
+			console.log(`else`);
+		 }
+	}, [arrBurgerConstructorIngredients]);
+
+	// сумма заказа
+	const calculateOrderAmount = (arr) => {
+		const amount = arr.reduce((total, ingredient) => total + ingredient.price, 0);
+	   // console.log(`amount: ${amount}`)
+		return amount;
+	};
+   const orderAmount = calculateOrderAmount(arrBurgerConstructorIngredients);
+
 
 	return(
 		<div className={`${styles.burgerConstructor} ml-5 pt-25`}>
@@ -35,79 +66,70 @@ const BurgerConstructor = ({ ingredients }) => {
 
 			{/* constructor box */}
 			<div className={`${styles.constructorBox}`}>
-				{/* булка-top*/}
-				<div className={`mr-10`}>
-					<ConstructorElement text={bun.name} price={bun.price} thumbnail={bun.image_mobile} type="top" isLocked={true} />
-				</div>
-            
-				{/* середина бургера */}
-				<div className={`${styles.constructorBox} pl-4 pr-4`}>
-					<ul>
-						<li>
-						   <DragIcon/>
-						   <ConstructorElement className={styles.constructorElement} text={main1.name} price={main1.price} thumbnail={main1.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement className={styles.constructorElement} text={main2.name} price={main2.price} thumbnail={main2.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={sauce.name} price={sauce.price} thumbnail={sauce.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main1.name} price={main1.price} thumbnail={main1.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main2.name} price={main2.price} thumbnail={main2.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main1.name} price={main1.price} thumbnail={main1.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main2.name} price={main2.price} thumbnail={main2.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main1.name} price={main1.price} thumbnail={main1.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main2.name} price={main2.price} thumbnail={main2.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main1.name} price={main1.price} thumbnail={main1.image_mobile} isLocked={false} />
-						</li>
-						<li>
-							<DragIcon/>
-							<ConstructorElement text={main2.name} price={main2.price} thumbnail={main2.image_mobile} isLocked={false} />
-						</li>
-						<li>
-							<DragIcon/>
-							<ConstructorElement text={main1.name} price={main1.price} thumbnail={main1.image_mobile} isLocked={false} />
-						</li>
-						<li>
-							<DragIcon/>
-							<ConstructorElement text={main2.name} price={main2.price} thumbnail={main2.image_mobile} isLocked={false} />
-						</li>
-					</ul>
-				</div>
-
-				{/* булка-bottom*/}
-				<div className={`mr-10`}>
-				   <ConstructorElement text={bun.name} price={bun.price} thumbnail={bun.image_mobile} type="bottom" isLocked={true} />
-				</div>
-			</div>
+            <ul>
+              {arrBurgerConstructorIngredients.length === 0 ? (
+                  <>
+                     <li>
+                       <DragIcon />
+                       <ConstructorElement text={'Выберите булку'} isLocked={true}/>
+                     </li>
+                     <li>
+                       <DragIcon />
+                       <ConstructorElement text={'Выберите начинку'} isLocked={false}/>
+                     </li>
+                     <li>
+                       <DragIcon />
+                       <ConstructorElement text={'Выберите булку'} isLocked={true}/>
+                     </li>
+                  </>
+               ) : (
+                  <>
+                     {/* Отображаем первый элемент (bunsTopBottom) */}
+                     <li key="top">
+                       <DragIcon />
+                       <ConstructorElement
+                         className={styles.constructorElement}
+                         text={bunsTopBottom.name}
+                         price={bunsTopBottom.price}
+                         thumbnail={bunsTopBottom.image_mobile}
+                         isLocked={true}
+                       />
+                     </li>
+                     
+                     {/* Отображаем основной контент */}
+                     {arrMainPart.map(product => (
+                       <li key={product.id}>
+                         <DragIcon />
+                         <ConstructorElement
+                           className={styles.constructorElement}
+                           text={product.name}
+                           price={product.price}
+                           thumbnail={product.image_mobile}
+                           isLocked={false}
+                         />
+                       </li>
+                     ))}
+                     
+                     {/* Отображаем последний элемент (bunsTopBottom) */}
+                     <li key="bottom">
+                       <DragIcon />
+                       <ConstructorElement
+                         className={styles.constructorElement}
+                         text={bunsTopBottom.name}
+                         price={bunsTopBottom.price}
+                         thumbnail={bunsTopBottom.image_mobile}
+                         isLocked={true}
+                       />
+                     </li>
+                  </>
+               )}
+            </ul>
+         </div>
 
 			{/* сумма заказа */}
 			<div className={`${styles.orderPrice} mr-4 mt-10 mb-10`}>
 				<div className={`text_type_digits-medium`}>
-				   <span>5000</span>
+				   <span>{orderAmount}</span>
 				</div>
 				<div>
 				   <CurrencyIcon type="primary"/>

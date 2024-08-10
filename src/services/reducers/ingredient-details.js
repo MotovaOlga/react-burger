@@ -2,3 +2,4 @@ export const ingredientDetailsReducer = (state = { ingredientDetails: {} }, acti
 	// Обработка действий
 	return state;
 };
+

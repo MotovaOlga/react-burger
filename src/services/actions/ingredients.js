@@ -1,7 +1,7 @@
 // Action Types
-import { INGREDIENTS_REQUEST, INGREDIENTS_LOADING, INGREDIENTS_LOAD_SUCCESS, INGREDIENTS_LOAD_ERROR } from './types'
+import { INGREDIENTS_LOADING, INGREDIENTS_LOAD_SUCCESS, INGREDIENTS_LOAD_ERROR } from './types'
 import { getIngredientsRequest} from '../../utils/api'
-import {thunk} from 'redux-thunk';
+// import {thunk} from 'redux-thunk';
 
 
 // Action Creators
@@ -22,7 +22,7 @@ export const ingredientsRequest = () => async dispatch => {
 
 export const ingredientsLoading = () => ({
 	type: INGREDIENTS_LOADING,
-	payload: 'loading',
+	// payload: 'loading',
 }); 
 
 export const ingredientsLoadSuccess = (ingredients) => ({

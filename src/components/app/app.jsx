@@ -103,7 +103,7 @@ const App = () => {
 				<div className={styles.mainBox}>
 					{/*  Полученные данные используйте в компонентах BurgerConstructor и BurgerIngredients. */}
 				   <BurgerIngredients ingredients={ingredients}/>
-				   <BurgerConstructor ingredients={ingredients}/>
+				   <BurgerConstructor/>
 				</div>
 			</div>
 	 </>

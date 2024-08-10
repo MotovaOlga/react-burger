@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useMemo} from 'react';
 import PropTypes from "prop-types";
 import {ingredientType} from '../../utils/types'
 import { Tab }  from '@ya.praktikum/react-developer-burger-ui-components';
@@ -13,66 +13,61 @@ const BurgerIngredients = ({ ingredients }) => {
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
 	const [currentIngredient, setCurrentIngredient] = useState(null);
 
+	const arrBun = useMemo(() => ingredients.filter(product => product.type === 'bun'));
+	const arrMain = useMemo(() => ingredients.filter((product) => product.type === 'main'));
+	const arrSauce = useMemo(() => ingredients.filter((product) => product.type === 'sauce'));
+
+	// функции модального окна close/open
 	const onClose = () => {
 		setIsModalOpen(false);
 	};
  
 	function onOpen (id) {
 		//надо найти в api этот ингредиент с заданым id
-		const details = ingredients.find(product => product._id === id);
-		if (details.length > 0) {
+		console.log(typeof ingredients);
+		console.log(ingredients);
+		const details = ingredients.find((product) => product._id === id);
+		if (Object.keys(details).length > 0) {
 			setCurrentIngredient(details); // Передаем details
 		}
 		setIsModalOpen(true);
 	};
-
-	const arrBun = ingredients.filter((product) => product.type === 'bun');
-	const arrMain= ingredients.filter((product) => product.type === 'main');
-	const arrSauce=ingredients.filter((product) => product.type === 'sauce');
 
 	// переключение табов
 	const lineRef = useRef(null);
 	const bunRef = useRef(null);
 	const sauceRef = useRef(null);
 	const mainRef = useRef(null);
-
-	console.log(lineRef);
  
 	const handleScroll = () => { 
-		if (lineRef.currentTab && bunRef.currentTab && sauceRef.currentTab && mainRef.currentTab) {
+		if (lineRef.current && bunRef.current && sauceRef.current && mainRef.current) {
 			const bunDistance = Math.abs(
-			  lineRef.currentTab.getBoundingClientRect().bottom -
-			  bunRef.currentTab.getBoundingClientRect().top
-			);
+			  lineRef.current.getBoundingClientRect().bottom -
+			  bunRef.current.getBoundingClientRect().top
+			); 
 			const sauceDistance = Math.abs(
-			  lineRef?.currentTab.getBoundingClientRect().bottom -
-			  sauceRef?.currentTab.getBoundingClientRect().top
+			  lineRef?.current.getBoundingClientRect().bottom -
+			  sauceRef?.current.getBoundingClientRect().top
 			);
 			const mainDistance = Math.abs(
-			  lineRef?.currentTab.getBoundingClientRect().bottom -
-			  mainRef?.currentTab.getBoundingClientRect().top
+			  lineRef?.current.getBoundingClientRect().bottom -
+			  mainRef?.current.getBoundingClientRect().top
 			);
 			const minDistance = Math.min(bunDistance, sauceDistance, mainDistance);
 			const currentHeader =
 			  minDistance === bunDistance
-				 ? 'bread'
+				 ? 'Buns'
 				 : minDistance === sauceDistance
-					? 'sauces'
-					: 'fillings';
+					? 'Fillings'
+					: 'Sauces';
 			setCurrentTab((prevState) => currentHeader === prevState ? prevState : currentHeader);
 		}
 	};
 
-	console.log(`#${currentTab}`);
-	useEffect(() => {
-		document.querySelector(`#${currentTab}`)?.scrollIntoView({ behavior: 'smooth' });
-	}, [currentTab]);
-
 	const setTab = (tab) => {
-	   console.log(tab);
 		setCurrentTab(tab);
-		const element = document.getElementById(tab);
-		if (element) element.scrollIntoView({ behavior: "smooth" });
+		const element = document.querySelector(`#${tab}`);
+		if (element) element.scrollIntoView({ behavior: "smooth", block: "start"  });
 	};
 
 	return(
@@ -89,17 +84,18 @@ const BurgerIngredients = ({ ingredients }) => {
 		  <p className={`${styles.headerIngredients} text_type_main-large mt-10`}>Соберите бургер</p>
 		  <section>
 			   <div className={`${styles.TabsBox} mt-5`} ref={lineRef}>
-			   	<Tab value="Buns" active={currentTab === 'Buns'} onClick={setTab}>Булки</Tab>
-					<Tab value="Fillings" active={currentTab === 'Fillings'} onClick={setTab}>Начинки</Tab>	
-			   	<Tab value="Sauces" active={currentTab === 'Sauces'} onClick={setTab}>Соусы</Tab>
+
+			   	<Tab active={currentTab === 'Buns'} onClick={()=>setTab("Buns")}>Булки</Tab>
+					<Tab active={currentTab === 'Fillings'} onClick={()=>setTab("Fillings")}>Начинки</Tab>	
+			   	<Tab active={currentTab === 'Sauces'} onClick={()=>setTab("Sauces")}>Соусы</Tab>
 			   </div>
-			   <div className={styles.ingredientsList}>
+			   <div className={styles.ingredientsList} onScroll={()=>handleScroll()}>
 			   	{/* Булки */}			   	
-					<IngredientList ref={bunRef}  ingredients={arrBun} title='Булки' onScroll={handleScroll} onOpen={onOpen}/>	  
+					<IngredientList headerId="Buns"  headerRef={bunRef}  ingredients={arrBun} title='Булки' onOpen={onOpen}/>	  
 					{/* Начинки */}
-			   	<IngredientList  ref={sauceRef} ingredients={arrSauce} title='Начинки' onScroll={handleScroll} onOpen={onOpen}/>	 		
+			   	<IngredientList headerId="Fillings" headerRef={sauceRef} ingredients={arrSauce} title='Начинки' onOpen={onOpen}/>	 		
 			   	{/* Соусы */}
-			   	<IngredientList ref={mainRef} ingredients={arrMain} title='Соусы' onScroll={handleScroll} onOpen={onOpen}/>		   		
+			   	<IngredientList headerId="Sauces" headerRef={mainRef} ingredients={arrMain} title='Соусы' onOpen={onOpen}/>		   		
 			   </div>
 		  </section>
 

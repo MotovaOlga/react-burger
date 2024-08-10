@@ -3,10 +3,10 @@ import { CurrencyIcon }  from '@ya.praktikum/react-developer-burger-ui-component
 // import data  from '../../utils/data.js';
 import styles from './ingredient-list.module.css'
 
-const IngredientList = ({ ingredients, title, onOpen }) => {
+const IngredientList = ({ headerId, headerRef, ingredients, title, onOpen }) => {
 	return (
 		<article>
-			<p className={`text_type_main-medium mt-10 mb-6`}>{title}</p>
+			<p id={headerId} ref={headerRef} className={`text_type_main-medium mt-10 mb-6`} >{title}</p>
 			<ul className={styles.ingredientsList}>
 				{ingredients.map(product => (
 					<li key={product._id} className={styles.ingredientCard} onClick={()=>onOpen(product._id)}>

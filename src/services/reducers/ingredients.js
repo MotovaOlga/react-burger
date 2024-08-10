@@ -1,8 +1,12 @@
-// import IngredientDetails from '../../components/ingredient-details/ingredient-details';
 import { INGREDIENTS_REQUEST, INGREDIENTS_LOADING, INGREDIENTS_LOAD_SUCCESS, INGREDIENTS_LOAD_ERROR } from '../actions/types'
-// import { initialState } from '../store'
+// import data from '../../utils/data';
 
 // данные, которыми инициализируется хранилище
+// const initialState = {
+// 		ingredients: [...data.products],
+// 		loading: false,
+// 	   error: null
+// };
 const initialState = {
 	ingredients: [],
 	loading: false,
@@ -11,12 +15,12 @@ const initialState = {
  
 export const ingredientsReducer = (state = initialState, action) => {
 	switch (action.type) {
-		case INGREDIENTS_REQUEST:
-			return {
-				...state,
-				loading: false,
-				error: null
-			};
+		// case INGREDIENTS_REQUEST:
+		// 	return {
+		// 		...state,
+		// 		loading: false,
+		// 		error: null
+		// 	};
 	   case INGREDIENTS_LOAD_SUCCESS:
 		   return {
 			   ...state,

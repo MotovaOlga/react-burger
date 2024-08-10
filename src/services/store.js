@@ -3,7 +3,7 @@ import { createStore, applyMiddleware } from 'redux';
 // import data from '../utils/data';
 // import { configureStore } from '@reduxjs/toolkit'
 import { composeWithDevTools } from '@redux-devtools/extension';
-import { customMiddleware } from './middleware/custom-middleware';
+// import { customMiddleware } from './middleware/custom-middleware';
 import {thunk} from 'redux-thunk';
 
 // // данные, которыми инициализируется хранилище
@@ -16,6 +16,7 @@ import {thunk} from 'redux-thunk';
 // 	   error: null
 // 	},
 // 	burgerConstructor: {
+//    bun: null,
 // 		burgerConstructor: [],
 // 	},
 // 	orderDetails: {
