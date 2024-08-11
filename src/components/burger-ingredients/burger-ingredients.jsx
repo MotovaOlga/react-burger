@@ -6,6 +6,9 @@ import styles from './burger-ingredients.module.css'
 import IngredientList from './ingredient-list/ingredient-list'
 import Modal from '../modal/modal'
 import IngredientDetails from '../ingredient-details/ingredient-details'
+import { useDispatch, useSelector } from 'react-redux'
+import { addIngredient, deleteIngredient, moveIngredient } from '../../services/actions/burger-constructor'
+import { v4 as uuidv4 } from 'uuid';
 
 
 const BurgerIngredients = ({ ingredients }) => {
@@ -22,16 +25,37 @@ const BurgerIngredients = ({ ingredients }) => {
 		setIsModalOpen(false);
 	};
  
-	function onOpen (id) {
+	const onOpen = (id) => {
 		//надо найти в api этот ингредиент с заданым id
-		console.log(typeof ingredients);
-		console.log(ingredients);
-		const details = ingredients.find((product) => product._id === id);
-		if (Object.keys(details).length > 0) {
-			setCurrentIngredient(details); // Передаем details
-		}
+		let details = ingredients.find((product) => product._id === id);
+		console.log('details: ', details); // отладка
+
+		if (!details) {
+			console.log('Details not found'); // отладка
+			// Используем значение по умолчанию для details
+			setCurrentIngredient({name: '', price: 0, image_mobile: ''});
+	  } else {
+			setCurrentIngredient(details);
+	  }
 		setIsModalOpen(true);
 	};
+
+	// добавление ингредиентов по клику
+	const dispatch = useDispatch();	 
+	// const handleAddIngredient = (ingredient) => {
+	// 	console.log('Deleting ingredient with ID:', ingredient);
+	// 	dispatch(addIngredient(ingredient));
+	// }
+	const handleAddIngredient = (ingredient) => {
+		// Создаем новый объект ингредиента с уникальным ключом
+		const ingredientWithKey = {
+			 ...ingredient,
+			 uniqueKey: uuidv4() // Добавляем уникальный ключ
+		};
+  
+		console.log('Adding ingredient with unique key:', ingredientWithKey.uniqueKey);
+		dispatch(addIngredient(ingredientWithKey));
+  }
 
 	// переключение табов
 	const lineRef = useRef(null);
@@ -91,14 +115,13 @@ const BurgerIngredients = ({ ingredients }) => {
 			   </div>
 			   <div className={styles.ingredientsList} onScroll={()=>handleScroll()}>
 			   	{/* Булки */}			   	
-					<IngredientList headerId="Buns"  headerRef={bunRef}  ingredients={arrBun} title='Булки' onOpen={onOpen}/>	  
+					<IngredientList headerId="Buns"  headerRef={bunRef}  ingredients={arrBun} title='Булки' onOpen={onOpen} addIngOnDblclick={handleAddIngredient}/>	  
 					{/* Начинки */}
-			   	<IngredientList headerId="Fillings" headerRef={sauceRef} ingredients={arrSauce} title='Начинки' onOpen={onOpen}/>	 		
+			   	<IngredientList headerId="Fillings" headerRef={sauceRef} ingredients={arrSauce} title='Начинки' onOpen={onOpen} addIngOnDblclick={handleAddIngredient}/>	 		
 			   	{/* Соусы */}
-			   	<IngredientList headerId="Sauces" headerRef={mainRef} ingredients={arrMain} title='Соусы' onOpen={onOpen}/>		   		
+			   	<IngredientList headerId="Sauces" headerRef={mainRef} ingredients={arrMain} title='Соусы' onOpen={onOpen} addIngOnDblclick={handleAddIngredient}/>		   		
 			   </div>
 		  </section>
-
 		</div>
 	)
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect }from 'react';
+import React, { useState, useEffect, useMemo }from 'react';
 import PropTypes from "prop-types";
 import {ingredientType} from '../../utils/types'
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -6,13 +6,17 @@ import styles from './burger-constructor.module.css'
 // import data  from '../../utils/data.js';
 import Modal from '../modal/modal'
 import OrderDetails from '../order-details/order-details'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { addIngredient, deleteIngredient, moveIngredient } from '../../services/actions/burger-constructor'
+import { DropTargetMonitor, useDrop } from "react-dnd";
 
 
 const BurgerConstructor = () => {
-	const [arrBurgerConstructorIngredients, setArrBurgerConstructorIngredients] = useState([]);
-	const [bunsTopBottom, setBunsTopBottom] = useState(null);
-	const [arrMainPart, setArrMainPart] = useState([]);
+	// массив игредиентов BurgerConstructor
+	const arrMainPart = useSelector(state => state.burgerConstructor.burgerConstructor);
+	const bunsTopBottom = useSelector(state => state.burgerConstructor.bun);
+	const arrBurgerConstructorIngredients = bunsTopBottom ? [bunsTopBottom, ...arrMainPart] : [...arrMainPart];
+	
 	const orderNumber = '034536';
 
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -23,34 +27,35 @@ const BurgerConstructor = () => {
 		setIsModalOpen(true);
 	};
 
-	// массив игредиентов BurgerConstructor
-	// setArrBurgerConstructorIngredients(useSelector(state => state.ingredients.ingredients)); 
-	// setArrBurgerConstructorIngredients(useSelector(state => state.burgerConstructor.burgerConstructor)); 
-	// console.log(`arrBurgerConstructorIngredients: ${arrBurgerConstructorIngredients}`)
-	// console.log(`typeof arrBurgerConstructorIngredients: ${typeof arrBurgerConstructorIngredients}`)
-	
-	// useEffect не работает
-	useEffect(() => {
-		console.log(`useEffect`);
+	// сумма заказа - обернуть в хук useMemo
+	const orderAmount = useMemo(() => {
+		const bunPrice = bunsTopBottom ? (bunsTopBottom.price)*2 : 0;
+		const arrMainPartPrice = arrMainPart.reduce((total, ingredient) => total + ingredient.price, 0);
+		return bunPrice + arrMainPartPrice;
+	 }, [bunsTopBottom, arrMainPart]);
 
-		if (arrBurgerConstructorIngredients.length !== 0) {
-		  setBunsTopBottom(arrBurgerConstructorIngredients[0]);
-		  setArrMainPart(arrBurgerConstructorIngredients.slice(1, -1));
-	     console.log(`bunsTopBottom: ${bunsTopBottom}`)
-	     console.log(`arrMainPart: ${arrMainPart}`)
-		}
-		else {
-			console.log(`else`);
-		 }
-	}, [arrBurgerConstructorIngredients]);
+	const dispatch = useDispatch();	 
+	const handleDeleteIngredient = (ingredientId) => {   
+		console.log('Deleting ingredient with ID:', ingredientId);
+		dispatch(deleteIngredient(ingredientId));
+	}
 
-	// сумма заказа
-	const calculateOrderAmount = (arr) => {
-		const amount = arr.reduce((total, ingredient) => total + ingredient.price, 0);
-	   // console.log(`amount: ${amount}`)
-		return amount;
-	};
-   const orderAmount = calculateOrderAmount(arrBurgerConstructorIngredients);
+	// const [{ canDrop, dragItem, isHover }, dropTarget] = useDrop<
+   // 	IIngredient,
+   // 	unknown,
+   // 	{ canDrop: boolean; dragItem: IIngredient; isHover: boolean } >
+	//    ({
+   // 	accept: "items",
+   // 	drop(item: IIngredient) {
+   // 	  console.log(item)
+   // 	  dispatch(addIngredient(item));
+   // 	},
+   // 	collect: (monitor: DropTargetMonitor) => ({
+   // 	  canDrop: monitor.canDrop(),
+   // 	  dragItem: monitor.getItem(),
+   // 	  isHover: monitor.isOver(),
+   // 	}),
+   // });
 
 
 	return(
@@ -70,56 +75,59 @@ const BurgerConstructor = () => {
               {arrBurgerConstructorIngredients.length === 0 ? (
                   <>
                      <li>
-                       <DragIcon />
-                       <ConstructorElement text={'Выберите булку'} isLocked={true}/>
+                       <ConstructorElement key={'top'} text={'Выберите булку'} type="top" isLocked={true}/>
+                     </li>
+							<li>
+                       <ConstructorElement key={'1'} text={'Выберите начинку'} isLocked={false} handleClose={()=> {handleDeleteIngredient('1')}}/>
                      </li>
                      <li>
-                       <DragIcon />
-                       <ConstructorElement text={'Выберите начинку'} isLocked={false}/>
-                     </li>
-                     <li>
-                       <DragIcon />
-                       <ConstructorElement text={'Выберите булку'} isLocked={true}/>
+                       <ConstructorElement key={'bottom'} text={'Выберите булку'} type="bottom" isLocked={true}/>
                      </li>
                   </>
                ) : (
                   <>
-                     {/* Отображаем первый элемент (bunsTopBottom) */}
+						   {/* булка-top*/}
                      <li key="top">
-                       <DragIcon />
-                       <ConstructorElement
-                         className={styles.constructorElement}
-                         text={bunsTopBottom.name}
-                         price={bunsTopBottom.price}
-                         thumbnail={bunsTopBottom.image_mobile}
-                         isLocked={true}
-                       />
+                        <DragIcon />
+                        <ConstructorElement
+                          className={styles.constructorElement}
+                          text={bunsTopBottom.name || 'Выберите булку'}
+                          price={bunsTopBottom.price || 0}
+                          thumbnail={bunsTopBottom.image_mobile || ''}
+							 	  type="top" 
+                          isLocked={true}
+                        />
                      </li>
-                     
-                     {/* Отображаем основной контент */}
-                     {arrMainPart.map(product => (
-                       <li key={product.id}>
-                         <DragIcon />
-                         <ConstructorElement
+
+                     {/* середина бургера */}
+							{arrMainPart.map((product, index) => {
+                     //   console.log(`Product at index ${index}:`, product); // Отладка
+                       return (
+                        <li key={product.uniqueKey} >
+                           <DragIcon />
+                           <ConstructorElement
                            className={styles.constructorElement}
-                           text={product.name}
-                           price={product.price}
-                           thumbnail={product.image_mobile}
+                           text={product.name || 'Выберите начинку'}
+                           price={product.price || 0}
+                           thumbnail={product.image_mobile || ''}
                            isLocked={false}
-                         />
-                       </li>
-                     ))}
+									handleClose={()=>handleDeleteIngredient(product._id)}
+                           />
+                        </li>
+                       );
+                     })}
                      
-                     {/* Отображаем последний элемент (bunsTopBottom) */}
+                     {/* булка-bottom*/}
                      <li key="bottom">
-                       <DragIcon />
-                       <ConstructorElement
-                         className={styles.constructorElement}
-                         text={bunsTopBottom.name}
-                         price={bunsTopBottom.price}
-                         thumbnail={bunsTopBottom.image_mobile}
-                         isLocked={true}
-                       />
+                        <DragIcon />
+                        <ConstructorElement
+                          className={styles.constructorElement}
+                          text={bunsTopBottom.name || 'Выберите булку'}
+                          price={bunsTopBottom.price || 0}
+                          thumbnail={bunsTopBottom.image_mobile || ''}
+								  type="bottom" 
+                          isLocked={true}
+                        />
                      </li>
                   </>
                )}

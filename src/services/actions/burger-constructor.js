@@ -1,5 +1,5 @@
 // Action Types
-import { ADD_INGREDIENT, DELETE_INGREDIENT, MOVE_INGREDIENT, SET_INGREDIENT} from './types'
+import { ADD_INGREDIENT, DELETE_INGREDIENT, MOVE_INGREDIENT } from './types'
 
 // ингредиентам надо герерировать ключ как только их перетаскиваю в бургер-конструктор
 // id не подойдет потому что таких ингрелиентов может быть в бургере несколько штук
@@ -7,20 +7,18 @@ import { ADD_INGREDIENT, DELETE_INGREDIENT, MOVE_INGREDIENT, SET_INGREDIENT} fro
 // Action Creators
 export const addIngredient = (ingredient) => ({
 	type: ADD_INGREDIENT,
-	payload: {
-		key: 1, // ингредиентам надо сгерерировать ключ
-		ingredient,
-	}
+	payload: ingredient,
 });
 
-export const deleteIngredient = (ingredient) => ({
+export const deleteIngredient = (ingredientId) => ({
 	type: DELETE_INGREDIENT,
-	payload: ingredient,
+	payload: ingredientId,
 }); 
 
-export const moveIngredient = (ingredient) => ({
+export const moveIngredient = (dragIndex, hoverIndex) => ({
 	type: MOVE_INGREDIENT,
-	payload: ingredient,
+	dragIndex,
+	hoverIndex,
 }); 
 
 

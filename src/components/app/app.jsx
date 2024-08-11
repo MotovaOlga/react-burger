@@ -11,7 +11,7 @@ import { ingredientsRequest } from '../../services/actions/ingredients';
 // import { initialState } from '../../services/reducers/ingredients'; // Импортируйте из вашего файла состояния
 // export type RootState = typeof initialState;
 // import { RootState } from '../../utils/types';
-import { INGREDIENTS_REQUEST, INGREDIENTS_LOADING, INGREDIENTS_LOAD_SUCCESS, INGREDIENTS_LOAD_ERROR } from '../../services/actions/types'
+// import { INGREDIENTS_REQUEST, INGREDIENTS_LOADING, INGREDIENTS_LOAD_SUCCESS, INGREDIENTS_LOAD_ERROR } from '../../services/actions/types'
 
 // // Определение типа для ингредиента
 // interface Ingredient {	

@@ -3,8 +3,8 @@
 //burger-constructor.js
 export const ADD_INGREDIENT = 'ADD_INGREDIENT';
 export const DELETE_INGREDIENT = 'DELETE_INGREDIENT';
-export const SET_INGREDIENT = 'SET_INGREDIENT';
 export const MOVE_INGREDIENT = 'MOVE_INGREDIENT';
+// export const SET_INGREDIENT = 'SET_INGREDIENT';
 // export const INIT_INGREDIENTS = 'INIT_INGREDIENTS';
 
 //ingredient-details.js
