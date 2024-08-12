@@ -13,9 +13,8 @@ import { DropTargetMonitor, useDrop } from "react-dnd";
 
 const BurgerConstructor = () => {
 	// массив игредиентов BurgerConstructor
-	const arrMainPart = useSelector(state => state.burgerConstructor.burgerConstructor);
-	const bunsTopBottom = useSelector(state => state.burgerConstructor.bun);
-	const arrBurgerConstructorIngredients = bunsTopBottom ? [bunsTopBottom, ...arrMainPart] : [...arrMainPart];
+	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
+	console.log('arrBurgerConstructorIngredients ', arrBurgerConstructorIngredients);
 	
 	const orderNumber = '034536';
 
@@ -29,16 +28,17 @@ const BurgerConstructor = () => {
 
 	// сумма заказа - обернуть в хук useMemo
 	const orderAmount = useMemo(() => {
-		const bunPrice = bunsTopBottom ? (bunsTopBottom.price)*2 : 0;
-		const arrMainPartPrice = arrMainPart.reduce((total, ingredient) => total + ingredient.price, 0);
-		return bunPrice + arrMainPartPrice;
-	 }, [bunsTopBottom, arrMainPart]);
+		const bunPrice = arrBurgerConstructorIngredients.bun ? (arrBurgerConstructorIngredients.bun.price)*2 : 0;
+		const burgerConstructorPrice = arrBurgerConstructorIngredients.burgerConstructor.reduce((total, ingredient) => total + ingredient.price, 0);
+		return bunPrice + burgerConstructorPrice;
+	 }, [arrBurgerConstructorIngredients]);
 
 	const dispatch = useDispatch();	 
-	const handleDeleteIngredient = (ingredientId) => {   
-		console.log('Deleting ingredient with ID:', ingredientId);
-		dispatch(deleteIngredient(ingredientId));
+	const handleDeleteIngredient = (ingredientKey) => {   
+		console.log('Deleting ingredient with ID:', ingredientKey);
+		dispatch(deleteIngredient(ingredientKey));
 	}
+
 
 	// const [{ canDrop, dragItem, isHover }, dropTarget] = useDrop<
    // 	IIngredient,
@@ -72,65 +72,67 @@ const BurgerConstructor = () => {
 			{/* constructor box */}
 			<div className={`${styles.constructorBox}`}>
             <ul>
-              {arrBurgerConstructorIngredients.length === 0 ? (
-                  <>
-                     <li>
-                       <ConstructorElement key={'top'} text={'Выберите булку'} type="top" isLocked={true}/>
-                     </li>
-							<li>
-                       <ConstructorElement key={'1'} text={'Выберите начинку'} isLocked={false} handleClose={()=> {handleDeleteIngredient('1')}}/>
-                     </li>
-                     <li>
-                       <ConstructorElement key={'bottom'} text={'Выберите булку'} type="bottom" isLocked={true}/>
-                     </li>
-                  </>
-               ) : (
-                  <>
 						   {/* булка-top*/}
-                     <li key="top">
-                        <DragIcon />
-                        <ConstructorElement
-                          className={styles.constructorElement}
-                          text={bunsTopBottom.name || 'Выберите булку'}
-                          price={bunsTopBottom.price || 0}
-                          thumbnail={bunsTopBottom.image_mobile || ''}
-							 	  type="top" 
-                          isLocked={true}
-                        />
-                     </li>
-
+							{arrBurgerConstructorIngredients.bun ? (
+                        <li key="top">
+							      <DragIcon />
+							      <ConstructorElement
+							        className={styles.constructorElement}
+							        text={arrBurgerConstructorIngredients.bun.name || 'Выберите булку'}
+							        price={arrBurgerConstructorIngredients.bun.price || 0}
+							        thumbnail={arrBurgerConstructorIngredients.bun.image_mobile || ''}
+							      	type="top" 
+							        isLocked={true}
+							      />
+								</li>
+                     ) : (
+								<li>
+								   <ConstructorElement key={'filings'} text={'Выберите булку'} isLocked={true}/>
+							   </li>
+					      )}
+							
                      {/* середина бургера */}
-							{arrMainPart.map((product, index) => {
-                     //   console.log(`Product at index ${index}:`, product); // Отладка
-                       return (
-                        <li key={product.uniqueKey} >
+							{arrBurgerConstructorIngredients.burgerConstructor.length > 0 ? (
+								arrBurgerConstructorIngredients.burgerConstructor.map((product, index) => {
+									//   console.log(`Product at index ${index}:`, product); // Отладка
+									  return (
+										<li key={product.key} >
+											<DragIcon />
+											<ConstructorElement
+											className={styles.constructorElement}
+											text={product.name || 'Выберите начинку'}
+											price={product.price || 0}
+											thumbnail={product.image_mobile || ''}
+											isLocked={false}
+											handleClose={()=>handleDeleteIngredient(product.key)}
+											/>
+										</li>
+									  );
+									})
+							):(
+								<li>
+								<ConstructorElement key={'bottom'} text={'Выберите начинку'} type="bottom" isLocked={false}/>
+							</li>
+							)}
+                     
+                     {/* булка-bottom*/}
+							{arrBurgerConstructorIngredients.bun ? (
+								<li key="bottom">
                            <DragIcon />
                            <ConstructorElement
                            className={styles.constructorElement}
-                           text={product.name || 'Выберите начинку'}
-                           price={product.price || 0}
-                           thumbnail={product.image_mobile || ''}
-                           isLocked={false}
-									handleClose={()=>handleDeleteIngredient(product._id)}
+                           text={arrBurgerConstructorIngredients.bun.name || 'Выберите булку'}
+                           price={arrBurgerConstructorIngredients.bun.price || 0}
+                           thumbnail={arrBurgerConstructorIngredients.bun.image_mobile || ''}
+								   type="bottom" 
+                           isLocked={true}
                            />
                         </li>
-                       );
-                     })}
-                     
-                     {/* булка-bottom*/}
-                     <li key="bottom">
-                        <DragIcon />
-                        <ConstructorElement
-                          className={styles.constructorElement}
-                          text={bunsTopBottom.name || 'Выберите булку'}
-                          price={bunsTopBottom.price || 0}
-                          thumbnail={bunsTopBottom.image_mobile || ''}
-								  type="bottom" 
-                          isLocked={true}
-                        />
-                     </li>
-                  </>
-               )}
+                     ) : (
+								<li>
+								   <ConstructorElement key={'bottom'} text={'Выберите булку'} type="bottom" isLocked={true}/>
+							   </li>
+					      )}
             </ul>
          </div>
 

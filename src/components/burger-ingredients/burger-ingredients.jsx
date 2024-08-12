@@ -12,6 +12,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 const BurgerIngredients = ({ ingredients }) => {
+	// массив игредиентов BurgerConstructor
+	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
+	
 	const [currentTab, setCurrentTab] = React.useState('Buns');
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
 	const [currentIngredient, setCurrentIngredient] = useState(null);
@@ -42,18 +45,14 @@ const BurgerIngredients = ({ ingredients }) => {
 
 	// добавление ингредиентов по клику
 	const dispatch = useDispatch();	 
-	// const handleAddIngredient = (ingredient) => {
-	// 	console.log('Deleting ingredient with ID:', ingredient);
-	// 	dispatch(addIngredient(ingredient));
-	// }
 	const handleAddIngredient = (ingredient) => {
 		// Создаем новый объект ингредиента с уникальным ключом
 		const ingredientWithKey = {
-			 ...ingredient,
-			 uniqueKey: uuidv4() // Добавляем уникальный ключ
+			...ingredient,
+			key: uuidv4() // Добавляем уникальный ключ
 		};
   
-		console.log('Adding ingredient with unique key:', ingredientWithKey.uniqueKey);
+		console.log('Adding ingredient with unique key:', ingredientWithKey.key);
 		dispatch(addIngredient(ingredientWithKey));
   }
 
@@ -94,6 +93,26 @@ const BurgerIngredients = ({ ingredients }) => {
 		if (element) element.scrollIntoView({ behavior: "smooth", block: "start"  });
 	};
 
+	// подсчет выбранных ингредиентов
+	const getIngredientCount = (ingredient) => {
+		if (ingredient.type === 'bun') {
+		  return arrBurgerConstructorIngredients.bun && arrBurgerConstructorIngredients.bun._id === ingredient._id ? 2 : 0;
+		} else {
+			if (
+				arrBurgerConstructorIngredients.burgerConstructor &&
+				arrBurgerConstructorIngredients.burgerConstructor.length > 0
+		  ) {
+			 const ingredientId = ingredient._id;
+			 const count = arrBurgerConstructorIngredients.burgerConstructor.filter(
+				(item) => item._id === ingredientId
+			 ).length;
+			 return count;
+		  }
+		  return 0;
+		}
+	};
+	
+
 	return(
 		<div className={`${styles.burgerIngredients} mr-5`}>
 			
@@ -115,11 +134,11 @@ const BurgerIngredients = ({ ingredients }) => {
 			   </div>
 			   <div className={styles.ingredientsList} onScroll={()=>handleScroll()}>
 			   	{/* Булки */}			   	
-					<IngredientList headerId="Buns"  headerRef={bunRef}  ingredients={arrBun} title='Булки' onOpen={onOpen} addIngOnDblclick={handleAddIngredient}/>	  
+					<IngredientList headerId="Buns"  headerRef={bunRef}  ingredients={arrBun} title='Булки' onOpen={onOpen} addIngOnDblclick={handleAddIngredient} getIngredientCount={getIngredientCount}/>	  
 					{/* Начинки */}
-			   	<IngredientList headerId="Fillings" headerRef={sauceRef} ingredients={arrSauce} title='Начинки' onOpen={onOpen} addIngOnDblclick={handleAddIngredient}/>	 		
+			   	<IngredientList headerId="Fillings" headerRef={sauceRef} ingredients={arrSauce} title='Начинки' onOpen={onOpen} addIngOnDblclick={handleAddIngredient} getIngredientCount={getIngredientCount}/>	 		
 			   	{/* Соусы */}
-			   	<IngredientList headerId="Sauces" headerRef={mainRef} ingredients={arrMain} title='Соусы' onOpen={onOpen} addIngOnDblclick={handleAddIngredient}/>		   		
+			   	<IngredientList headerId="Sauces" headerRef={mainRef} ingredients={arrMain} title='Соусы' onOpen={onOpen} addIngOnDblclick={handleAddIngredient} getIngredientCount={getIngredientCount}/>		   		
 			   </div>
 		  </section>
 		</div>

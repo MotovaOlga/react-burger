@@ -1,16 +1,17 @@
 import React from 'react';
-import { CurrencyIcon }  from '@ya.praktikum/react-developer-burger-ui-components';
+import { Counter, CurrencyIcon }  from '@ya.praktikum/react-developer-burger-ui-components';
 // import data  from '../../utils/data.js';
 import styles from './ingredient-list.module.css'
 
-const IngredientList = ({ headerId, headerRef, ingredients, title, onOpen, addIngOnDblclick }) => {
+const IngredientList = ({ headerId, headerRef, ingredients, title, onOpen, addIngOnDblclick, getIngredientCount }) => {
 	// console.log('onOpen:', onOpen('60666c42cc7b410027a1a9b1'));
 	return (
 		<article>
 			<p id={headerId} ref={headerRef} className={`text_type_main-medium mt-10 mb-6`} >{title}</p>
 			<ul className={styles.ingredientsList}>
 				{ingredients.map(product => (
-					<li key={product._id} className={styles.ingredientCard} ondblClick={()=> onOpen(product._id)} onClick={() => addIngOnDblclick(product)}>
+					<li key={product._id} className={styles.ingredientCard} onDoubleClick={()=> onOpen(product._id)} onClick={() => addIngOnDblclick(product)}>
+						<Counter className={`${styles.counterStyle} p-4`} count={getIngredientCount(product)} size="dedault"/>
 						<img src={product.image} alt={product.name}/>
 						<div className={`${styles.price} p-1`}>
 							<div>

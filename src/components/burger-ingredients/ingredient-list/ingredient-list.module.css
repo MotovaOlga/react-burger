@@ -9,6 +9,7 @@
 }
 
 .ingredientCard {
+	position: relative;
 	width: 50%;
 }
 
@@ -25,3 +26,8 @@
 	align-items: center;
 }
 
+.counterStyle {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+}
