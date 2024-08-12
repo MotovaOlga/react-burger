@@ -8,43 +8,40 @@ import Modal from '../modal/modal'
 import IngredientDetails from '../ingredient-details/ingredient-details'
 import { useDispatch, useSelector } from 'react-redux'
 import { addIngredient, deleteIngredient, moveIngredient } from '../../services/actions/burger-constructor'
+import { addCurrentIngredient, clearCurrentIngredient } from '../../services/actions/ingredient-details'
 import { v4 as uuidv4 } from 'uuid';
 
 
 const BurgerIngredients = ({ ingredients }) => {
+	const dispatch = useDispatch();	 
 	// массив игредиентов BurgerConstructor
 	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
 	
 	const [currentTab, setCurrentTab] = React.useState('Buns');
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
-	const [currentIngredient, setCurrentIngredient] = useState(null);
+	// const [currentIngredient, setCurrentIngredient] = useState(null);
 
 	const arrBun = useMemo(() => ingredients.filter(product => product.type === 'bun'));
 	const arrMain = useMemo(() => ingredients.filter((product) => product.type === 'main'));
 	const arrSauce = useMemo(() => ingredients.filter((product) => product.type === 'sauce'));
 
-	// функции модального окна close/open
+	// функции модального окна close/open 
+	// после close ощищаем стор-ingredientDetails
 	const onClose = () => {
 		setIsModalOpen(false);
+		dispatch(clearCurrentIngredient());
 	};
- 
+	// при open найти ингридиент по id и передать его в стор-ingredientDetails объект currentIngredient
 	const onOpen = (id) => {
 		//надо найти в api этот ингредиент с заданым id
-		let details = ingredients.find((product) => product._id === id);
-		console.log('details: ', details); // отладка
+		const currentIngredient = ingredients.find((product) => product._id === id);
+		// console.log('currentIngredient: ', currentIngredient); // отладка
+		dispatch(addCurrentIngredient(currentIngredient));
 
-		if (!details) {
-			console.log('Details not found'); // отладка
-			// Используем значение по умолчанию для details
-			setCurrentIngredient({name: '', price: 0, image_mobile: ''});
-	  } else {
-			setCurrentIngredient(details);
-	  }
 		setIsModalOpen(true);
 	};
 
 	// добавление ингредиентов по клику
-	const dispatch = useDispatch();	 
 	const handleAddIngredient = (ingredient) => {
 		// Создаем новый объект ингредиента с уникальным ключом
 		const ingredientWithKey = {
@@ -119,8 +116,8 @@ const BurgerIngredients = ({ ingredients }) => {
 			{/* модальное окно */}
 			{
 				isModalOpen && 
-				<Modal onClose={onClose} title={'Детали ингредиента'} value={currentIngredient}>
-					<IngredientDetails currentIngredient={currentIngredient}/>
+				<Modal onClose={onClose} title={'Детали ингредиента'}>
+					<IngredientDetails/>
 				</Modal>
 			}
 

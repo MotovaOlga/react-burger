@@ -16,8 +16,6 @@ const BurgerConstructor = () => {
 	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
 	console.log('arrBurgerConstructorIngredients ', arrBurgerConstructorIngredients);
 	
-	const orderNumber = '034536';
-
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
 	const onClose = () => {
 		setIsModalOpen(false);
@@ -64,7 +62,7 @@ const BurgerConstructor = () => {
 			{/* модальное окно */}
 			{
 				isModalOpen && 
-				<Modal onClose={onClose} title={''} value={orderNumber}>
+				<Modal onClose={onClose} title={''}>
 					<OrderDetails/>
 				</Modal>
 			}

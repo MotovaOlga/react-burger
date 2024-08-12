@@ -14,15 +14,6 @@
 	color: var(--text-primary-color);
 }
 
-.modalHeight540 {
-	height: 540px;
- }
- 
- .modalHeight720 {
-	height: 720px;
- }
- 
-
 header {
 	display: flex;
 	flex-direction: row;

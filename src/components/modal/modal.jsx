@@ -7,14 +7,6 @@ import ModalOverlay from '../modal-overlay/modal-overlay'
 
 const Modal = ({title, children, onClose}) => {
 	const portal = document.getElementById('portal');
-	const getModalHeightClass = (title) => {
-		if (title === 'Детали ингредиента') {
-		  return 'modal-height-540';
-		} else {
-		  return 'modal-height-720';
-		}
-	};
-	const modalHeightClass = getModalHeightClass(title);
 
 	const handleKeyDown = (event) => {
 		if (event.key === 'Escape') {
@@ -33,7 +25,8 @@ const Modal = ({title, children, onClose}) => {
 		(
 			<>
 				<ModalOverlay onClose={onClose}/>
-				<div className={`${styles.modal} ${modalHeightClass} pl-10 pt-10 pr-10 pb-15`}>
+				{/* <div className={`${styles.modal} ${modalHeightClass} pl-10 pt-10 pr-10 pb-15`}> */}
+				<div className={`${styles.modal} pl-10 pt-10 pr-10 pb-15`}>
 					<header className={`text_type_main-large p-1`}>
 						<div className={`${styles.title}`}>
 							{title}
