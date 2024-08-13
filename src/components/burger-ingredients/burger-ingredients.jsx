@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addIngredient, deleteIngredient, moveIngredient } from '../../services/actions/burger-constructor'
 import { addCurrentIngredient, clearCurrentIngredient } from '../../services/actions/ingredient-details'
 import { v4 as uuidv4 } from 'uuid';
+import { DropTargetMonitor, useDrop } from "react-dnd";
 
 
 const BurgerIngredients = ({ ingredients }) => {
@@ -109,9 +110,43 @@ const BurgerIngredients = ({ ingredients }) => {
 		}
 	};
 	
+	// const [{ canDrop, isOver }, drop] = useDrop(() => ({
+	// 	accept: ItemTypes.BOX, //
+	// 	drop: () => ({ name: 'Dustbin' }), //
+	// 	collect: (monitor) => ({
+	// 	  isOver: monitor.isOver(),
+	// 	  canDrop: monitor.canDrop(),
+	// 	}),
+	//  }))
+	//  const isActive = canDrop && isOver
+	//  let backgroundColor = '#222'
+	//  if (isActive) {
+	// 	backgroundColor = 'darkgreen'
+	//  } else if (canDrop) {
+	// 	backgroundColor = 'darkkhaki'
+	//  }
+
+	// const [{ canDrop, dragItem, isHover }, dropTarget] = useDrop<
+   // 	IIngredient,
+   // 	unknown,
+   // 	{ canDrop: boolean; dragItem: IIngredient; isHover: boolean } >
+	//    ({
+   // 	accept: "items",
+   // 	drop(item: IIngredient) {
+   // 	  console.log(item)
+   // 	  dispatch(addIngredient(item));
+   // 	},
+   // 	collect: (monitor: DropTargetMonitor) => ({
+   // 	  canDrop: monitor.canDrop(),
+   // 	  dragItem: monitor.getItem(),
+   // 	  isHover: monitor.isOver(),
+   // 	}),
+   // });
+
+	
 
 	return(
-		<div className={`${styles.burgerIngredients} mr-5`}>
+		<div className={`${styles.burgerIngredients} mr-5` }>
 			
 			{/* модальное окно */}
 			{

@@ -7,28 +7,34 @@ import { orderRequest } from '../../services/actions/order-details';
 
 const OrderDetails = () => {
 	//надо получить номер заказа
-	// { ingredients : ["60666c42cc7b410027a1a9b1", "609646e4dc916e00276b286e","609646e4dc916e00276b2870", "60666c42cc7b410027a1a9b1"] }
-	// const orderNumber = '034536';
 	const dispatch = useDispatch();	
-	
+	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
+	const orderIngredients = {
+		'ingredients': [
+		   arrBurgerConstructorIngredients.bun._id,  // ID из объекта bun
+		   ...arrBurgerConstructorIngredients.burgerConstructor.map(item => item._id),  // ID из массива burgerConstructor
+		   arrBurgerConstructorIngredients.bun._id,  // ID из объекта bun
+		]
+	};
+	// console.log('orderIngredients: ', orderIngredients); //отладка
 
-	const [orderNumber, setOrderNumber] = useState('1234567890'); 
+	const [orderNumber, setOrderNumber] = useState(''); 
 	
-	const orderIngredients = { 'ingredients': ["60666c42cc7b410027a1a9b1", "609646e4dc916e00276b286e", "609646e4dc916e00276b2870", "60666c42cc7b410027a1a9b1"] };
 	useEffect(() => {
-		console.log('orderRequest');
+		console.log('orderRequest'); //отладка
 	   dispatch(orderRequest(orderIngredients));		
    }, []);
 
-	const order = useSelector(state => state.orderDetails.orderDetails.order); // Получаем состояние из Redux
-	console.log('order:', order);
+	const order = useSelector(state => state.orderDetails.order); // Получаем состояние из Redux
+	console.log('order:', order); //отладка
 
 	useEffect(() => {
 		if (order) {
-			setOrderNumber(order.orderNumber); // Убедитесь, что вы используете правильное имя свойства
+			setOrderNumber(order.order.number);
 		}
    }, [order]);
-	console.log('orderNumber:', orderNumber);
+	console.log('orderNumber:', orderNumber); //отладка
+
 
 	return (
 		<div className={`${styles.orderDetails} p-15`}>
