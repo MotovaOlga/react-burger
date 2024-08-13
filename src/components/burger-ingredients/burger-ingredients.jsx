@@ -109,22 +109,7 @@ const BurgerIngredients = ({ ingredients }) => {
 		  return 0;
 		}
 	};
-	
-	// const [{ canDrop, isOver }, drop] = useDrop(() => ({
-	// 	accept: ItemTypes.BOX, //
-	// 	drop: () => ({ name: 'Dustbin' }), //
-	// 	collect: (monitor) => ({
-	// 	  isOver: monitor.isOver(),
-	// 	  canDrop: monitor.canDrop(),
-	// 	}),
-	//  }))
-	//  const isActive = canDrop && isOver
-	//  let backgroundColor = '#222'
-	//  if (isActive) {
-	// 	backgroundColor = 'darkgreen'
-	//  } else if (canDrop) {
-	// 	backgroundColor = 'darkkhaki'
-	//  }
+
 
 	// const [{ canDrop, dragItem, isHover }, dropTarget] = useDrop<
    // 	IIngredient,

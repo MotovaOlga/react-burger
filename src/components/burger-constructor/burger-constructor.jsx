@@ -8,14 +8,16 @@ import Modal from '../modal/modal'
 import OrderDetails from '../order-details/order-details'
 import { useDispatch, useSelector } from 'react-redux'
 import { addIngredient, deleteIngredient, moveIngredient } from '../../services/actions/burger-constructor'
-import { DropTargetMonitor, useDrop } from "react-dnd";
+// import { DropTargetMonitor, useDrop } from "react-dnd";
+// import { DropTargetMonitor, useDrop } from "react-dnd";
 
 
 const BurgerConstructor = () => {
 	// массив игредиентов BurgerConstructor
 	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
 	console.log('arrBurgerConstructorIngredients ', arrBurgerConstructorIngredients);
-	
+
+
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
 	const onClose = () => {
 		setIsModalOpen(false);
@@ -37,23 +39,58 @@ const BurgerConstructor = () => {
 		dispatch(deleteIngredient(ingredientKey));
 	}
 
+	// DND
+	const [currentCard, setCurrentCard] = useState({ currentCard: null, dragIndex: null });
 
-	// const [{ canDrop, dragItem, isHover }, dropTarget] = useDrop<
-   // 	IIngredient,
-   // 	unknown,
-   // 	{ canDrop: boolean; dragItem: IIngredient; isHover: boolean } >
-	//    ({
-   // 	accept: "items",
-   // 	drop(item: IIngredient) {
-   // 	  console.log(item)
-   // 	  dispatch(addIngredient(item));
-   // 	},
-   // 	collect: (monitor: DropTargetMonitor) => ({
-   // 	  canDrop: monitor.canDrop(),
-   // 	  dragItem: monitor.getItem(),
-   // 	  isHover: monitor.isOver(),
-   // 	}),
-   // });
+	function dragStartHandler(e, card, dragIndex) {
+		console.log('dragStartHandler-ingredient:', card);
+		setCurrentCard({ currentCard: card, dragIndex: dragIndex });
+		// return(e);
+	}
+	function dragEndHandler(e) {
+		// return(e);
+	}
+	function dragOverHandler(e) {
+		e.preventDefault();	
+		// e.target.style.background = 'lightgrey';
+		// return(e);
+	}
+	function dropHandler(e, card, hoverIndex) {
+		e.preventDefault();
+		// как найти индекс этих элементов
+		console.log('dropHandler-currentCard, dragIndex:', currentCard); // dragIndex. array.indexOf(element)
+		console.log('dropHandler-card, hoverIndex:', card, hoverIndex); // hoverIndex
+		
+		// где-то нам надо записать порядок карточек, чтобы мы могла их сортировать index
+		// мы должны моменять порядок карточек. которая была ниже становиться на место верхней.
+		// а верхняя ставиться на одну ниже
+		dispatch(moveIngredient(currentCard.dragIndex, hoverIndex));
+
+		// return(e);
+	}
+
+
+
+
+	// Хук useDrop работает с целевым элементом(компонент, в который мы перетаскиваем исходный элемент).
+	// const [{ canDrop, dragItem, isHover }, dropTargetRef] = useDrop(() => ({
+	// 	accept: 'ingredient', // строка, которая должна быть аналогична свойству type перетаскиваемого компонента.
+	// 	drop: (item) => (
+	// 		dispatch(addIngredient(item))
+	// 	), // принимает в качестве параметра item перетаскиваемого компонента и monitor. срабатывает при «броске» перетаскиваемого элемента в целевой.
+	// 	collect: (monitor) => ({ // набор вычислений для работы с пропсами
+	// 		canDrop: monitor.canDrop(), // возвращает булевое значение true в случае, если в этот момент никакой элемент не перетаскивается.
+	// 		isHover: monitor.isOver(),
+	// 		// dragItem: monitor.getItem(),
+	// 	}),
+	// }));
+
+	// const moveItem = useCallback(
+	// 	(dragIndex, hoverIndex) => {
+	// 	  dispatch(moveIngredient(dragIndex, hoverIndex));
+	// 	},
+	// 	[dispatch]
+	//  );
 
 
 	return(
@@ -68,6 +105,7 @@ const BurgerConstructor = () => {
 			}
 
 			{/* constructor box */}
+			{/* ref={dropTargetRef}  */}
 			<div className={`${styles.constructorBox}`}>
             <ul>
 						   {/* булка-top*/}
@@ -94,7 +132,15 @@ const BurgerConstructor = () => {
 								arrBurgerConstructorIngredients.burgerConstructor.map((product, index) => {
 									//   console.log(`Product at index ${index}:`, product); // Отладка
 									  return (
-										<li key={product.key} >
+										<li 
+										   key={product.key} 
+										   draggable={true}
+											onDragStart={(e) => dragStartHandler(e, product, index)}
+											onDragLeave={(e) => dragEndHandler(e)}
+											onDragEnd={(e) => dragEndHandler(e)}
+											onDragOver={(e) => dragOverHandler(e)}
+											onDrop={(e) => dropHandler(e, product, index)}
+										>
 											<DragIcon />
 											<ConstructorElement
 											className={styles.constructorElement}
