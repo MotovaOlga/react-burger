@@ -18,11 +18,10 @@ export const INGREDIENTS_LOAD_SUCCESS = 'INGREDIENTS_LOAD_SUCCESS';
 export const INGREDIENTS_LOAD_ERROR = 'INGREDIENTS_LOAD_ERROR';
 
 //order-details.js
-export const ORDER_REQUEST = 'ORDER_REQUEST';
-export const ORDER_LOADING = 'ORDER_LOADING'; //
+export const ORDER_LOADING = 'ORDER_LOADING';
 export const ORDER_LOAD_SUCCESS = 'ORDER_LOAD_SUCCESS';
 export const ORDER_LOAD_ERROR = 'ORDER_LOAD_ERROR';
-export const ORDER_NUMBER_UPDATE = 'ORDER_NUMBER_UPDATE'; //
+export const ORDER_NUMBER_UPDATE = 'ORDER_NUMBER_UPDATE'; // как это сделать? очистить полность бургер конструктор?! и номер заказа?
 
 
 

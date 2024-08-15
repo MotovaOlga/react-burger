@@ -15,9 +15,8 @@ export const deleteIngredient = (ingredientKey) => ({
 export const moveIngredient = (dragIndex, hoverIndex) => ({
 	type: MOVE_INGREDIENT,
 	payload: {dragIndex, hoverIndex},
-	// dragIndex,
-	// hoverIndex,
 }); 
+
 
 
 

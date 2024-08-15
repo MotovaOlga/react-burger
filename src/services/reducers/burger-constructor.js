@@ -27,30 +27,23 @@ export const burgerConstructorReducer = (state = initialState, action) => {
 				  burgerConstructor: updatedBurgerConstructor,
 				};
 			}
-			return state;
-
+			return state; 
+			
 		case MOVE_INGREDIENT:
 			console.log('reducer MOVE_INGREDIENT');
-			console.log('action.payload', action.payload);
-			const { dragIndex, hoverIndex } = action.payload; console.log('dragIndex, hoverIndex', dragIndex, hoverIndex);
+			// console.log('action.payload', action.payload);
+			const { dragIndex, hoverIndex } = action.payload; // console.log('dragIndex, hoverIndex', dragIndex, hoverIndex);
 			const updatedIngredientsMove = [...state.burgerConstructor]; // Создание копии массива ингредиентов
-
-			const draggedItem = updatedIngredientsMove[dragIndex]; console.log('draggedItem', draggedItem);// Извлечение перетаскиваемого элемента
-
+			const draggedItem = updatedIngredientsMove[dragIndex]; // console.log('draggedItem', draggedItem);// Извлечение перетаскиваемого элемента
 			updatedIngredientsMove.splice(dragIndex, 1); // Удаление перетаскиваемого элемента из его начального положения
-
-			console.log('updatedIngredientsMove1', updatedIngredientsMove );
-
+			// console.log('updatedIngredientsMove1', updatedIngredientsMove );
 			updatedIngredientsMove.splice(hoverIndex, 0, draggedItem); //Вставка перетаскиваемого элемента в новое положение
-			
-			console.log('updatedIngredientsMove2', updatedIngredientsMove );
-
-
-
+			// console.log('updatedIngredientsMove2', updatedIngredientsMove );
 			return {
 				...state, 
 				burgerConstructor: updatedIngredientsMove,				
 			};
+
 	   default:
 			return state;
 	}

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useMemo} from 'react';
+import React, { useRef} from 'react';
 import PropTypes from "prop-types";
 import {ingredientType} from '../../utils/types'
 import { Tab }  from '@ya.praktikum/react-developer-burger-ui-components';
@@ -7,10 +7,7 @@ import IngredientList from './ingredient-list/ingredient-list'
 import Modal from '../modal/modal'
 import IngredientDetails from '../ingredient-details/ingredient-details'
 import { useDispatch, useSelector } from 'react-redux'
-import { addIngredient, deleteIngredient, moveIngredient } from '../../services/actions/burger-constructor'
 import { addCurrentIngredient, clearCurrentIngredient } from '../../services/actions/ingredient-details'
-import { v4 as uuidv4 } from 'uuid';
-import { DropTargetMonitor, useDrop } from "react-dnd";
 
 
 const BurgerIngredients = ({ ingredients }) => {
@@ -20,11 +17,10 @@ const BurgerIngredients = ({ ingredients }) => {
 	
 	const [currentTab, setCurrentTab] = React.useState('Buns');
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
-	// const [currentIngredient, setCurrentIngredient] = useState(null);
 
-	const arrBun = useMemo(() => ingredients.filter(product => product.type === 'bun'));
-	const arrMain = useMemo(() => ingredients.filter((product) => product.type === 'main'));
-	const arrSauce = useMemo(() => ingredients.filter((product) => product.type === 'sauce'));
+	const arrBun = ingredients.filter(product => product.type === 'bun');
+	const arrMain = ingredients.filter(product => product.type === 'main');
+	const arrSauce = ingredients.filter(product => product.type === 'sauce');
 
 	// функции модального окна close/open 
 	// после close ощищаем стор-ingredientDetails
@@ -35,24 +31,14 @@ const BurgerIngredients = ({ ingredients }) => {
 	// при open найти ингридиент по id и передать его в стор-ingredientDetails объект currentIngredient
 	const onOpen = (id) => {
 		//надо найти в api этот ингредиент с заданым id
-		const currentIngredient = ingredients.find((product) => product._id === id);
-		// console.log('currentIngredient: ', currentIngredient); // отладка
-		dispatch(addCurrentIngredient(currentIngredient));
+		if (id) {
+			const currentIngredient = ingredients.find((item) => item._id === id);
+		   // console.log('currentIngredient: ', currentIngredient); // отладка
+		   dispatch(addCurrentIngredient(currentIngredient));
 
-		setIsModalOpen(true);
+			setIsModalOpen(true);
+		}
 	};
-
-	// добавление ингредиентов по клику
-	const handleAddIngredient = (ingredient) => {
-		// Создаем новый объект ингредиента с уникальным ключом
-		const ingredientWithKey = {
-			...ingredient,
-			key: uuidv4() // Добавляем уникальный ключ
-		};
-  
-		console.log('Adding ingredient with unique key:', ingredientWithKey.key);
-		dispatch(addIngredient(ingredientWithKey));
-  }
 
 	// переключение табов
 	const lineRef = useRef(null);
@@ -93,43 +79,24 @@ const BurgerIngredients = ({ ingredients }) => {
 
 	// подсчет выбранных ингредиентов
 	const getIngredientCount = (ingredient) => {
+		if (!ingredient || !ingredient._id) return 0; // Если ingredient не определён, возвращаем 0
+	  
+		const { bun, burgerConstructor } = arrBurgerConstructorIngredients || {};
+
 		if (ingredient.type === 'bun') {
-		  return arrBurgerConstructorIngredients.bun && arrBurgerConstructorIngredients.bun._id === ingredient._id ? 2 : 0;
+		  return bun && bun._id === ingredient._id ? 2 : 0;
 		} else {
-			if (
-				arrBurgerConstructorIngredients.burgerConstructor &&
-				arrBurgerConstructorIngredients.burgerConstructor.length > 0
-		  ) {
-			 const ingredientId = ingredient._id;
-			 const count = arrBurgerConstructorIngredients.burgerConstructor.filter(
-				(item) => item._id === ingredientId
-			 ).length;
-			 return count;
-		  }
+			if ( burgerConstructor &&	burgerConstructor.length > 0 ) {
+				const ingredientId = ingredient._id;
+				// const count = burgerConstructor.filter((item) => item._id === ingredientId).length;
+				return burgerConstructor.filter(item => item._id === ingredientId).length;
+				// return 110;
+		   }
 		  return 0;
 		}
 	};
 
-
-	// const [{ canDrop, dragItem, isHover }, dropTarget] = useDrop<
-   // 	IIngredient,
-   // 	unknown,
-   // 	{ canDrop: boolean; dragItem: IIngredient; isHover: boolean } >
-	//    ({
-   // 	accept: "items",
-   // 	drop(item: IIngredient) {
-   // 	  console.log(item)
-   // 	  dispatch(addIngredient(item));
-   // 	},
-   // 	collect: (monitor: DropTargetMonitor) => ({
-   // 	  canDrop: monitor.canDrop(),
-   // 	  dragItem: monitor.getItem(),
-   // 	  isHover: monitor.isOver(),
-   // 	}),
-   // });
-
 	
-
 	return(
 		<div className={`${styles.burgerIngredients} mr-5` }>
 			
@@ -151,11 +118,11 @@ const BurgerIngredients = ({ ingredients }) => {
 			   </div>
 			   <div className={styles.ingredientsList} onScroll={()=>handleScroll()}>
 			   	{/* Булки */}			   	
-					<IngredientList headerId="Buns"  headerRef={bunRef}  ingredients={arrBun} title='Булки' onOpen={onOpen} addIngOnDblclick={handleAddIngredient} getIngredientCount={getIngredientCount}/>	  
+					<IngredientList headerId="Buns"  headerRef={bunRef}  ingredients={arrBun? arrBun : []} title='Булки' onOpen={onOpen} getIngredientCount={getIngredientCount}/>	  
 					{/* Начинки */}
-			   	<IngredientList headerId="Fillings" headerRef={sauceRef} ingredients={arrSauce} title='Начинки' onOpen={onOpen} addIngOnDblclick={handleAddIngredient} getIngredientCount={getIngredientCount}/>	 		
+			   	<IngredientList headerId="Fillings" headerRef={sauceRef} ingredients={arrSauce? arrSauce : []} title='Начинки' onOpen={onOpen} getIngredientCount={getIngredientCount}/>	 		
 			   	{/* Соусы */}
-			   	<IngredientList headerId="Sauces" headerRef={mainRef} ingredients={arrMain} title='Соусы' onOpen={onOpen} addIngOnDblclick={handleAddIngredient} getIngredientCount={getIngredientCount}/>		   		
+			   	<IngredientList headerId="Sauces" headerRef={mainRef} ingredients={arrMain? arrMain : []} title='Соусы' onOpen={onOpen} getIngredientCount={getIngredientCount}/>		   		
 			   </div>
 		  </section>
 		</div>

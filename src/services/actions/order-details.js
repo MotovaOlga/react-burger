@@ -1,17 +1,17 @@
 // Action Types
-import { ORDER_REQUEST, ORDER_LOADING, ORDER_LOAD_SUCCESS, ORDER_LOAD_ERROR, ORDER_NUMBER_UPDATE  } from './types'
+import { ORDER_LOADING, ORDER_LOAD_SUCCESS, ORDER_LOAD_ERROR, ORDER_NUMBER_UPDATE  } from './types'
 import { getOrderRequest} from '../../utils/api'
 
 //будем передевать массив айдишников
 
 // Action Creators
 // Пример ответа:
-// {
+// order: {
+// "success": true
 //   "name": "Краторный метеоритный бургер",
 //   "order": {
 //       "number": 6257
 //   },
-//   "success": true
 // }
 
 export const orderRequest = (orderIngredients) => async dispatch => {

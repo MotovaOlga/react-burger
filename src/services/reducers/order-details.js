@@ -1,28 +1,21 @@
-import { ORDER_REQUEST, ORDER_LOADING, ORDER_LOAD_SUCCESS, ORDER_LOAD_ERROR, ORDER_NUMBER_UPDATE  } from '../actions/types' 
+import { ORDER_LOADING, ORDER_LOAD_SUCCESS, ORDER_LOAD_ERROR, ORDER_NUMBER_UPDATE  } from '../actions/types' 
 
 const initialState = {
-	orderDetails: {
-		orderIngredients: [],
-	   order: null,
+	   order: null, 
 	   loading: false,
 	   error: null,
 }
-// response: {
-// 	"name": "Краторный метеоритный бургер",
-// 	"order": {
-// 		 "number": 6257
-// 	},
-// 	"success": true
-//  }
-}
+// Пример ответа:
+// order: {
+// "success": true
+//   "name": "Краторный метеоритный бургер",
+//   "order": {
+//       "number": 6257
+//   },
+// }
+
 export const orderDetailsReducer = (state = initialState, action) => {
 	switch (action.type) {
-		//  case ORDER_REQUEST:
-		// 	  return {
-		// 			...state,
-		// 			loading: true,
-		// 			error: null,
-		// 	  };
 		 case ORDER_LOAD_SUCCESS:
 			  return {
 					...state,

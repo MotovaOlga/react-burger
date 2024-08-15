@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo }from 'react';
+import React, { useRef, useCallback, useState, useEffect, useMemo }from 'react';
 import PropTypes from "prop-types";
 import {ingredientType} from '../../utils/types'
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -8,89 +8,118 @@ import Modal from '../modal/modal'
 import OrderDetails from '../order-details/order-details'
 import { useDispatch, useSelector } from 'react-redux'
 import { addIngredient, deleteIngredient, moveIngredient } from '../../services/actions/burger-constructor'
-// import { DropTargetMonitor, useDrop } from "react-dnd";
-// import { DropTargetMonitor, useDrop } from "react-dnd";
+import { useDrop } from "react-dnd";
+import { orderRequest } from '../../services/actions/order-details';
+import { v4 as uuidv4 } from 'uuid';
+import { BurgerConstructorCard } from './burger-constructor-card/burger-constructor-card'
 
 
 const BurgerConstructor = () => {
+	const dispatch = useDispatch();	 
+
 	// массив игредиентов BurgerConstructor
 	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
-	console.log('arrBurgerConstructorIngredients ', arrBurgerConstructorIngredients);
-
 
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
 	const onClose = () => {
 		setIsModalOpen(false);
 	};
 	const onOpen = () => {
-		setIsModalOpen(true);
+		if (
+			arrBurgerConstructorIngredients &&
+			arrBurgerConstructorIngredients.bun &&
+			arrBurgerConstructorIngredients.burgerConstructor 
+		   ) {
+			const {bun, burgerConstructor} = arrBurgerConstructorIngredients;
+			const orderIngredients = {				
+				ingredients: [
+				  bun ? bun._id : null,  // ID из объекта bun, если он существует
+				  ...burgerConstructor ? burgerConstructor.map(item => item._id) : [],  // ID из массива burgerConstructor, если он существует
+				  bun ? bun._id : null,  // ID из объекта bun, если он существует
+				].filter(id => id !== null)  // Удаляем все null значения из массива
+			};
+			// console.log('orderIngredients.ingredients: ', orderIngredients.ingredients); //отладка
+
+			// Проверка, что массив ингредиентов не пустой
+		   if (orderIngredients.ingredients.length > 2) {
+		   	dispatch(orderRequest(orderIngredients));
+		   	setIsModalOpen(true);
+		   } else {
+		   	console.log('Добавьте ингредиенты, чтобы создать заказ.');
+		   } 
+		}	else {
+			console.log('Добавьте ингредиенты, чтобы создать заказ.');
+		}
 	};
 
 	// сумма заказа - обернуть в хук useMemo
 	const orderAmount = useMemo(() => {
-		const bunPrice = arrBurgerConstructorIngredients.bun ? (arrBurgerConstructorIngredients.bun.price)*2 : 0;
-		const burgerConstructorPrice = arrBurgerConstructorIngredients.burgerConstructor.reduce((total, ingredient) => total + ingredient.price, 0);
+		const bunPrice = arrBurgerConstructorIngredients.bun ? (arrBurgerConstructorIngredients.bun.price) * 2 : 0;
+		const burgerConstructorPrice = Array.isArray(arrBurgerConstructorIngredients.burgerConstructor) 
+			 ? arrBurgerConstructorIngredients.burgerConstructor.reduce((total, item) => total + (item.price || 0), 0)
+			 : 0;
+		// const burgerConstructorPrice = 0; 
 		return bunPrice + burgerConstructorPrice;
-	 }, [arrBurgerConstructorIngredients]);
+  }, [arrBurgerConstructorIngredients]);
 
-	const dispatch = useDispatch();	 
-	const handleDeleteIngredient = (ingredientKey) => {   
-		console.log('Deleting ingredient with ID:', ingredientKey);
-		dispatch(deleteIngredient(ingredientKey));
-	}
+//   const dispatch = useDispatch();	 
+//   const handleDeleteIngredient = (ingredientKey) => {   
+// 	  console.log('Deleting ingredient with ID:', ingredientKey);
+// 	  dispatch(deleteIngredient(ingredientKey));
+//   }
 
 	// DND
-	const [currentCard, setCurrentCard] = useState({ currentCard: null, dragIndex: null });
+	// сортировка
+	const moveCard = useCallback((dragIndex, hoverIndex) => {
+	//   console.log('moveCard:(dragIndex, hoverIndex)', dragIndex, hoverIndex);
+		dispatch(moveIngredient(dragIndex, hoverIndex));
+	}, [])
+	
 
-	function dragStartHandler(e, card, dragIndex) {
-		console.log('dragStartHandler-ingredient:', card);
-		setCurrentCard({ currentCard: card, dragIndex: dragIndex });
-		// return(e);
-	}
-	function dragEndHandler(e) {
-		// return(e);
-	}
-	function dragOverHandler(e) {
-		e.preventDefault();	
-		// e.target.style.background = 'lightgrey';
-		// return(e);
-	}
-	function dropHandler(e, card, hoverIndex) {
-		e.preventDefault();
-		// как найти индекс этих элементов
-		console.log('dropHandler-currentCard, dragIndex:', currentCard); // dragIndex. array.indexOf(element)
-		console.log('dropHandler-card, hoverIndex:', card, hoverIndex); // hoverIndex
-		
-		// где-то нам надо записать порядок карточек, чтобы мы могла их сортировать index
-		// мы должны моменять порядок карточек. которая была ниже становиться на место верхней.
-		// а верхняя ставиться на одну ниже
-		dispatch(moveIngredient(currentCard.dragIndex, hoverIndex));
+	// function dragStartHandler(e, card, dragIndex) {
+	// 	console.log('dragStartHandler-ingredient:', card);
+	// 	setCurrentCard({ currentCard: card, dragIndex: dragIndex });
+	// }
+	// function dragEndHandler(e) {
+	// }
+	// function dragOverHandler(e) {
+	// 	e.preventDefault();	
+	// 	// e.target.style.background = 'lightgrey';
+	// }
+	// function dropHandler(e, card, hoverIndex) {
+	// 	e.preventDefault();
+	// 	// как найти индекс этих элементов
+	// 	// console.log('dropHandler-currentCard, dragIndex:', currentCard); // dragIndex. array.indexOf(element)
+	// 	// console.log('dropHandler-card, hoverIndex:', card, hoverIndex); // hoverIndex
 
-		// return(e);
-	}
+	// 	// dispatch(moveIngredient(currentCard.dragIndex, hoverIndex));
+	// }
 
+	// добавление ингредиентов по клику
+	const handleAddIngredient = (ingredient) => {
+		// Создаем новый объект ингредиента с уникальным ключом
+		const ingredientWithKey = {
+			...ingredient,
+			key: uuidv4(), // Добавляем уникальный ключ
+		};
+  
+		// console.log('Adding ingredient with unique key:', ingredientWithKey.key);
+		dispatch(addIngredient(ingredientWithKey));
+  }
 
-
-
+	// перетаскивание
 	// Хук useDrop работает с целевым элементом(компонент, в который мы перетаскиваем исходный элемент).
-	// const [{ canDrop, dragItem, isHover }, dropTargetRef] = useDrop(() => ({
-	// 	accept: 'ingredient', // строка, которая должна быть аналогична свойству type перетаскиваемого компонента.
-	// 	drop: (item) => (
-	// 		dispatch(addIngredient(item))
-	// 	), // принимает в качестве параметра item перетаскиваемого компонента и monitor. срабатывает при «броске» перетаскиваемого элемента в целевой.
-	// 	collect: (monitor) => ({ // набор вычислений для работы с пропсами
-	// 		canDrop: monitor.canDrop(), // возвращает булевое значение true в случае, если в этот момент никакой элемент не перетаскивается.
-	// 		isHover: monitor.isOver(),
-	// 		// dragItem: monitor.getItem(),
-	// 	}),
-	// }));
-
-	// const moveItem = useCallback(
-	// 	(dragIndex, hoverIndex) => {
-	// 	  dispatch(moveIngredient(dragIndex, hoverIndex));
-	// 	},
-	// 	[dispatch]
-	//  );
+		const [{ canDrop, dragItem, isHover }, dropTargetRef] = useDrop(() => ({
+		accept: 'ingredientCard', // строка, которая должна быть аналогична свойству type перетаскиваемого компонента.
+		drop: (ingredient) => (
+			handleAddIngredient(ingredient)
+		), // принимает данные перетаскиваемого компонента и monitor. срабатывает при «броске» перетаскиваемого элемента в целевой.
+		collect: (monitor) => ({ // набор вычислений для работы с пропсами
+			canDrop: monitor.canDrop(), // возвращает булевое значение true в случае, если в этот момент никакой элемент не перетаскивается.
+         dragItem: monitor.getItem(),
+         isHover: monitor.isOver(),
+		}),
+	}));
 
 
 	return(
@@ -105,21 +134,21 @@ const BurgerConstructor = () => {
 			}
 
 			{/* constructor box */}
-			{/* ref={dropTargetRef}  */}
-			<div className={`${styles.constructorBox}`}>
+			<div ref={dropTargetRef} className={`${styles.constructorBox}`}>
             <ul>
 						   {/* булка-top*/}
 							{arrBurgerConstructorIngredients.bun ? (
                         <li key="top">
-							      <DragIcon />
+									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun}/>
+							      {/* <DragIcon />
 							      <ConstructorElement
 							        className={styles.constructorElement}
 							        text={arrBurgerConstructorIngredients.bun.name || 'Выберите булку'}
 							        price={arrBurgerConstructorIngredients.bun.price || 0}
 							        thumbnail={arrBurgerConstructorIngredients.bun.image_mobile || ''}
-							      	type="top" 
+							        type="top" 
 							        isLocked={true}
-							      />
+							      /> */}
 								</li>
                      ) : (
 								<li>
@@ -131,38 +160,37 @@ const BurgerConstructor = () => {
 							{arrBurgerConstructorIngredients.burgerConstructor.length > 0 ? (
 								arrBurgerConstructorIngredients.burgerConstructor.map((product, index) => {
 									//   console.log(`Product at index ${index}:`, product); // Отладка
-									  return (
-										<li 
-										   key={product.key} 
-										   draggable={true}
-											onDragStart={(e) => dragStartHandler(e, product, index)}
-											onDragLeave={(e) => dragEndHandler(e)}
-											onDragEnd={(e) => dragEndHandler(e)}
-											onDragOver={(e) => dragOverHandler(e)}
-											onDrop={(e) => dropHandler(e, product, index)}
-										>
-											<DragIcon />
-											<ConstructorElement
-											className={styles.constructorElement}
-											text={product.name || 'Выберите начинку'}
-											price={product.price || 0}
-											thumbnail={product.image_mobile || ''}
-											isLocked={false}
-											handleClose={()=>handleDeleteIngredient(product.key)}
-											/>
+									//   console.log(`середина бургера - index:`, index); // Отладка
+									if(product){
+									   return (
+											<div >
+											   <li 
+										         key={product.key} 
+										         // draggable={true}
+											      // onDragStart={(e) => dragStartHandler(e, product, index)}
+											      // onDragLeave={(e) => dragEndHandler(e)}
+											      // onDragEnd={(e) => dragEndHandler(e)}
+											      // onDragOver={(e) => dragOverHandler(e)}
+											      // onDrop={(e) => dropHandler(e, product, index)}
+									      	>
+									         <BurgerConstructorCard moveCard={moveCard} ingredient={product} index={index}/>
 										</li>
-									  );
-									})
+
+											</div>
+										
+									   );
+					         	}})
 							):(
 								<li>
-								<ConstructorElement key={'bottom'} text={'Выберите начинку'} type="bottom" isLocked={false}/>
-							</li>
+								   <ConstructorElement key={'bottom'} text={'Выберите начинку'} type="bottom" isLocked={false}/>
+							   </li>
 							)}
                      
                      {/* булка-bottom*/}
 							{arrBurgerConstructorIngredients.bun ? (
 								<li key="bottom">
-                           <DragIcon />
+									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun}/>
+                           {/* <DragIcon />
                            <ConstructorElement
                            className={styles.constructorElement}
                            text={arrBurgerConstructorIngredients.bun.name || 'Выберите булку'}
@@ -170,7 +198,7 @@ const BurgerConstructor = () => {
                            thumbnail={arrBurgerConstructorIngredients.bun.image_mobile || ''}
 								   type="bottom" 
                            isLocked={true}
-                           />
+                           /> */}
                         </li>
                      ) : (
 								<li>
