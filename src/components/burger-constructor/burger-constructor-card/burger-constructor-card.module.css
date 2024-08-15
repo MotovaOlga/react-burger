@@ -17,16 +17,16 @@
 	height: 912px;
 	overflow-y: auto;
 	overflow-x: hidden;
-}
+} */
 
-.constructorBox ul li {
-	margin: 16px 0px;
+.burgerConstructorCard {
+	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 }
 
-.orderPrice {
+/* .orderPrice {
 	display: flex;
 	flex-direction: row;
 	align-items: center;

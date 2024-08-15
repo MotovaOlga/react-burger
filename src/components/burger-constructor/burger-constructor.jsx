@@ -7,7 +7,7 @@ import styles from './burger-constructor.module.css'
 import Modal from '../modal/modal'
 import OrderDetails from '../order-details/order-details'
 import { useDispatch, useSelector } from 'react-redux'
-import { addIngredient, deleteIngredient, moveIngredient } from '../../services/actions/burger-constructor'
+import { addIngredient, moveIngredient } from '../../services/actions/burger-constructor'
 import { useDrop } from "react-dnd";
 import { orderRequest } from '../../services/actions/order-details';
 import { v4 as uuidv4 } from 'uuid';
@@ -38,7 +38,6 @@ const BurgerConstructor = () => {
 				  bun ? bun._id : null,  // ID из объекта bun, если он существует
 				].filter(id => id !== null)  // Удаляем все null значения из массива
 			};
-			// console.log('orderIngredients.ingredients: ', orderIngredients.ingredients); //отладка
 
 			// Проверка, что массив ингредиентов не пустой
 		   if (orderIngredients.ingredients.length > 2) {
@@ -62,38 +61,12 @@ const BurgerConstructor = () => {
 		return bunPrice + burgerConstructorPrice;
   }, [arrBurgerConstructorIngredients]);
 
-//   const dispatch = useDispatch();	 
-//   const handleDeleteIngredient = (ingredientKey) => {   
-// 	  console.log('Deleting ingredient with ID:', ingredientKey);
-// 	  dispatch(deleteIngredient(ingredientKey));
-//   }
-
 	// DND
 	// сортировка
 	const moveCard = useCallback((dragIndex, hoverIndex) => {
-	//   console.log('moveCard:(dragIndex, hoverIndex)', dragIndex, hoverIndex);
 		dispatch(moveIngredient(dragIndex, hoverIndex));
 	}, [])
 	
-
-	// function dragStartHandler(e, card, dragIndex) {
-	// 	console.log('dragStartHandler-ingredient:', card);
-	// 	setCurrentCard({ currentCard: card, dragIndex: dragIndex });
-	// }
-	// function dragEndHandler(e) {
-	// }
-	// function dragOverHandler(e) {
-	// 	e.preventDefault();	
-	// 	// e.target.style.background = 'lightgrey';
-	// }
-	// function dropHandler(e, card, hoverIndex) {
-	// 	e.preventDefault();
-	// 	// как найти индекс этих элементов
-	// 	// console.log('dropHandler-currentCard, dragIndex:', currentCard); // dragIndex. array.indexOf(element)
-	// 	// console.log('dropHandler-card, hoverIndex:', card, hoverIndex); // hoverIndex
-
-	// 	// dispatch(moveIngredient(currentCard.dragIndex, hoverIndex));
-	// }
 
 	// добавление ингредиентов по клику
 	const handleAddIngredient = (ingredient) => {
@@ -103,7 +76,6 @@ const BurgerConstructor = () => {
 			key: uuidv4(), // Добавляем уникальный ключ
 		};
   
-		// console.log('Adding ingredient with unique key:', ingredientWithKey.key);
 		dispatch(addIngredient(ingredientWithKey));
   }
 
@@ -140,15 +112,6 @@ const BurgerConstructor = () => {
 							{arrBurgerConstructorIngredients.bun ? (
                         <li key="top">
 									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun}/>
-							      {/* <DragIcon />
-							      <ConstructorElement
-							        className={styles.constructorElement}
-							        text={arrBurgerConstructorIngredients.bun.name || 'Выберите булку'}
-							        price={arrBurgerConstructorIngredients.bun.price || 0}
-							        thumbnail={arrBurgerConstructorIngredients.bun.image_mobile || ''}
-							        type="top" 
-							        isLocked={true}
-							      /> */}
 								</li>
                      ) : (
 								<li>
@@ -159,25 +122,13 @@ const BurgerConstructor = () => {
                      {/* середина бургера */}
 							{arrBurgerConstructorIngredients.burgerConstructor.length > 0 ? (
 								arrBurgerConstructorIngredients.burgerConstructor.map((product, index) => {
-									//   console.log(`Product at index ${index}:`, product); // Отладка
-									//   console.log(`середина бургера - index:`, index); // Отладка
 									if(product){
 									   return (
 											<div >
-											   <li 
-										         key={product.key} 
-										         // draggable={true}
-											      // onDragStart={(e) => dragStartHandler(e, product, index)}
-											      // onDragLeave={(e) => dragEndHandler(e)}
-											      // onDragEnd={(e) => dragEndHandler(e)}
-											      // onDragOver={(e) => dragOverHandler(e)}
-											      // onDrop={(e) => dropHandler(e, product, index)}
-									      	>
-									         <BurgerConstructorCard moveCard={moveCard} ingredient={product} index={index}/>
-										</li>
-
+											   <li key={product.key} >
+									            <BurgerConstructorCard moveCard={moveCard} ingredient={product} index={index}/>
+										      </li>
 											</div>
-										
 									   );
 					         	}})
 							):(
@@ -190,15 +141,6 @@ const BurgerConstructor = () => {
 							{arrBurgerConstructorIngredients.bun ? (
 								<li key="bottom">
 									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun}/>
-                           {/* <DragIcon />
-                           <ConstructorElement
-                           className={styles.constructorElement}
-                           text={arrBurgerConstructorIngredients.bun.name || 'Выберите булку'}
-                           price={arrBurgerConstructorIngredients.bun.price || 0}
-                           thumbnail={arrBurgerConstructorIngredients.bun.image_mobile || ''}
-								   type="bottom" 
-                           isLocked={true}
-                           /> */}
                         </li>
                      ) : (
 								<li>

@@ -22,7 +22,6 @@ export const ingredientsRequest = () => async dispatch => {
 
 export const ingredientsLoading = () => ({
 	type: INGREDIENTS_LOADING,
-	// payload: 'loading',
 }); 
 
 export const ingredientsLoadSuccess = (ingredients) => ({

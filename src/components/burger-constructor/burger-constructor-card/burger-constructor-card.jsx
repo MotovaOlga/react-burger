@@ -2,16 +2,12 @@ import React, { useRef } from 'react';
 import PropTypes from "prop-types";
 import {ingredientType} from '../../../utils/types'
 import { useDispatch } from 'react-redux'
-import { addIngredient, deleteIngredient, moveIngredient } from '../../../services/actions/burger-constructor'
+import { deleteIngredient } from '../../../services/actions/burger-constructor'
 import styles from './burger-constructor-card.module.css'
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrop, useDrag } from "react-dnd";
 
 export const BurgerConstructorCard = ({ ingredient, index, moveCard}) => {
-	// console.log('BurgerConstructorCard - ingredient:', ingredient);
-	// console.log('BurgerConstructorCard - index:', index);
-	// console.log('BurgerConstructorCard - ingredient.key:', ingredient.key);
-
 	const dispatch = useDispatch();	 
 	const handleDeleteIngredient = (ingredientKey) => {   
 		// console.log('Deleting ingredient with KEY:', ingredientKey);
@@ -31,8 +27,6 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard}) => {
 		   const dragIndex = item.index; // это индекс элемента, который перетаскивается.
 		   const hoverIndex = index; // это индекс элемента, над которым в данный момент находится перетаскиваемый элемент
 
-			// console.log('dragIndex:', dragIndex);
-		   // console.log('hoverIndex:', hoverIndex);
 		   console.log('item.id:', item.id);
 		   console.log('item:', item);
 
@@ -81,7 +75,6 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard}) => {
       }),
 	})
 
-	
 	const [{ isDragging }, drag] = useDrag({
 	  type: 'ingredient',
 	  item: { id: ingredient.key, index },
@@ -95,7 +88,7 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard}) => {
 	drag(drop(ref));
 	
    return (
-      <div ref={ref} style={{ ...styles, opacity } } data-handler-id={handlerId}>
+      <div className={`${styles.burgerConstructorCard} pr-4`} ref={ref} style={{ ...styles, opacity } } data-handler-id={handlerId}>
          <DragIcon />
          <ConstructorElement
            className={styles.constructorElement}
@@ -109,6 +102,7 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard}) => {
          />
       </div>
    );
+
 };
 
 BurgerConstructorCard.propTypes = {

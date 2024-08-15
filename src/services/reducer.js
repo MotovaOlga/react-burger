@@ -18,12 +18,13 @@ export const rootReducer = combineReducers({
 // 		ingredients: []
 // 	},
 // 	burgerConstructor: {
+//       bun: null, //здесь храним булку
 // 		burgerConstructor: []
 // 	},
 // 	orderDetails: {
-// 		orderDetails: []
+// 		order: []
 // 	},
 //    ingredientDetails: {
-// 		ingredientDetails: []
+// 		currentIngredient: []
 // 	},
 // }

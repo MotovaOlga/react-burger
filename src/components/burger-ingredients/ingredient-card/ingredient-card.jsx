@@ -28,7 +28,6 @@ const IngredientCard = ({ ingredient, getIngredientCount }) => {
 	return (
 		<div ref={dragRef} style={{ opacity: isDragging ? 0.5 : 1 }}>
 			<div style={{ display: getIngredientCount(ingredient) ? 'block' : 'none', }} className={`${styles.counterWrapper} p-4`} >
-			   {/* count={getIngredientCount(ingredient) ? getIngredientCount(ingredient) : 0} */}
 			   <Counter count={getIngredientCount(ingredient) || 0} size="dedault"/>
 			</div>
 			
