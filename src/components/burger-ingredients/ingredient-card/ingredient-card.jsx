@@ -46,7 +46,7 @@ const IngredientCard = ({ ingredient, getIngredientCount }) => {
 };
 
 IngredientCard.propTypes = {
-	ingredient: PropTypes.shape(ingredientType),
+	ingredient: PropTypes.shape(ingredientType).isRequired,
 	getIngredientCount: PropTypes.func.isRequired
 };
 

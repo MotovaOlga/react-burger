@@ -1,4 +1,4 @@
-import React, { useRef} from 'react';
+import React, { useRef, useMemo, useEffect} from 'react';
 import PropTypes from "prop-types";
 import {ingredientType} from '../../utils/types'
 import { Tab }  from '@ya.praktikum/react-developer-burger-ui-components';
@@ -8,19 +8,28 @@ import Modal from '../modal/modal'
 import IngredientDetails from '../ingredient-details/ingredient-details'
 import { useDispatch, useSelector } from 'react-redux'
 import { addCurrentIngredient, clearCurrentIngredient } from '../../services/actions/ingredient-details'
+import { ingredientsRequest } from '../../services/actions/ingredients';
 
 
-const BurgerIngredients = ({ ingredients }) => {
+const BurgerIngredients = () => { //{ ingredients }
 	const dispatch = useDispatch();	 
+	
+	useEffect(() => {
+		// console.log('getIngredients');
+		dispatch(ingredientsRequest());
+   }, []);
+	
+	const ingredients = useSelector(state => state.ingredients.ingredients); 
+
 	// массив игредиентов BurgerConstructor
 	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
 	
 	const [currentTab, setCurrentTab] = React.useState('Buns');
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-	const arrBun = ingredients.filter(product => product.type === 'bun');
-	const arrMain = ingredients.filter(product => product.type === 'main');
-	const arrSauce = ingredients.filter(product => product.type === 'sauce');
+	const arrBun = useMemo(() => ingredients.filter(product => product.type === 'bun'));
+	const arrMain = useMemo(() => ingredients.filter(product => product.type === 'main'));
+	const arrSauce = useMemo(() => ingredients.filter(product => product.type === 'sauce'));
 
 	// функции модального окна close/open 
 	// после close ощищаем стор-ingredientDetails
@@ -129,8 +138,14 @@ const BurgerIngredients = ({ ingredients }) => {
 	)
 };
 
-BurgerIngredients.propTypes = {
-	ingredients: PropTypes.arrayOf(ingredientType).isRequired
-};
+// BurgerIngredients.propTypes = {
+// 	headerId: PropTypes.string,
+// 	headerRef: PropTypes.string,
+// 	title: PropTypes.string,
+// 	ingredients: PropTypes.arrayOf(ingredientType).isRequired,
+// 	ingredient: PropTypes.shape(ingredientType).isRequired,
+// 	getIngredientCount: PropTypes.func.isRequired,
+// 	onOpen: PropTypes.func.isRequired
+// };
 
 export default BurgerIngredients;

@@ -27,8 +27,8 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard}) => {
 		   const dragIndex = item.index; // это индекс элемента, который перетаскивается.
 		   const hoverIndex = index; // это индекс элемента, над которым в данный момент находится перетаскиваемый элемент
 
-		   console.log('item.id:', item.id);
-		   console.log('item:', item);
+		   // console.log('item.id:', item.id);
+		   // console.log('item:', item);
 
 		   // Don't replace items with themselves
 		   if (dragIndex === hoverIndex) return;
@@ -102,9 +102,10 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard}) => {
          />
       </div>
    );
-
 };
 
 BurgerConstructorCard.propTypes = {
-	ingredient: PropTypes.arrayOf(ingredientType).isRequired
+	ingredient: PropTypes.shape(ingredientType).isRequired,
+	index: PropTypes.number,
+	moveCard: PropTypes.func,
 };

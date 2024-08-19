@@ -20,6 +20,7 @@ const BurgerConstructor = () => {
 	// массив игредиентов BurgerConstructor
 	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
 
+	// модальное окно
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
 	const onClose = () => {
 		setIsModalOpen(false);
@@ -44,10 +45,10 @@ const BurgerConstructor = () => {
 		   	dispatch(orderRequest(orderIngredients));
 		   	setIsModalOpen(true);
 		   } else {
-		   	console.log('Добавьте ингредиенты, чтобы создать заказ.');
+		   	alert('Добавьте ингредиенты, чтобы создать заказ.');
 		   } 
 		}	else {
-			console.log('Добавьте ингредиенты, чтобы создать заказ.');
+			alert('Добавьте ингредиенты, чтобы создать заказ.');
 		}
 	};
 
@@ -68,14 +69,13 @@ const BurgerConstructor = () => {
 	}, [])
 	
 
-	// добавление ингредиентов по клику
+	// добавление ингредиентов
 	const handleAddIngredient = (ingredient) => {
 		// Создаем новый объект ингредиента с уникальным ключом
 		const ingredientWithKey = {
 			...ingredient,
 			key: uuidv4(), // Добавляем уникальный ключ
 		};
-  
 		dispatch(addIngredient(ingredientWithKey));
   }
 
@@ -111,11 +111,12 @@ const BurgerConstructor = () => {
 						   {/* булка-top*/}
 							{arrBurgerConstructorIngredients.bun ? (
                         <li key="top">
-									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun}/>
+									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun} /> 
+									{/* moveCard={()=>{return;}} index={''} */}
 								</li>
                      ) : (
-								<li>
-								   <ConstructorElement key={'filings'} text={'Выберите булку'} isLocked={true}/>
+								<li key={'top'} >
+								   <ConstructorElement text={'Выберите булку'} isLocked={true}/>
 							   </li>
 					      )}
 							
@@ -124,16 +125,16 @@ const BurgerConstructor = () => {
 								arrBurgerConstructorIngredients.burgerConstructor.map((product, index) => {
 									if(product){
 									   return (
-											<div >
-											   <li key={product.key} >
+											<div key={product.key}>
+											   <li>
 									            <BurgerConstructorCard moveCard={moveCard} ingredient={product} index={index}/>
 										      </li>
 											</div>
 									   );
 					         	}})
 							):(
-								<li>
-								   <ConstructorElement key={'bottom'} text={'Выберите начинку'} type="bottom" isLocked={false}/>
+								<li key={'filings'} >
+								   <ConstructorElement text={'Выберите начинку'} type="bottom" isLocked={false}/>
 							   </li>
 							)}
                      
@@ -143,8 +144,8 @@ const BurgerConstructor = () => {
 									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun}/>
                         </li>
                      ) : (
-								<li>
-								   <ConstructorElement key={'bottom'} text={'Выберите булку'} type="bottom" isLocked={true}/>
+								<li key={'bottom'} >
+								   <ConstructorElement text={'Выберите булку'} type="bottom" isLocked={true}/>
 							   </li>
 					      )}
             </ul>
@@ -159,16 +160,12 @@ const BurgerConstructor = () => {
 				   <CurrencyIcon type="primary"/>
 				</div>
 				<div className={`ml-10`}>
-				   <Button type="primary" size="medium" onClick={onOpen}>Оформить заказ</Button> 
+				   <Button htmlType='button' type='primary' size="medium" onClick={onOpen}>Оформить заказ</Button> 
 				</div>
 			</div>
 
 		</div>
 	)
-};
-
-BurgerConstructor.propTypes = {
-	ingredients: PropTypes.arrayOf(ingredientType).isRequired
 };
 
 export default BurgerConstructor;

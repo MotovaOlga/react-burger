@@ -7,17 +7,12 @@ export const customMiddleware = () => {
 	return store => {
 		return next => {
 			return action => {
-				console.log('store after dispatch', store);
-				console.log('swill dispatch', action);
-				console.log('dispatch', next);
-
-				// if(action.type === INGREDIENTS_REQUEST) {
-				//    console.log('INGREDIENTS_REQUEST');
-				// 	return;
-				// }
+				// console.log('store after dispatch', store);
+				// console.log('swill dispatch', action);
+				// console.log('dispatch', next);
 			
 				if(typeof action === "function") {
-				   console.log('action-function');
+				   // console.log('action-function');
 					return action(store.dispatch, store.getState);
 				}
 

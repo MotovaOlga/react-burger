@@ -9,13 +9,13 @@ const initialState = {
 export const burgerConstructorReducer = (state = initialState, action) => {
 	switch (action.type) {
 	   case ADD_INGREDIENT:
-			console.log('reducer ADD_INGREDIENT');
+			// console.log('reducer ADD_INGREDIENT');
 		   return action.payload.type === 'bun'
             ? { ...state, bun: action.payload, burgerConstructor: state.burgerConstructor }
             : { ...state, bun: state.bun, burgerConstructor: [...state.burgerConstructor, action.payload] };
 
 		case DELETE_INGREDIENT:
-			console.log('reducer DELETE_INGREDIENT');
+			// console.log('reducer DELETE_INGREDIENT');
 			const index = state.burgerConstructor.findIndex(
 				(item) => item.key === action.payload // action.key
 			);
@@ -30,7 +30,7 @@ export const burgerConstructorReducer = (state = initialState, action) => {
 			return state; 
 			
 		case MOVE_INGREDIENT:
-			console.log('reducer MOVE_INGREDIENT');
+			// console.log('reducer MOVE_INGREDIENT');
 			const { dragIndex, hoverIndex } = action.payload; // console.log('dragIndex, hoverIndex', dragIndex, hoverIndex);
 			const updatedIngredientsMove = [...state.burgerConstructor]; // Создание копии массива ингредиентов
 			const draggedItem = updatedIngredientsMove[dragIndex]; // console.log('draggedItem', draggedItem);// Извлечение перетаскиваемого элемента

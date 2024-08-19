@@ -5,6 +5,7 @@ import {ingredientType} from '../../../utils/types'
 import styles from './ingredient-list.module.css'
 import IngredientCard from '../ingredient-card/ingredient-card';
 
+
 const IngredientList = ({ headerId, headerRef, ingredients, title, onOpen, getIngredientCount }) => {
 	return (
 		<article>
@@ -21,8 +22,12 @@ const IngredientList = ({ headerId, headerRef, ingredients, title, onOpen, getIn
 };
 
 IngredientList.propTypes = {
-	ingredients: PropTypes.arrayOf(ingredientType),
-	getIngredientCount: PropTypes.func.isRequired
+	ingredients: PropTypes.arrayOf(ingredientType).isRequired,
+	getIngredientCount: PropTypes.func.isRequired,
+	headerId: PropTypes.string,
+	headerRef: PropTypes.object,
+	title: PropTypes.string, 
+	onOpen: PropTypes.func,
 };
 
 export default IngredientList;

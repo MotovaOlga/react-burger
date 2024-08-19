@@ -20,14 +20,14 @@ const initialState = {
 export const ingredientDetailsReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case ADD_CURRENT_INGREDIENT:
-			console.log('ADD_CURRENT_INGREDIENT');
+			// console.log('ADD_CURRENT_INGREDIENT');
 			return {
 				 ...state,
 				 currentIngredient: action.payload,
 			};
 
 	  case CLEAR_CURRENT_INGREDIENT:
-		   console.log('CLEAR_CURRENT_INGREDIENT');
+		   // console.log('CLEAR_CURRENT_INGREDIENT');
 			return {
 				 ...state,
 				 currentIngredient: initialState.currentIngredient,
