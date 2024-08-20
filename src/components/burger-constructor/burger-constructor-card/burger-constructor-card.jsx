@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import PropTypes from "prop-types";
-import {ingredientType} from '../../../utils/types'
+import {ingredientTypeWithKey} from '../../../utils/types'
 import { useDispatch } from 'react-redux'
 import { deleteIngredient } from '../../../services/actions/burger-constructor'
 import styles from './burger-constructor-card.module.css'
@@ -105,7 +105,8 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard}) => {
 };
 
 BurgerConstructorCard.propTypes = {
-	ingredient: PropTypes.shape(ingredientType).isRequired,
+	ingredient: ingredientTypeWithKey.isRequired,
 	index: PropTypes.number,
 	moveCard: PropTypes.func,
 };
+

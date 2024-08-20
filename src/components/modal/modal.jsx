@@ -1,4 +1,5 @@
 import React, { useEffect}  from 'react';
+import PropTypes from "prop-types";
 import {createPortal} from 'react-dom';
 import styles from './modal.module.css'
 import close from '../../images/close.svg'
@@ -45,5 +46,12 @@ const Modal = ({title, children, onClose}) => {
 		), portal
 	)
 };
+
+Modal.propTypes = {
+	title: PropTypes.string.isRequired, 
+	children: PropTypes.object, 
+	onClose: PropTypes.func.isRequired,
+};
+
 
 export default Modal;

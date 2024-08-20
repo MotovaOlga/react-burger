@@ -1,6 +1,4 @@
 import React, { useRef, useCallback, useState, useEffect, useMemo }from 'react';
-import PropTypes from "prop-types";
-import {ingredientType} from '../../utils/types'
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css'
 // import data  from '../../utils/data.js';

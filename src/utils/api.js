@@ -5,8 +5,6 @@ const apiConfig = {
 	// orderUrl: "https://norma.nomoreparties.space/api",
 	// headers: {},
 };
-// Эндпоинт: POST https://norma.nomoreparties.space/api/orders
-// Тело запроса: { "ingredients": ["60666c42cc7b410027a1a9b1", "609646e4dc916e00276b286e","609646e4dc916e00276b2870", "60666c42cc7b410027a1a9b1"] } 
 
 // функция которая обрабатывает-проверяет ответ
 const getResponse = (response) => {

@@ -24,10 +24,10 @@ const IngredientList = ({ headerId, headerRef, ingredients, title, onOpen, getIn
 IngredientList.propTypes = {
 	ingredients: PropTypes.arrayOf(ingredientType).isRequired,
 	getIngredientCount: PropTypes.func.isRequired,
-	headerId: PropTypes.string,
-	headerRef: PropTypes.object,
-	title: PropTypes.string, 
-	onOpen: PropTypes.func,
+	headerId: PropTypes.string.isRequired,
+	headerRef: PropTypes.object.isRequired,
+	title: PropTypes.string.isRequired, 
+	onOpen: PropTypes.func.isRequired,
 };
 
 export default IngredientList;

@@ -3,6 +3,7 @@ import { INGREDIENTS_LOADING, INGREDIENTS_LOAD_SUCCESS, INGREDIENTS_LOAD_ERROR }
 import { getIngredientsRequest} from '../../utils/api'
 // import {thunk} from 'redux-thunk';
 
+
 // Action Creators
 export const ingredientsRequest = () => async dispatch => {
 	dispatch(ingredientsLoading()); // Запускаем процесс загрузки
