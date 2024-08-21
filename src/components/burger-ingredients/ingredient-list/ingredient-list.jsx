@@ -1,31 +1,33 @@
 import React from 'react';
-import { CurrencyIcon }  from '@ya.praktikum/react-developer-burger-ui-components';
+import PropTypes from "prop-types";
+import {ingredientType} from '../../../utils/types'
 // import data  from '../../utils/data.js';
 import styles from './ingredient-list.module.css'
+import IngredientCard from '../ingredient-card/ingredient-card';
 
-const IngredientList = ({ ingredients, title, onOpen }) => {
+
+const IngredientList = ({ headerId, headerRef, ingredients, title, onOpen, getIngredientCount }) => {
 	return (
 		<article>
-			<p className={`text_type_main-medium mt-10 mb-6`}>{title}</p>
+			<p id={headerId} ref={headerRef} className={`text_type_main-medium mt-10 mb-6`} >{title}</p>
 			<ul className={styles.ingredientsList}>
 				{ingredients.map(product => (
-					<li key={product._id} className={styles.ingredientCard} onClick={()=>onOpen(product._id)}>
-						<img src={product.image} alt={product.name} />
-						<div className={`${styles.price} p-1`}>
-							<div>
-							   <span className={`text_type_digits-default`}>{product.price}</span>
-							</div>
-							<div>
-							   <CurrencyIcon type="primary"/>
-							</div>
-						</div>
-						<p>{product.name}</p>					
+					<li key={product?._id || 'Unknown'} className={styles.ingredientCard} onClick={() => onOpen(product?._id || 'Unknown')}>
+						<IngredientCard ingredient={product} getIngredientCount={getIngredientCount}></IngredientCard>
 					</li>
 				))}
 			</ul>
 		</article>
-
 	);	
+};
+
+IngredientList.propTypes = {
+	ingredients: PropTypes.arrayOf(ingredientType).isRequired,
+	getIngredientCount: PropTypes.func.isRequired,
+	headerId: PropTypes.string.isRequired,
+	headerRef: PropTypes.object.isRequired,
+	title: PropTypes.string.isRequired, 
+	onOpen: PropTypes.func.isRequired,
 };
 
 export default IngredientList;

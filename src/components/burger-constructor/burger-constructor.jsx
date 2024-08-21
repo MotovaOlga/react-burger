@@ -1,26 +1,96 @@
-import React from 'react';
-import PropTypes from "prop-types";
-import {ingredientType} from '../../utils/types'
+import React, { useRef, useCallback, useState, useEffect, useMemo }from 'react';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css'
 // import data  from '../../utils/data.js';
 import Modal from '../modal/modal'
 import OrderDetails from '../order-details/order-details'
+import { useDispatch, useSelector } from 'react-redux'
+import { addIngredient, moveIngredient } from '../../services/actions/burger-constructor'
+import { useDrop } from "react-dnd";
+import { orderRequest } from '../../services/actions/order-details';
+import { v4 as uuidv4 } from 'uuid';
+import { BurgerConstructorCard } from './burger-constructor-card/burger-constructor-card'
 
-const BurgerConstructor = ({ ingredients }) => {
-	const bun = ingredients.filter((product) => product.type === 'bun')[0] || {};
-	const main1 = ingredients.filter((product) => product.type === 'main')[0] || {};
-	const main2 = ingredients.filter((product) => product.type === 'main')[1] || {};
-	const sauce = ingredients.filter((product) => product.type === 'sauce')[0] || {};
-	const orderNumber = '034536';
 
+const BurgerConstructor = () => {
+	const dispatch = useDispatch();	 
+
+	// массив игредиентов BurgerConstructor
+	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
+
+	// модальное окно
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
 	const onClose = () => {
 		setIsModalOpen(false);
 	};
 	const onOpen = () => {
-		setIsModalOpen(true);
+		if (
+			arrBurgerConstructorIngredients &&
+			arrBurgerConstructorIngredients.bun &&
+			arrBurgerConstructorIngredients.burgerConstructor 
+		   ) {
+			const {bun, burgerConstructor} = arrBurgerConstructorIngredients;
+			const orderIngredients = {				
+				ingredients: [
+				  bun ? bun._id : null,  // ID из объекта bun, если он существует
+				  ...burgerConstructor ? burgerConstructor.map(item => item._id) : [],  // ID из массива burgerConstructor, если он существует
+				  bun ? bun._id : null,  // ID из объекта bun, если он существует
+				].filter(id => id !== null)  // Удаляем все null значения из массива
+			};
+
+			// Проверка, что массив ингредиентов не пустой
+		   if (orderIngredients.ingredients.length > 2) {
+		   	dispatch(orderRequest(orderIngredients));
+		   	setIsModalOpen(true);
+		   } else {
+		   	alert('Добавьте ингредиенты, чтобы создать заказ.');
+		   } 
+		}	else {
+			alert('Добавьте ингредиенты, чтобы создать заказ.');
+		}
 	};
+
+	// сумма заказа - обернуть в хук useMemo
+	const orderAmount = useMemo(() => {
+		const bunPrice = arrBurgerConstructorIngredients.bun ? (arrBurgerConstructorIngredients.bun.price) * 2 : 0;
+		const burgerConstructorPrice = Array.isArray(arrBurgerConstructorIngredients.burgerConstructor) 
+			 ? arrBurgerConstructorIngredients.burgerConstructor.reduce((total, item) => total + (item.price || 0), 0)
+			 : 0;
+		// const burgerConstructorPrice = 0; 
+		return bunPrice + burgerConstructorPrice;
+  }, [arrBurgerConstructorIngredients]);
+
+	// DND
+	// сортировка
+	const moveCard = useCallback((dragIndex, hoverIndex) => {
+		dispatch(moveIngredient(dragIndex, hoverIndex));
+	}, [])
+	
+
+	// добавление ингредиентов
+	const handleAddIngredient = (ingredient) => {
+		// Создаем новый объект ингредиента с уникальным ключом
+		const ingredientWithKey = {
+			...ingredient,
+			key: uuidv4(), // Добавляем уникальный ключ
+		};
+		dispatch(addIngredient(ingredientWithKey));
+  }
+
+	// перетаскивание
+	// Хук useDrop работает с целевым элементом(компонент, в который мы перетаскиваем исходный элемент).
+		const [{ canDrop, dragItem, isHover }, dropTargetRef] = useDrop(() => ({
+		accept: 'ingredientCard', // строка, которая должна быть аналогична свойству type перетаскиваемого компонента.
+		drop: (ingredient) => (
+			handleAddIngredient(ingredient)
+		), // принимает данные перетаскиваемого компонента и monitor. срабатывает при «броске» перетаскиваемого элемента в целевой.
+		collect: (monitor) => ({ // набор вычислений для работы с пропсами
+			canDrop: monitor.canDrop(), // возвращает булевое значение true в случае, если в этот момент никакой элемент не перетаскивается.
+         dragItem: monitor.getItem(),
+         isHover: monitor.isOver(),
+		}),
+	}));
+
 
 	return(
 		<div className={`${styles.burgerConstructor} ml-5 pt-25`}>
@@ -28,101 +98,72 @@ const BurgerConstructor = ({ ingredients }) => {
 			{/* модальное окно */}
 			{
 				isModalOpen && 
-				<Modal onClose={onClose} title={''} value={orderNumber}>
+				<Modal onClose={onClose} title={''}>
 					<OrderDetails/>
 				</Modal>
 			}
 
 			{/* constructor box */}
-			<div className={`${styles.constructorBox}`}>
-				{/* булка-top*/}
-				<div className={`mr-10`}>
-					<ConstructorElement text={bun.name} price={bun.price} thumbnail={bun.image_mobile} type="top" isLocked={true} />
-				</div>
-            
-				{/* середина бургера */}
-				<div className={`${styles.constructorBox} pl-4 pr-4`}>
-					<ul>
-						<li>
-						   <DragIcon/>
-						   <ConstructorElement className={styles.constructorElement} text={main1.name} price={main1.price} thumbnail={main1.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement className={styles.constructorElement} text={main2.name} price={main2.price} thumbnail={main2.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={sauce.name} price={sauce.price} thumbnail={sauce.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main1.name} price={main1.price} thumbnail={main1.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main2.name} price={main2.price} thumbnail={main2.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main1.name} price={main1.price} thumbnail={main1.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main2.name} price={main2.price} thumbnail={main2.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main1.name} price={main1.price} thumbnail={main1.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main2.name} price={main2.price} thumbnail={main2.image_mobile} isLocked={false} />
-						</li>
-						<li>
-						   <DragIcon/>
-							<ConstructorElement text={main1.name} price={main1.price} thumbnail={main1.image_mobile} isLocked={false} />
-						</li>
-						<li>
-							<DragIcon/>
-							<ConstructorElement text={main2.name} price={main2.price} thumbnail={main2.image_mobile} isLocked={false} />
-						</li>
-						<li>
-							<DragIcon/>
-							<ConstructorElement text={main1.name} price={main1.price} thumbnail={main1.image_mobile} isLocked={false} />
-						</li>
-						<li>
-							<DragIcon/>
-							<ConstructorElement text={main2.name} price={main2.price} thumbnail={main2.image_mobile} isLocked={false} />
-						</li>
-					</ul>
-				</div>
-
-				{/* булка-bottom*/}
-				<div className={`mr-10`}>
-				   <ConstructorElement text={bun.name} price={bun.price} thumbnail={bun.image_mobile} type="bottom" isLocked={true} />
-				</div>
-			</div>
+			<div ref={dropTargetRef} className={`${styles.constructorBox}`}>
+            <ul>
+						   {/* булка-top*/}
+							{arrBurgerConstructorIngredients.bun ? (
+                        <li key="top">
+									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun} /> 
+									{/* moveCard={()=>{return;}} index={''} */}
+								</li>
+                     ) : (
+								<li key={'top'} >
+								   <ConstructorElement text={'Выберите булку'} isLocked={true}/>
+							   </li>
+					      )}
+							
+                     {/* середина бургера */}
+							{arrBurgerConstructorIngredients.burgerConstructor.length > 0 ? (
+								arrBurgerConstructorIngredients.burgerConstructor.map((product, index) => {
+									if(product){
+									   return (
+											<div key={product.key}>
+											   <li>
+									            <BurgerConstructorCard moveCard={moveCard} ingredient={product} index={index}/>
+										      </li>
+											</div>
+									   );
+					         	}})
+							):(
+								<li key={'filings'} >
+								   <ConstructorElement text={'Выберите начинку'} type="bottom" isLocked={false}/>
+							   </li>
+							)}
+                     
+                     {/* булка-bottom*/}
+							{arrBurgerConstructorIngredients.bun ? (
+								<li key="bottom">
+									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun}/>
+                        </li>
+                     ) : (
+								<li key={'bottom'} >
+								   <ConstructorElement text={'Выберите булку'} type="bottom" isLocked={true}/>
+							   </li>
+					      )}
+            </ul>
+         </div>
 
 			{/* сумма заказа */}
 			<div className={`${styles.orderPrice} mr-4 mt-10 mb-10`}>
 				<div className={`text_type_digits-medium`}>
-				   <span>5000</span>
+				   <span>{orderAmount}</span>
 				</div>
 				<div>
 				   <CurrencyIcon type="primary"/>
 				</div>
 				<div className={`ml-10`}>
-				   <Button type="primary" size="medium" onClick={onOpen}>Оформить заказ</Button> 
+				   <Button htmlType='button' type='primary' size="medium" onClick={onOpen}>Оформить заказ</Button> 
 				</div>
 			</div>
 
 		</div>
 	)
-};
-
-BurgerConstructor.propTypes = {
-	ingredients: PropTypes.arrayOf(ingredientType).isRequired
 };
 
 export default BurgerConstructor;
