@@ -25,7 +25,13 @@ nav {
 	align-items: center;
 	justify-content: center;
 }
-.navBox span{
+
+.navBox span {
+	padding: 8px;
+}
+
+a {
+	color: inherit;
 	padding: 8px;
 }
 
