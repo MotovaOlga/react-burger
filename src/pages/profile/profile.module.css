@@ -21,9 +21,9 @@
 	line-height: 64px;
 }
 
-.links li:hover {
+/* .links li:hover {
 	color: var(--text-primary-color);
-}
+} */
 
 .inputs {
 	text-align: right;

@@ -26,9 +26,7 @@ nav {
 	justify-content: center;
 }
 
-.navBox span {
-	padding: 8px;
-}
+
 
 a {
 	color: inherit;
@@ -42,6 +40,9 @@ a {
 	justify-content: center;
 
 	color: var(--text-inactive-color);
+}
+.icons span {
+	padding: 8px;
 }
 .icons:hover{
 	color: var(--text-primary-color);
