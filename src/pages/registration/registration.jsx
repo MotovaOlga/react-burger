@@ -28,29 +28,14 @@ export const Registration = () => {
 		   const data = await registerRequest( formData );
 			console.log('Register request successful, data: ', data); //Отладка
 
-			
-			// запишем authToken в куки
-			let authToken = data.accessToken.split('Bearer ')[1];
-			if (authToken) {
-			   console.log('setCookie authToken - ', authToken); //Отладка
-			   setCookie('token', authToken);
-			}
-
-			// запишем refreshToken в local storage
-			let refreshToken = data.refreshToken;
-			if (refreshToken) {
-			   console.log('local storage refreshToken - ', refreshToken); //Отладка
-				localStorage.setItem('refreshToken', refreshToken);
-			}
- 
-			// запишем имя, почту и токен??? пользователя в стор
+			// запишем имя, почту пользователя в стор
 	      if (data.success) {
+				// console.log('dispatch(registerAction(data.user))'); //Отладка
 				dispatch(registerAction(data.user));
 	      }
-
 		} catch (error) {
 		   console.log('Register failed', error);
-			// если пользователь уже зарегистрирован то направлять его на страницу авторизации. что нужно проверить???
+		  	// ЧТО ДЕЛАТЬ ЕСЛИ ПОЛЬЗОВАТЕЛЬ УЖЕ ЗАРЕГИСТРИРОВАН??? 
 			// if (isAuthorized) {
 			// 	return (
 			// 	  <Navigate to={'/login'}/>

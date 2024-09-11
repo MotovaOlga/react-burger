@@ -31,7 +31,7 @@ export const Login = () => {
 
   
 	const handleLogin = async (e) => {
-		console.error('handleLogin'); //Отладка
+		console.log('handleLogin'); //Отладка
 		console.log('formData', formData); //Отладка
 
 		e.preventDefault();
@@ -41,27 +41,15 @@ export const Login = () => {
 			// Обработка успешного ответа
 			console.log('Login successful, data: ', data); //Отладка
 
-			// запишем authToken в куки
-			let authToken = data.accessToken.split('Bearer ')[1];
-			if (authToken) {
-			   console.log('setCookie authToken - ', authToken); //Отладка
-			   setCookie('token', authToken);
-			}
-
-			// запишем refreshToken в local storage
-			let refreshToken = data.refreshToken;
-			if (refreshToken) {
-			   console.log('local storage refreshToken - ', refreshToken); //Отладка
-				localStorage.setItem('refreshToken', refreshToken);
-			}
-
 			if (data.success) {
+				console.log('dispatch(loginAction(data.user))'); //Отладка
 				dispatch(loginAction(data.user));
 	      }
 
 		} catch (error) {
 		  console.log('Login failed', error);
-		  	// если пользователь не зарегистрирован то направлять его на страницу регистрации. что нужно проверить???
+		  	// ЧТО ДЕЛАТЬ ЕСЛИ ПАРОЛЬ И ЛОГИН НЕ ВЕРНЫЕ??? 
+			// или если пользователь не зарегистрирован???
 			// if (isAuthenticated) {
 			// 	return (
 			// 	  <Navigate to={'/registration'}/>

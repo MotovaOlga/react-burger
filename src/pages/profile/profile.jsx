@@ -8,8 +8,9 @@ import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
 import {
 	// registerRequest,
 	// loginRequest,
-	// refreshTokenRequest,
 	logoutRequest,
+	refreshTokenRequest,
+	fetchWithRefreshToken,
 	// getUserRequest,
 	// updateUserRequest, 
 } from '../../utils/api';
@@ -43,13 +44,21 @@ export const Profile = () => {
 		}));
    };
 
-	// Сохранить изменения - только он сохраняет еще и пароль!!!
+	// Сохранить изменения - только он сохраняет еще и пароль!!! пароль нужно только отправлять на сервер
    const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log('handleSubmit'); //Отладка
-		console.log('new state ', newState);
-		dispatch(updateUserAction(newState))
-		//
+		try {
+			console.log('handleSubmit'); //Отладка
+			console.log('new state ', newState);
+			// refreshTokenRequest();
+			fetchWithRefreshToken();
+	      // updateUserRequest(newState);
+			dispatch(updateUserAction(newState))
+		} catch (error) {
+		  console.log('Login failed', error);
+		  	// ЧТО ДЕЛАТЬ если не получил ответа от сервера??? 
+		}
+
    };
 
 	// Отменить изменения
@@ -85,10 +94,6 @@ export const Profile = () => {
 			if (data.success) {
 				// Очищаем стор
 				dispatch(logoutAction());
-
-				// очищаем куки и local storage
-		      deleteCookie('token');
-		      localStorage.removeItem('refreshToken');
 
 				// Навигация на страницу входа
 				navigate('/login'); // Навигация на страницу входа

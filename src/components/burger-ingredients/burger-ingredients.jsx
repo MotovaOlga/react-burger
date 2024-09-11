@@ -20,7 +20,7 @@ const BurgerIngredients = () => {
 	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
 	
 	const [currentTab, setCurrentTab] = React.useState('Buns');
-	const [isModalOpen, setIsModalOpen] = React.useState(false);
+	// const [isModalOpen, setIsModalOpen] = React.useState(false);
 
 	const arrBun = useMemo(() => ingredients.filter(product => product.type === 'bun'),[ingredients]);
 	const arrMain = useMemo(() => ingredients.filter(product => product.type === 'main'),[ingredients]);
@@ -29,7 +29,7 @@ const BurgerIngredients = () => {
 	// функции модального окна close/open 
 	// после close ощищаем стор-ingredientDetails
 	const onClose = () => {
-		setIsModalOpen(false);
+		// setIsModalOpen(false);
 		dispatch(clearCurrentIngredient());
 	};
 	// при open найти ингридиент по id и передать его в стор-ingredientDetails объект currentIngredient
@@ -40,7 +40,7 @@ const BurgerIngredients = () => {
 		   // console.log('currentIngredient: ', currentIngredient); // отладка
 		   dispatch(addCurrentIngredient(currentIngredient));
 
-			setIsModalOpen(true);
+			// setIsModalOpen(true);
 		}
 	};
 
@@ -105,12 +105,12 @@ const BurgerIngredients = () => {
 		<div className={`${styles.burgerIngredients} mr-5` }>
 			
 			{/* модальное окно */}
-			{
+			{/* {
 				isModalOpen && 
 				<Modal onClose={onClose} title={'Детали ингредиента'}>
 					<IngredientDetails/>
 				</Modal>
-			}
+			} */}
 
 		  <p className={`${styles.headerIngredients} text_type_main-large mt-10`}>Соберите бургер</p>
 		  <section>

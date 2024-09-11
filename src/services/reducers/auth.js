@@ -14,13 +14,17 @@ import { getCookie } from '../../utils/cookie';
 
 const initialState = {
 	isAuthenticated: false,  // аутентифицирован?
-	isAuthorized: !!getCookie('token'), // авторизован?
+	isAuthorized: false, // авторизован?
+
+	//isAuthChecked: false, // флажок что проверка закончена и не важно как закончена. тоже самое isLoading. все давнные загрузились
+	// если данные о пользователе есть то true а если нет то false. на него опирается protected-route
+
 	user: {
 		name:'',
 		email:'',
    },
+
 	// token: null, //???
-	//isAuthChecked: false, // флажок что проверка закончена и не важно как закончена
 	//getUserRequest:false,
 	//refreshTokenRequest:false,
 	//tokenIsGood:false,
@@ -32,9 +36,8 @@ export const authReducer = (state = initialState, action) => {
 			return {
 				...state,
 				isAuthenticated: true,
-				isAuthorized: !!getCookie('token'),
+				isAuthorized: true,
 				user: action.payload.user,
-				// token: action.payload.token,
 			};
 
 		case REGISTER_FAILED:
@@ -44,21 +47,19 @@ export const authReducer = (state = initialState, action) => {
 			return {
 				...state,
 				isAuthenticated: true,
-				isAuthorized: !!getCookie('token'),
+				isAuthorized: true,
 				user: action.payload.user,
-				// token: action.payload.token,
 			};
 
 		case LOGOUT:
 			return {
 				...state,
 				isAuthenticated: false,
-				isAuthorized: !!getCookie('token'),
+				isAuthorized: false,
 				user: {
 					name:'',
 					email:'',
 				},
-				// token: null,
 			};
 
 		case UPDATE_USER:
@@ -67,67 +68,6 @@ export const authReducer = (state = initialState, action) => {
 				user: action.payload.user,
 			};
 
-		// case GET_USER_REQUEST:
-		// 	// return state; 
-		// 	return {
-		// 		...state,
-		// 		getUserRequest : true,
-		// 		user: {
-		// 			...state.user
-		// 		}
-		//    }
-
-		// case GET_USER_SUCCESS:
-		// 	// return state; 
-		// 	return {
-		// 		...state,
-		// 		getUserRequest : false,
-		// 		authorized : true,
-		// 		user: {
-		// 			name : action?.user?.name,
-		// 			email: action?.user?.email,
-		// 			password: '',
-		// 		}
-		//    }
-
-		// case GET_USER_FAILED:
-		// 	// return state; 
-		// 	return {
-		// 		...state,
-		// 		getUserRequest : false,
-		// 		authorized: false,
-		// 		user: {
-		// 			name : '',
-		// 			email: '',
-		// 			password: '',
-		// 		}
-		//    }
-
-		// case REFRESH_TOKEN_REQUEST:
-		// 	// return state; 
-		// 	return {
-		// 		...state,
-		// 		refreshTokenRequest: true,
-		// 		tokenIsGood : false
-		//    }
-
-		// case REFRESH_TOKEN_SUCCESS:
-		// 	// return state; 
-		// 	return {
-		// 		...state,
-		// 		authorized : true,
-		// 		refreshTokenRequest: false,
-		// 		tokenIsGood : true,
-		//    }
-
-		// case REFRESH_TOKEN_FAILED:
-		// 	// return state;
-		// 	return {
-		// 		...state,
-		// 		authorized : false,
-		// 		refreshTokenRequest: false,
-		// 		tokenIsGood : false,
-		//    }
 			
 	   default:
 			return state;
