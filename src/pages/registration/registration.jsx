@@ -11,7 +11,7 @@ import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
 export const Registration = () => {
 	const [formData, setFormData] = useState({name:'', email:'', password:''});
 	const dispatch = useDispatch();
-	const isAuthorized = useSelector(state => state.auth.isAuthorized)
+	const isAuth = useSelector(state => state.auth.isAuth)
 
 	const fieldChange = (e) => {
 		setFormData({
@@ -44,7 +44,7 @@ export const Registration = () => {
 		}
 	};
 
-	if (isAuthorized) {
+	if (isAuth) {
 		return (
 		  <Navigate to={'/'}/>
 		);

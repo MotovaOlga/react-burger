@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react';
 import AppHeader from '../app-header/app-header';
 import styles from './app.module.css'
 import { useDispatch, useSelector } from 'react-redux'
-// import { ingredientsRequest } from '../../services/actions/ingredients';
+import { ingredientsRequest } from '../../services/actions/ingredients';
 // import { DndProvider } from 'react-dnd'
 // import { HTML5Backend } from 'react-dnd-html5-backend'
-import { Link, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { Link, Routes, Route, useNavigate, useLocation, useParams } from 'react-router-dom'
 import { Home } from '../../pages/home/home'
 import { Profile } from '../../pages/profile/profile'
 import { Login } from '../../pages/login/login'
@@ -24,9 +24,22 @@ const App = () => {
 	const state = location.state || {};
 	console.log('location: ', location); //Отладка
 
-	// мне нужно передать id через param
-	// и проверить что загрузка ингридиентов завершена isLoading
-	// тогда модалка будет иметь все данные... наверное
+	const {ingredients, globalLoading, globalError} = useSelector((state) => state.ingredients);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		dispatch(ingredientsRequest());
+   }, []);
+
+	useEffect(() => {
+		setIsLoading(globalLoading); // Синхронизируем isLoading с глобальным isLoading
+	}, [globalLoading]);
+
+	// прелоудер, можно еще создать отдельный компонент <Preloader />
+	if(isLoading){
+		return <p>Loading...</p>
+	}
+
 
 	const handleModalClose = () => {
 		navigate(-1);

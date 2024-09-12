@@ -59,12 +59,11 @@ export const getOrderRequest = async (orderData) => {
 // export const loginRequest, !!!
 // export const logoutRequest, !!!
 // export const refreshTokenRequest, !!!
-// export const fetchWithRefreshToken ...
-// export const getUserRequest, ...
-// export const updateUserRequest, ...
-
-// export const forgotPasswordRequest,
-// export const resetPasswordRequest,
+// export const fetchWithRefreshToken !!!
+// export const getUserRequest, !!!
+// export const updateUserRequest, !!!
+// export const forgotPasswordRequest, ...
+// export const resetPasswordRequest, ...
 
 
 // ???export const addOrdersRequest
@@ -222,25 +221,30 @@ export const refreshTokenRequest = async () => {
 };
 
 
-export const fetchWithRefreshToken = async () => {
-	console.log( 'fetchWithRefreshToken' );
-	const url = `${apiConfig.baseUrl}/auth/user`;
+export const fetchWithRefreshToken = async (url, options) => {
+	console.log( 'fetchWithRefreshToken');
+	// console.log( 'localStorage.getItem(accessToken)', localStorage.getItem('accessToken'));
+	// const url = `${apiConfig.baseUrl}/auth/user`;
+	const options1 = {
+	   method: 'GET',
+	   headers: {
+	   	'Content-Type': 'application/json',
+	   	'Authorization': 'Bearer 1' + localStorage.getItem('accessToken'),
+	   },
+	};
 
 	try {
-		console.log('try1 '); //Отладка
-		const response = await fetch(url, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer 1' + localStorage.getItem('accessToken'),
-			},
-	   })
-		// Если ответ не ок, выбрасываем ошибку
+		// console.log('try1 '); //Отладка
+		const response = await fetch(url, options1);
+		console.log('try1 response ', response); //Отладка
+
+		// // Если ответ не ок, выбрасываем ошибку
 	   if (!response.ok) {
+		   console.log('try1 Error'); //Отладка
 			throw new Error(`Error ${response.status}`);
 		   // throw Promise.reject(`Error ${response.status}`);
       }
-		return response.json();
+		return await getResponse(response);
 	} catch (error) {
 		console.error('error1 ', error); //Отладка
 		console.log('error1.message ', error.message); //Отладка
@@ -248,28 +252,22 @@ export const fetchWithRefreshToken = async () => {
 
 		// if (error.message.includes('jwt expired')) { // Более гибкая проверка
 		// if(error.message === 'jwt expired') {
-		// if(error.status === 403) {
+		// Если сервер возвращает ошибку 403, это может указывать на то, что токен истек или недостаточно прав для выполнения запроса.
 		if (error.message.includes('Error 403')) {
 			console.log('error.message.includes(Error 403) = true'); //Отладка
 			try {
 		      // console.log('try2 '); //Отладка
-
 				const refreshData = await refreshTokenRequest();
 		      // console.log('refreshData ', refreshData); //Отладка
 				
 				if (!refreshData.success) {
 				  return Promise.reject(refreshData);
 				}
-				const response = await fetch(url, {
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-					},
-			   })
-				return getResponse(response);
+				const response = await fetch(url, options);
+			   console.log('Отладка response ', response); //Отладка
+		      return await getResponse(response);
 			} catch (refreshError) {
-				 return Promise.reject(refreshError);
+				return Promise.reject(refreshError);
 			}
 	  } else {
 			return Promise.reject(error);
@@ -277,21 +275,40 @@ export const fetchWithRefreshToken = async () => {
 	} 
 };
 
-
-// Для работы с данными о пользователе (обновлении информации и получении данных о пользователе) используется token. 
-export const getUserRequest = (token) => {
-	return console.log( 'getUserRequest' );
-	// return fetchWithRefreshToken2(()=>{
-	// 	 return myFetch2(config.userUrl, 'GET', token);
-	// })//.then(checkResponse);
+// Сервер вернёт такой ответ: {"success": true, "user": { "email": "", "name": "" }} 
+export const getUserRequest = async () => {
+	console.log( 'getUserRequest'); //Отладка
+	const url = `${apiConfig.baseUrl}/auth/user`;
+	const accessToken = 'Bearer ' + localStorage.getItem('accessToken');
+   const options = {
+	   method: 'GET',
+	   headers: {
+	   	'Content-Type': 'application/json',
+	   	'Authorization': accessToken,
+	   },
+	};
+	const response = await fetchWithRefreshToken(url, options);
+	console.log( 'getUserRequest - response: ', response); //Отладка
+	return response;
+	// return getResponse(response);
 };
 
-// Для работы с данными о пользователе (обновлении информации и получении данных о пользователе) используется token. 
-export const updateUserRequest = (params) => {
-	return console.log('updateUserRequest');
-	// return fetchWithRefreshToken2(()=>{
-	// 	 return myFetch(config.userUrl, 'PATCH', params);
-	// }).then(checkResponse);
+// сервер вернёт обновлённого пользователя: {"success": true, "user": { "email": "", "name": "" }}
+export const updateUserRequest = async (newFormData) => { //({name, email, password}) => {
+	console.log('updateUserRequest'); //Отладка
+	const url = `${apiConfig.baseUrl}/auth/user`;
+	const accessToken = 'Bearer ' + localStorage.getItem('accessToken');
+   const options = {
+	   method: 'PATCH',
+	   headers: {
+	   	'Content-Type': 'application/json',
+	   	'Authorization': accessToken,
+	   },
+		body: JSON.stringify(newFormData),
+	};
+	const response = await fetchWithRefreshToken(url, options);
+	console.log( 'updateUserRequest - response: ', response); //Отладка
+	return response;
 };
 
 // export const forgotPasswordRequest

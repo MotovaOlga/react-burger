@@ -1,4 +1,4 @@
-import React, { useEffect} from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './profile.module.css'
 import { Input, Button,  ShowIcon, HideIcon, EditIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, NavLink, Routes, Route, useNavigate, Navigate } from 'react-router-dom'
@@ -9,10 +9,10 @@ import {
 	// registerRequest,
 	// loginRequest,
 	logoutRequest,
-	refreshTokenRequest,
-	fetchWithRefreshToken,
-	// getUserRequest,
-	// updateUserRequest, 
+	// refreshTokenRequest,
+	// fetchWithRefreshToken,
+	getUserRequest,
+	updateUserRequest, 
 } from '../../utils/api';
 
 export const Profile = () => {
@@ -23,20 +23,56 @@ export const Profile = () => {
 		email   : "",
 		password: "",
    };
-   // const defaultState = useSelector((store) => store.auth.user); // defaultState то что храниться уже сейчас в сторе
-   // const [defaultState, setDefaultState] = React.useState(emptyState);
-	// const [state, setState] = React.useState(emptyState); // новый стейт
-   const user = useSelector((store) => store.auth.user);
-	const [newState, setNewState] = React.useState(emptyState); // новый стейт
+	// const user = useSelector((store) => store.auth.user);
+	const [user, setUser] = useState(emptyState); // стейт
+	const [newState, setNewState] = useState(emptyState); // новый стейт
+	const [isLoading, setIsLoading] = React.useState(true);
 
+	// тогда при обновлении страницы данные о пользователе исчезать не будут и при переходе на эту страницу всегда будут свежие данные
+	useEffect(() => {
+		const fetchUser = async () => {
+			try {
+				const data = await getUserRequest();
+				if(data.success){
+					console.log('user, ', data.user);
+					setUser(data.user);
+					setNewState(data.user);
+					dispatch(updateUserAction(data.user)); // нужно ли мне вообще это хранить в сторе?
+				}
+			} catch (error) {
+				console.log('getUser failed', error);
+				// если вернеться ошибка, тогда удалить токен, очистить стор и перенаправить на страницу логина?????????????????????????????
+				// обработать исходя с того какой код ошибки
+				// 403 не авторизован
+			} finally {
+				setIsLoading(false); // Устанавливаем загрузку завершенной
+			}
+		};
+
+		fetchUser ();
+	}, [dispatch]); // вызывает при ...
+
+	// прелоудер, можно еще создать отдельный компонент <Preloader />
+	if(isLoading){
+		return <p>Loading...</p>
+	}
+
+	// useEffect(()=>{
+	// 	console.log('useEffect PROFILE'); //Отладка
+	// 	setNewState({
+	// 		name: user.name || '',
+	// 		email: user.email || '',
+	// 		password: '',
+	// 	});
+   // },[]);
 
 	const handleIOnIconClick = (e) => {
 		console.log('onIconClick');
 	}
 
    const handleInputChange = (e) => {
-		console.log('handleInputChange');
-		console.log('new state ', newState);
+		console.log('handleInputChange');  //Отладка
+		console.log('new state ', newState);  //Отладка
 		const { name, value } = e.target;
 		setNewState(prevState => ({
 			...prevState,
@@ -45,17 +81,31 @@ export const Profile = () => {
    };
 
 	// Сохранить изменения - только он сохраняет еще и пароль!!! пароль нужно только отправлять на сервер
-   const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
 			console.log('handleSubmit'); //Отладка
-			console.log('new state ', newState);
+			console.log('new state ', newState);  //Отладка
 			// refreshTokenRequest();
-			fetchWithRefreshToken();
+			// fetchWithRefreshToken();
 	      // updateUserRequest(newState);
-			dispatch(updateUserAction(newState))
+			// const data = await getUserRequest();
+			// const data = await updateUserRequest({name: 'Katerine', email: 'katyakatya@gmail.com', password: 'qwerty1'});
+			const data = await updateUserRequest(newState);
+			// Обработка успешного ответа
+			// console.log('handleSubmit successful, data: ', data); //Отладка
+			if (data.success) {
+				console.log('handleSubmit data.success: ', data); //Отладка
+				// const res = await getUserRequest();
+				// console.log('handleSubmit res: ', res); //Отладка
+
+				dispatch(updateUserAction(data.user)); 
+				const res = await getUserRequest();  //Отладка
+				console.log('res.user: ', res.user); //Отладка
+	      }
+			
 		} catch (error) {
-		  console.log('Login failed', error);
+		  console.log('updateUserRequest failed', error);
 		  	// ЧТО ДЕЛАТЬ если не получил ответа от сервера??? 
 		}
 
@@ -68,12 +118,15 @@ export const Profile = () => {
 		setNewState(user); // без пароля будет
    };
 
-   useEffect(()=>{
-		console.log('useEffect PROFILE'); //Отладка
-		setNewState({
-			 ...user, // оставим пароль
-		});
-   },[user]);
+   // useEffect(()=>{
+	// 	console.log('useEffect PROFILE'); //Отладка
+	// 	setNewState({
+	// 		name: user.name || '',
+	// 		email: user.email || '',
+	// 		password: '',
+	// 	});
+   // },[]);
+
 
    // useEffect(()=>{
 	// 	dispatch(getUserAction())

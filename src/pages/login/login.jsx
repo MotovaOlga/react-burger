@@ -20,7 +20,7 @@ export const Login = () => {
 	// const [password, setPassword] = useState('');
 	const dispatch = useDispatch();
 	const [formData, setFormData] = useState({email:'', password:''});
-	const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+	const isAuth = useSelector(state => state.auth.isAuth)
 
 	const fieldChange = (e) => {
 		setFormData({
@@ -59,7 +59,7 @@ export const Login = () => {
 	};
 
 	// console.log('isAuthenticated ', isAuthenticated);
-	if (isAuthenticated) {
+	if (isAuth) {
 		return (
 		  <Navigate to={'/'}/>
 		);
