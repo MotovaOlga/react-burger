@@ -26,7 +26,6 @@ const Modal = ({title, children, onClose}) => {
 		(
 			<>
 				<ModalOverlay onClose={onClose}/>
-				{/* <div className={`${styles.modal} ${modalHeightClass} pl-10 pt-10 pr-10 pb-15`}> */}
 				<div className={`${styles.modal} pl-10 pt-10 pr-10 pb-15`}>
 					<header className={`text_type_main-large p-1`}>
 						<div className={`${styles.title}`}>

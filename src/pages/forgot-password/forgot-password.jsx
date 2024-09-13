@@ -20,11 +20,9 @@ export const ForgotPassword = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			console.log('handleSubmit, email - ', email);  //Отладка
 			const data =  await forgotPasswordRequest(email);
 			// Обработка успешного ответа
 			if (data.success) {
-				console.log('handleSubmit data.success: ', data); //Отладка
 				// В случае успеха пользователь направляется на маршрут /reset-password
 				navigate('/reset-password');
 	      }

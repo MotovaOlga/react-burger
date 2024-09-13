@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import styles from './profile.module.css'
 import { Input, Button,  ShowIcon, HideIcon, EditIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, NavLink, Routes, Route, useNavigate, Navigate } from 'react-router-dom'
+import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserAction, updateUserAction, logoutAction} from "../../services/actions/auth";
-import {	logoutRequest,	getUserRequest, updateUserRequest, } from '../../utils/api';
+import { updateUserAction, logoutAction} from "../../services/actions/auth";
+import {	logoutRequest,	updateUserRequest, } from '../../utils/api';
+// import Orders from '../orders/orders'
 
 export const Profile = () => {
 	const dispatch = useDispatch();
@@ -16,10 +17,16 @@ export const Profile = () => {
    };
 	const {user, isLoading, isAuth} = useSelector((state) => state.auth);
 	const [newState, setNewState] = useState(emptyState); // новый стейт
+	const [isChanged, setIsChanged] = useState(false); // отслеживаем изменения чтобы показывать/скрывать кнопки 'Сохранить' и 'Отменить'
 
 	useEffect(() => {
 		setNewState(user); // заполним поля инпутов
-	}, []);
+	}, [user]);
+
+	useEffect(() => {
+		const isUserChanged = JSON.stringify(newState) !== JSON.stringify(user);
+		setIsChanged(isUserChanged);
+   }, [newState, user]);
 
 	// прелоудер, можно еще создать отдельный компонент <Preloader />
 	if(isLoading){
@@ -30,14 +37,12 @@ export const Profile = () => {
 	// 	return <Navigate to={'/login'}></Navigate>
 	// }
 
-	const handleIOnIconClick = (e) => {
-		e.preventDefault();
-		console.log('onIconClick');
-	}
+	// const handleIOnIconClick = (e) => {
+	// 	e.preventDefault();
+	// 	console.log('onIconClick');
+	// }
 
    const handleInputChange = (e) => {
-		console.log('handleInputChange');  //Отладка
-		console.log('new state ', newState);  //Отладка
 		const { name, value } = e.target;
 		setNewState(prevState => ({
 			...prevState,
@@ -45,35 +50,29 @@ export const Profile = () => {
 		}));
    };
 
-	// Сохранить изменения - только он сохраняет еще и пароль!!! пароль нужно только отправлять на сервер
+	// Сохранить изменения
    const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			console.log('handleSubmit'); //Отладка
-			console.log('new state ', newState);  //Отладка
-			
 			const data = await updateUserRequest(newState);
 			// Обработка успешного ответа
-			// console.log('handleSubmit successful, data: ', data); //Отладка
 			if (data.success) {
-				console.log('handleSubmit data.success: ', data); //Отладка
 				dispatch(updateUserAction(data.user)); 
-				setNewState(user); //очищаем поле пароля
-				const res = await getUserRequest();  //Отладка
-				console.log('res.user: ', res.user); //Отладка
+				setIsChanged(false); //скрываем кнопки 'Сохранить' и 'Отменить'
 	      }
 		} catch (error) {
-		  console.log('updateUserRequest failed', error);
-		  	// ЧТО ДЕЛАТЬ если не получил ответа от сервера??? 
+		   console.log('updateUserRequest failed', error);
+		   alert('Что-то пошло не так. Проробуйте еще раз.');
+			setNewState(user);
 		}
 
    };
 
 	// Отменить изменения
 	const handleReset = (e) => {
-		console.log('handleReset'); //Отладка
 		e.preventDefault();
 		setNewState(user); // без пароля 
+		setIsChanged(false); //скрываем кнопки 'Сохранить' и 'Отменить'
    };
 
 	// Выход 
@@ -82,22 +81,16 @@ export const Profile = () => {
 	const handleLogout = async (e) => {
 		e.preventDefault();
 		try {
-			console.log('handleLogout LOGOUT'); //Отладка
-
 			const data = await logoutRequest();
-			console.log('Logout successful, data: ', data); //Отладка
-
 			if (data.success) {
 				// Очищаем стор
 				dispatch(logoutAction());
 
 				// Навигация на страницу входа
 				navigate('/login'); // Навигация на страницу входа
-				// <Navigate to={'/login'}/> // Используй в JSX для навигации при рендеринге компонента,
 	      }
 		} catch (error) {
 			console.log('Logout request failed', error);
-			// что делать если не успешно прошел запрос???
 		}
 	};
 
@@ -108,8 +101,21 @@ export const Profile = () => {
 				{/* левый столбец */}
 			   <div className={`${styles.links} text text_type_main-medium pr-15`}>
 			   	<ul>
-			   		<li><span className={`text_color_primary`}>Профиль</span></li>
-			   		<li>История заказов</li>
+			   		{/* <li><span className={`text_color_primary`}>Профиль</span></li> */}
+			   		<li>
+							<NavLink 
+							to={'/profile'} 
+							className={({isActive}) => isActive ? 'text_color_primary' : 'text'}
+							>
+								Профиль
+							</NavLink></li>
+			   		<li>
+							<NavLink 
+							to={'/profile/orders'} 
+							className={({isActive}) => isActive ? 'text_color_primary' : 'text'}
+							>
+								История заказов
+							</NavLink></li>
 			   		<li><button onClick={handleLogout}>Выход</button></li>
 			   	</ul>
 					<p className={`text_type_main-default pt-20`}>В этом разделе вы можете изменить свои персональные данные</p>
@@ -127,7 +133,7 @@ export const Profile = () => {
                      name={"name"}
                      size={"default"}
 							icon={"EditIcon"}
-							onIconClick={handleIOnIconClick}
+							// onIconClick={handleIOnIconClick}
 						   />
 							</li>
 						<li>
@@ -139,7 +145,7 @@ export const Profile = () => {
                      name={"email"}
                      size={"default"}
 							icon={"EditIcon"}
-							onIconClick={handleIOnIconClick}
+							// onIconClick={handleIOnIconClick}
 						   />
 							</li>
 						<li>
@@ -151,28 +157,31 @@ export const Profile = () => {
                      name={"password"}
                      size={"default"}
 							icon={"EditIcon"}
-							onIconClick={handleIOnIconClick}
+							// onIconClick={handleIOnIconClick}
 						   />
 							</li>
 			   	</ul>
-					<Button
-					type={'secondary'}
-					size={'large'}
-					onClick={handleReset}
-					htmlType={'button'}
-					>
-						Отменить
-					</Button>
-					<Button
-					type={'primary'}
-					size={'large'}
-					onClick={handleSubmit}
-					htmlType={'button'}
-					>
-						Сохранить
-					</Button>
+					{isChanged && (
+						<>
+							<Button
+								type={'secondary'}
+								size={'large'}
+								onClick={handleReset}
+								htmlType={'button'}
+								>
+								Отменить
+								</Button>
+							<Button
+								type={'primary'}
+								size={'large'}
+								onClick={handleSubmit}
+								htmlType={'button'}
+								>
+								Сохранить
+							</Button>
+						</>
+					)}
 			   </div>
-
 			</div>
 		</div>
 	)

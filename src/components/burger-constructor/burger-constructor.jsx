@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState, useEffect, useMemo }from 'react';
+import React, { useCallback, useMemo }from 'react';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css'
 // import data  from '../../utils/data.js';
@@ -16,11 +16,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 const BurgerConstructor = () => {
 	const dispatch = useDispatch();	
 	const navigate = useNavigate();
-	const location = useLocation();
-	console.log('location - ', location);
-	// const {user, isLoading, isAuth} = useSelector((state) => state.auth);
 	const isAuth = useSelector((state) => state.auth.isAuth);
-	console.log('BurgerConstructor isAuth - ', isAuth);
 
 	// массив игредиентов BurgerConstructor
 	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
@@ -32,7 +28,6 @@ const BurgerConstructor = () => {
 	};
 	const onOpen = () => {
 		if(!isAuth){
-			// const { from } = location.state || { from: {pathname: '/'}};
 			alert('Пройдите авторизацию.');
 			navigate('/login'); // Навигация на страницу входа
 		};

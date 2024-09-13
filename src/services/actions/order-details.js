@@ -18,14 +18,9 @@ import { getOrderRequest} from '../../utils/api'
 export const orderRequest = (orderIngredients) => async dispatch => {
 	dispatch(orderLoading()); // Запускаем процесс загрузки
 	try {
-	//   console.log('response start');
 	  const response = await getOrderRequest(orderIngredients); // Ждём ответа от API
-	//   console.log('response end');
-	//   console.log('response2: ', response);
 	  dispatch(orderLoadSuccess(response)); // Передаём данные в Redux
 	} catch (error) {
-	//   console.log('Error');
-	//   console.log(error);
 	  dispatch(orderLoadError(error)); // Передаём ошибку в Redux
 	}
 };

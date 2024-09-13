@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AppHeader from '../app-header/app-header';
 import styles from './app.module.css'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { Home } from '../../pages/home/home'
 import { Profile } from '../../pages/profile/profile'
@@ -14,6 +14,7 @@ import IngredientDetails from '../ingredient-details/ingredient-details'
 import { ProtectedRouteElement } from '../protected-route/protected-route';
 import { updateUserAction, logoutAction} from "../../services/actions/auth";
 import {	getUserRequest } from '../../utils/api';
+import { Orders } from '../../pages/orders/orders'
 
 
 const App = () => {
@@ -21,24 +22,19 @@ const App = () => {
    const navigate = useNavigate();
 	let location = useLocation();
 	const state = location.state || {};
-	console.log('App - location: ', location); //Отладка
-
-	// const {user, isLoading, isAuth} = useSelector((state) => state.auth);
 	const [loading, setLoading] = useState(true);
+	// console.log('App - location: ', location); //Отладка
 
-	// тогда при обновлении страницы данные о пользователе из стора исчезать не будут и на странице всегда будут свежие данные
-	// getUser
+	// с помощью getUser при обновлении страницы данные о пользователе из стора исчезать не будут и на странице всегда будут свежие данные
 	useEffect(() => {
 		const getUser = async () => {
 			try {
 				const data = await getUserRequest();
 				if(data.success){
-					console.log('user, ', data.user);
-					// setUser(data.user); // запишем пользователя
 					dispatch(updateUserAction(data.user)); // нужно ли мне вообще это хранить в сторе?
 				}
 			} catch (error) {
-				console.log('User not found, error - ', error);
+				// console.log('User not found, error - ', error);
 				// если вернеться ошибка, тогда удалить токен, очистить стор
 				// очищаем local storage
 		   	localStorage.removeItem('accessToken'); //лучше перенести это в api
@@ -70,22 +66,15 @@ const App = () => {
 			      <Route path='/' element={<Home />}></Route>
 				   <Route path='/img/:id' element={<IngredientDetails/>}></Route>
 
-					{/* <Route path='/profile' element={<Profile />}></Route>  */}
-				   {/* <Route path='/login' element={<Login />}></Route> */}
-				   {/* <Route path='/registration' element={<Registration />}></Route> */}
-				   {/* <Route path='/forgot-password' element={<ForgotPassword />}></Route>  */}
-				   {/* <Route path='/reset-password' element={<ResetPassword />}></Route> */}
-
 					{/* маршрут доступен только для Авторизованных пользователей */}
 				   <Route path='/profile' element={<ProtectedRouteElement onlyAuth={true} component={<Profile />}/>}></Route> 
+					<Route path='/profile/orders' element={<ProtectedRouteElement onlyAuth={true} component={<Orders />}/>}></Route> 
 
 					{/* маршрут доступен только для НЕавторизованных пользователей */}
 				   <Route path='/login' element={<ProtectedRouteElement onlyAuth={false} component={<Login />}/>}></Route> 
 				   <Route path='/registration' element={<ProtectedRouteElement onlyAuth={false} component={<Registration />}/>}></Route> 
 				   <Route path='/forgot-password' element={<ProtectedRouteElement onlyAuth={false} component={<ForgotPassword />}/>}></Route>
 				   <Route path='/reset-password' element={<ProtectedRouteElement onlyAuth={false} component={<ResetPassword />}/>}></Route>
-
-				   {/* <Route path='/ingredient-details' element={<IngredientDetails />}></Route> */}
 			   </Routes> 
 				{
 					state?.backgroundLocation && (

@@ -1,27 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styles from './login.module.css'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Input, Button,  ShowIcon, HideIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import {
-	// registerRequest,
-	loginRequest,
-	// refreshTokenRequest,
-	// logoutRequest,
-	// getUserRequest,
-	// updateUserRequest, 
-} from '../../utils/api';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import {	loginRequest } from '../../utils/api';
 import { loginAction } from '../../services/actions/auth'
-import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
 
 
 export const Login = () => {
-	// const [email, setEmail] = useState('');
-	// const [password, setPassword] = useState('');
 	const dispatch = useDispatch();
 	const location = useLocation();
    const navigate = useNavigate();
-	const [formData, setFormData] = useState({email:'', password:''});
+	const emptyState = { email: "", password: "", };
+	const [formData, setFormData] = useState(emptyState);
 	// const isAuth = useSelector(state => state.auth.isAuth)
 
 	const fieldChange = (e) => {
@@ -30,44 +21,32 @@ export const Login = () => {
 			 [e.target.name] : e.target.value
 		})
    };
-
   
 	const handleLogin = async (e) => {
-		console.log('handleLogin'); //Отладка
-		console.log('formData', formData); //Отладка
-
 		e.preventDefault();
 		try {
 		   const data = await loginRequest( formData ); 
 
 			// Обработка успешного ответа
-			console.log('Login successful, data: ', data); //Отладка
-
 			if (data.success) {
-				console.log('dispatch(loginAction(data.user))'); //Отладка
 				dispatch(loginAction(data.user));
 
             // После успешной аутентификации перенаправляем пользователя на предыдущую страницу
-				console.log('location.state ', location.state); //Отладка
-				console.log('location.state?.from?.pathname || / ', location.state?.from?.pathname || '/'); //Отладка
+				// console.log('location.state ', location.state); //Отладка
+				// console.log('location.state?.from?.pathname || / ', location.state?.from?.pathname || '/'); //Отладка
 
 				const from = location.state?.from?.pathname || '/';
             navigate(from, { replace: true });
 	      }
 
 		} catch (error) {
-		  console.log('Login failed', error);
-		  	// ЧТО ДЕЛАТЬ ЕСЛИ ПАРОЛЬ И ЛОГИН НЕ ВЕРНЫЕ??? 
-			// или если пользователь не зарегистрирован???
-			// if (isAuthenticated) {
-			// 	return (
-			// 	  <Navigate to={'/registration'}/>
-			// 	);
-			// }
+		   console.log('Login request failed', error);
+		   alert('Неверные данные. Проробуйте еще раз.');
+		   setFormData(emptyState);
 		}
 	};
 
-	// console.log('isAuthenticated ', isAuthenticated);
+	// console.log('isAuth ', isAuth);
 	// if (isAuth) {
 	// 	return (
 	// 	  <Navigate to={'/'}/>
@@ -80,7 +59,7 @@ export const Login = () => {
 		   	<header className={`text text_type_main-medium text_color_primary pb-6`}>Вход</header>
 				<div className={`pb-6`}>
 				   <Input
-				   // type={"text"}
+				   type={"email"}
 				   placeholder={"E-mail"}
 					onChange={fieldChange}
 				   value={formData.email}
@@ -91,7 +70,7 @@ export const Login = () => {
 				</div>
 				<div className={`pb-6`}>
 				   <Input
-				   	// type={"text"}
+				   	type={"password"}
 				   	placeholder={"Пароль"}
 						onChange={fieldChange}
 						name={"password"}

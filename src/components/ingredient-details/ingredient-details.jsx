@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from "prop-types";
-import {ingredientType} from '../../utils/types'
 import styles from './ingredient-details.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -8,7 +6,6 @@ import { ingredientsRequest } from '../../services/actions/ingredients';
 
 
 const IngredientDetails = () => {
-	// const ingredient = useSelector(state => state.ingredientDetails.currentIngredient);
 	const dispatch = useDispatch();
 	const {ingredients, globalLoading, globalError} = useSelector((state) => state.ingredients);
 	const [isLoading, setIsLoading] = useState(true);

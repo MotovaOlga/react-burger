@@ -1,17 +1,23 @@
-import React, { useEffect, useState} from 'react'
+import React, { useState} from 'react'
 import styles from './registration.module.css'
 import { Input, Button,  ShowIcon, HideIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerRequest } from '../../utils/api'
 import { registerAction } from '../../services/actions/auth'
-import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
 
 
 export const Registration = () => {
-	const [formData, setFormData] = useState({name:'', email:'', password:''});
+	const emptyState = {
+		name    : "",
+		email   : "",
+		password: "",
+   };
+	const [formData, setFormData] = useState(emptyState);
+	const location = useLocation();
+   const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const isAuth = useSelector(state => state.auth.isAuth)
+	// const isAuth = useSelector(state => state.auth.isAuth)
 
 	const fieldChange = (e) => {
 		setFormData({
@@ -21,35 +27,28 @@ export const Registration = () => {
    };
 
 	const handleRegister = async (e) => {
-		// console.log('handleRegister'); //Отладка
-		// console.log('formData', formData); //Отладка
 		e.preventDefault();
 		try {
 		   const data = await registerRequest( formData );
-			console.log('Register request successful, data: ', data); //Отладка
-
 			// запишем имя, почту пользователя в стор
 	      if (data.success) {
-				// console.log('dispatch(registerAction(data.user))'); //Отладка
 				dispatch(registerAction(data.user));
+				// если регистрация прошла успешно перенаправить на предыдущую страницу страницу
+				const from = location.state?.from?.pathname || '/';
+            navigate(from, { replace: true });
 	      }
 		} catch (error) {
 		   console.log('Register failed', error);
-		  	// ЧТО ДЕЛАТЬ ЕСЛИ ПОЛЬЗОВАТЕЛЬ УЖЕ ЗАРЕГИСТРИРОВАН??? 
-			// if (isAuthorized) {
-			// 	return (
-			// 	  <Navigate to={'/login'}/>
-			// 	);
-			// }
+			alert('Что-то пошло не так. Проробуйте еще раз.');
+			setFormData(emptyState);
 		}
 	};
 
-	if (isAuth) {
-		return (
-		  <Navigate to={'/'}/>
-		);
-	}
-
+	// if (isAuth) {
+	// 	return (
+	// 	  <Navigate to={'/'}/>
+	// 	);
+	// }
 
 	return (
 		<>
@@ -57,7 +56,7 @@ export const Registration = () => {
 		   	<header className={`text text_type_main-medium text_color_primary pb-6`}>Регистрация</header>
 				<div className={`pb-6`}>
 				   <Input
-				   // type={"text"}
+				   type={"text"}
 				   placeholder={"Имя"}
 				   name={"name"}
 					value={formData.name}
@@ -68,7 +67,7 @@ export const Registration = () => {
 				</div>
 				<div className={`pb-6`}>
 				   <Input
-				   // type={"text"}
+				   type={"email"}
 				   placeholder={"E-mail"}
 					name={"email"}
 				   value={formData.email}
@@ -79,7 +78,7 @@ export const Registration = () => {
 				</div>
 				<div className={`pb-6`}>
 				   <Input
-				   	// type={"text"}
+				   	type={"password"}
 				   	placeholder={"Пароль"}
 						name={"password"}
 				   	value={formData.password}
@@ -92,7 +91,7 @@ export const Registration = () => {
 				<Button
 					type={'primary'}
 					size={'large'}
-					onClick={handleRegister} //()=>console.log('Button-Зарегистрироваться onClick ')}
+					onClick={handleRegister}
 					htmlType={'button'}
 					>
 						Зарегистрироваться
@@ -101,7 +100,6 @@ export const Registration = () => {
 				<span className={`${styles.additionalActions} pt-20`}>Уже зарегистрированы?
 				   <Link to={'/login'} className="text_color_accent pl-2">Войти</Link>
 				</span>
-
 		   </div>
 		   	
 		</>

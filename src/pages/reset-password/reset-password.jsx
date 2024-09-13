@@ -20,12 +20,9 @@ export const ResetPassword = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			console.log('handleSubmit, formData - ', formData);  //Отладка
-			
 			const data =  await resetPasswordRequest(formData);
 			// Обработка успешного ответа
 			if (data.success) {
-				console.log('handleSubmit formData.success: ', formData); //Отладка
 				// В случае успеха пользователь направляется на маршрут /login
 				navigate('/login');
 	      }

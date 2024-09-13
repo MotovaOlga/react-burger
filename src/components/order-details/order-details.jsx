@@ -2,7 +2,6 @@ import React, { useState, useEffect }from 'react';
 import { useSelector } from 'react-redux'
 import styles from './order-details.module.css'
 import orderAccpeted from '../../images/orderAccpeted.svg'
-// import { orderRequest } from '../../services/actions/order-details';
 
 
 const OrderDetails = () => {
@@ -14,7 +13,6 @@ const OrderDetails = () => {
 			setOrderNumber(order.order.number);
 		}
 	}, [order]);
-	// console.log('orderNumber:', orderNumber); //отладка
 
 	return (
 		<div className={`${styles.orderDetails} p-15`}>

@@ -1,21 +1,15 @@
 // Action Types
 import { INGREDIENTS_LOADING, INGREDIENTS_LOAD_SUCCESS, INGREDIENTS_LOAD_ERROR } from './types'
 import { getIngredientsRequest} from '../../utils/api'
-// import {thunk} from 'redux-thunk';
 
 
 // Action Creators
 export const ingredientsRequest = () => async dispatch => {
 	dispatch(ingredientsLoading()); // Запускаем процесс загрузки
 	try {
-	//   console.log('response start');
 	  const response = await getIngredientsRequest(); // Ждём ответа от API
-	//   console.log('response end');
-	//   console.log(response);
 	  dispatch(ingredientsLoadSuccess(response)); // Передаём данные в Redux
 	} catch (error) {
-	//   console.log('Error');
-	//   console.log(error);
 	  dispatch(ingredientsLoadError(error)); // Передаём ошибку в Redux
 	}
 };
