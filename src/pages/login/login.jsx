@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './login.module.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { Input, Button,  ShowIcon, HideIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import {
 	// registerRequest,
 	loginRequest,
@@ -19,8 +19,10 @@ export const Login = () => {
 	// const [email, setEmail] = useState('');
 	// const [password, setPassword] = useState('');
 	const dispatch = useDispatch();
+	const location = useLocation();
+   const navigate = useNavigate();
 	const [formData, setFormData] = useState({email:'', password:''});
-	const isAuth = useSelector(state => state.auth.isAuth)
+	// const isAuth = useSelector(state => state.auth.isAuth)
 
 	const fieldChange = (e) => {
 		setFormData({
@@ -44,6 +46,13 @@ export const Login = () => {
 			if (data.success) {
 				console.log('dispatch(loginAction(data.user))'); //Отладка
 				dispatch(loginAction(data.user));
+
+            // После успешной аутентификации перенаправляем пользователя на предыдущую страницу
+				console.log('location.state ', location.state); //Отладка
+				console.log('location.state?.from?.pathname || / ', location.state?.from?.pathname || '/'); //Отладка
+
+				const from = location.state?.from?.pathname || '/';
+            navigate(from, { replace: true });
 	      }
 
 		} catch (error) {
@@ -59,11 +68,11 @@ export const Login = () => {
 	};
 
 	// console.log('isAuthenticated ', isAuthenticated);
-	if (isAuth) {
-		return (
-		  <Navigate to={'/'}/>
-		);
-	}
+	// if (isAuth) {
+	// 	return (
+	// 	  <Navigate to={'/'}/>
+	// 	);
+	// }
 
 	return (
 		<>
@@ -95,7 +104,7 @@ export const Login = () => {
 				<Button
 					type={'primary'}
 					size={'large'}
-					onClick={handleLogin} //()=>console.log('Button onClick *Войти*')}
+					onClick={handleLogin}
 					htmlType={'button'}
 					>
 						Войти

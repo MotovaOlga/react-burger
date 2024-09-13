@@ -1,13 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './forgot-password.module.css';
-import { useDispatch, useSelector } from 'react-redux'
-import { Input, Button,  ShowIcon, HideIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, Routes, Route } from 'react-router-dom';
-
+import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Link, useNavigate } from 'react-router-dom';
 import { forgotPasswordRequest } from '../../utils/api';
 
 export const ForgotPassword = () => {
-	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const emptyState = { email: "", };
+	const [email, setEmail] = useState(emptyState);
+
+	const handleInputChange = (e) => {
+		const { name, value } = e.target;
+		setEmail(prevState => ({
+			...prevState,
+			[name]: value // Обновление значения по имени поля
+		}));
+   };
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			console.log('handleSubmit, email - ', email);  //Отладка
+			const data =  await forgotPasswordRequest(email);
+			// Обработка успешного ответа
+			if (data.success) {
+				console.log('handleSubmit data.success: ', data); //Отладка
+				// В случае успеха пользователь направляется на маршрут /reset-password
+				navigate('/reset-password');
+	      }
+			return data;
+		} catch (error) {
+		   console.log('forgotPasswordRequest failed', error);
+		}
+   };
+
 	return (
 		<>
 		   <div className={`${styles.wrapper} text text_type_main-default text_color_inactive`}>
@@ -16,9 +42,9 @@ export const ForgotPassword = () => {
 				   <Input
 				   type={"email"}
 				   placeholder={"Укажите e-mail"}
-				   // value={"mail@stellar.burgers"}
-				   // {state.name||''}
-				   // name={"name"}
+					onChange={handleInputChange}
+					value={email.email ||''}
+					name={"email"}
 				   size={"default"}
 				   />
 				</div>
@@ -26,7 +52,7 @@ export const ForgotPassword = () => {
 				<Button
 					type={'primary'}
 					size={'large'}
-					onClick={()=>console.log('Button onClick')}
+					onClick={handleSubmit}
 					htmlType={'button'}
 					>
 						Восстановить
@@ -35,9 +61,7 @@ export const ForgotPassword = () => {
 				<span className={`${styles.additionalActions} pt-20`}>Вспомнили пароль?
 				   <Link to={'/login'} className="text_color_accent pl-2">Войти</Link>
 				</span>
-					
 		   </div>
-		   	
 		</>
 	)
 };

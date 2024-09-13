@@ -327,13 +327,6 @@ export const forgotPasswordRequest = async (email) => {
 			body: JSON.stringify(email),
 	   });
 		return await getResponse(response);
-		// const data = await getResponse(response);
-		// console.log('data ', data); //Отладка
-		// if(data.success) {
-		// 	console.log('data.success '); //Отладка
-		// 	// В случае успеха пользователь направляется на маршрут /reset-password
-		// }
-		// return data;
 	} catch (error) {
 		throw new Error(`Error ${error.status}`);
 	} 

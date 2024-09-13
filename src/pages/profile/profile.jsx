@@ -15,12 +15,8 @@ export const Profile = () => {
 		password: "",
    };
 	const {user, isLoading, isAuth} = useSelector((state) => state.auth);
-
-	// const user = useSelector((store) => store.auth.user); // стейт
-	// const isLoading = useSelector((store) => store.auth.isLoading); // стейт
-	// const [user, setUser] = useState(emptyState); // стейт
 	const [newState, setNewState] = useState(emptyState); // новый стейт
-	// const [isLoading, setIsLoading] = React.useState(true);
+
 	useEffect(() => {
 		setNewState(user); // заполним поля инпутов
 	}, []);
@@ -35,6 +31,7 @@ export const Profile = () => {
 	// }
 
 	const handleIOnIconClick = (e) => {
+		e.preventDefault();
 		console.log('onIconClick');
 	}
 
@@ -54,24 +51,17 @@ export const Profile = () => {
 		try {
 			console.log('handleSubmit'); //Отладка
 			console.log('new state ', newState);  //Отладка
-			// refreshTokenRequest();
-			// fetchWithRefreshToken();
-	      // updateUserRequest(newState);
-			// const data = await getUserRequest();
-			// const data = await updateUserRequest({name: 'Katerine', email: 'katyakatya@gmail.com', password: 'qwerty1'});
+			
 			const data = await updateUserRequest(newState);
 			// Обработка успешного ответа
 			// console.log('handleSubmit successful, data: ', data); //Отладка
 			if (data.success) {
 				console.log('handleSubmit data.success: ', data); //Отладка
-				// const res = await getUserRequest();
-				// console.log('handleSubmit res: ', res); //Отладка
-
 				dispatch(updateUserAction(data.user)); 
+				setNewState(user); //очищаем поле пароля
 				const res = await getUserRequest();  //Отладка
 				console.log('res.user: ', res.user); //Отладка
 	      }
-			
 		} catch (error) {
 		  console.log('updateUserRequest failed', error);
 		  	// ЧТО ДЕЛАТЬ если не получил ответа от сервера??? 

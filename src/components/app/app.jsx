@@ -11,7 +11,7 @@ import { ResetPassword } from '../../pages/reset-password/reset-password'
 import { ForgotPassword } from '../../pages/forgot-password/forgot-password'
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details'
-import { ProtectedRoute } from '../protected-route/protected-route';
+import { ProtectedRouteElement } from '../protected-route/protected-route';
 import { updateUserAction, logoutAction} from "../../services/actions/auth";
 import {	getUserRequest } from '../../utils/api';
 
@@ -21,7 +21,7 @@ const App = () => {
    const navigate = useNavigate();
 	let location = useLocation();
 	const state = location.state || {};
-	// console.log('location: ', location); //Отладка
+	console.log('App - location: ', location); //Отладка
 
 	// const {user, isLoading, isAuth} = useSelector((state) => state.auth);
 	const [loading, setLoading] = useState(true);
@@ -68,22 +68,23 @@ const App = () => {
 			   <AppHeader />
 				<Routes location={state?.backgroundLocation || location}>
 			      <Route path='/' element={<Home />}></Route>
-
-					<Route path='/profile' element={<Profile />}></Route> 
-				   <Route path='/login' element={<Login />}></Route>
-				   <Route path='/registration' element={<Registration />}></Route>
-
-				   {/* <Route path='/profile' element={<ProtectedRoute component={<Profile />}/>}></Route> маршрут доступен только для авторизованных пользователей */}
-
-				   {/* <Route path='/login' element={<ProtectedRoute component={<Login />}/>}></Route>  */}
-				  
-				   {/* <Route path='/registration' element={<ProtectedRoute component={<Registration />}/>}></Route>  */}
-
-				   <Route path='/forgot-password' element={<ForgotPassword />}></Route> 
-
-				   <Route path='/reset-password' element={<ResetPassword />}></Route>
-
 				   <Route path='/img/:id' element={<IngredientDetails/>}></Route>
+
+					{/* <Route path='/profile' element={<Profile />}></Route>  */}
+				   {/* <Route path='/login' element={<Login />}></Route> */}
+				   {/* <Route path='/registration' element={<Registration />}></Route> */}
+				   {/* <Route path='/forgot-password' element={<ForgotPassword />}></Route>  */}
+				   {/* <Route path='/reset-password' element={<ResetPassword />}></Route> */}
+
+					{/* маршрут доступен только для Авторизованных пользователей */}
+				   <Route path='/profile' element={<ProtectedRouteElement onlyAuth={true} component={<Profile />}/>}></Route> 
+
+					{/* маршрут доступен только для НЕавторизованных пользователей */}
+				   <Route path='/login' element={<ProtectedRouteElement onlyAuth={false} component={<Login />}/>}></Route> 
+				   <Route path='/registration' element={<ProtectedRouteElement onlyAuth={false} component={<Registration />}/>}></Route> 
+				   <Route path='/forgot-password' element={<ProtectedRouteElement onlyAuth={false} component={<ForgotPassword />}/>}></Route>
+				   <Route path='/reset-password' element={<ProtectedRouteElement onlyAuth={false} component={<ResetPassword />}/>}></Route>
+
 				   {/* <Route path='/ingredient-details' element={<IngredientDetails />}></Route> */}
 			   </Routes> 
 				{
