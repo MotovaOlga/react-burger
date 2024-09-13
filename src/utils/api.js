@@ -48,6 +48,8 @@ export const getOrderRequest = async (orderData) => {
 	}
 };
 
+// POST https://norma.nomoreparties.space/api/password-reset- эндпоинт для /forgot-password.
+// POST https://norma.nomoreparties.space/api/password-reset/reset - эндпоинт для /reset-password 
 // POST https://norma.nomoreparties.space/api/auth/login - эндпоинт для авторизации.
 // POST https://norma.nomoreparties.space/api/auth/register - эндпоинт для регистрации пользователя.
 // POST https://norma.nomoreparties.space/api/auth/logout - эндпоинт для выхода из системы.
@@ -220,7 +222,7 @@ export const refreshTokenRequest = async () => {
 	} 
 };
 
-
+// если токена вообще нет то считаем что пользователь не авторизован
 export const fetchWithRefreshToken = async (url, options) => {
 	console.log( 'fetchWithRefreshToken');
 	// console.log( 'localStorage.getItem(accessToken)', localStorage.getItem('accessToken'));
@@ -311,5 +313,56 @@ export const updateUserRequest = async (newFormData) => { //({name, email, passw
 	return response;
 };
 
-// export const forgotPasswordRequest
-// export const resetPasswordRequest
+// Тело запроса: { "email": "" } 
+// Тело успешного ответа: { "success": true, "message": "Reset email sent" }
+export const forgotPasswordRequest = async (email) => { 
+	const url = `${apiConfig.baseUrl}/password-reset`;
+	console.log('forgotPasswordRequest'); //Отладка
+	try {
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				 'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(email),
+	   });
+		return await getResponse(response);
+		// const data = await getResponse(response);
+		// console.log('data ', data); //Отладка
+		// if(data.success) {
+		// 	console.log('data.success '); //Отладка
+		// 	// В случае успеха пользователь направляется на маршрут /reset-password
+		// }
+		// return data;
+	} catch (error) {
+		throw new Error(`Error ${error.status}`);
+	} 
+};
+
+
+// пользователь вводит новый пароль и код из имейла
+// Тело запроса: { "password": "", "token": "" }
+// Тело успешного ответа: { "success": true, "message": "Password successfully reset" } 
+export const resetPasswordRequest = async (password, token) => { 
+	const url = `${apiConfig.baseUrl}/password-reset/reset`;
+	console.log('resetPasswordRequest'); //Отладка
+	try {
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				 'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(password, token),
+	   });
+		const data = await getResponse(response);
+		console.log('data ', data); //Отладка
+		// if(data.success) {
+		// 	console.log('data.success '); //Отладка
+		// 	// ...
+		// }
+		return data;
+		// return getResponse(response);
+	} catch (error) {
+		throw new Error(`Error ${error.status}`);
+	} 
+}

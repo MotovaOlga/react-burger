@@ -10,10 +10,17 @@ import { useDrop } from "react-dnd";
 import { orderRequest } from '../../services/actions/order-details';
 import { v4 as uuidv4 } from 'uuid';
 import { BurgerConstructorCard } from './burger-constructor-card/burger-constructor-card'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 
 const BurgerConstructor = () => {
-	const dispatch = useDispatch();	 
+	const dispatch = useDispatch();	
+	const navigate = useNavigate();
+	const location = useLocation();
+	console.log('location - ', location);
+	// const {user, isLoading, isAuth} = useSelector((state) => state.auth);
+	const isAuth = useSelector((state) => state.auth.isAuth);
+	console.log('BurgerConstructor isAuth - ', isAuth);
 
 	// массив игредиентов BurgerConstructor
 	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
@@ -24,6 +31,11 @@ const BurgerConstructor = () => {
 		setIsModalOpen(false);
 	};
 	const onOpen = () => {
+		if(!isAuth){
+			// const { from } = location.state || { from: {pathname: '/'}};
+			alert('Пройдите авторизацию.');
+			navigate('/login'); // Навигация на страницу входа
+		};
 		if (
 			arrBurgerConstructorIngredients &&
 			arrBurgerConstructorIngredients.bun &&

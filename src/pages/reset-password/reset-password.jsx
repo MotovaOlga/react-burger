@@ -3,6 +3,7 @@ import styles from './reset-password.module.css'
 import { Input, Button,  ShowIcon, HideIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, Routes, Route } from 'react-router-dom'
 
+
 export const ResetPassword = () => {
 	return (
 		<>

@@ -30,6 +30,11 @@ export const rootReducer = combineReducers({
 // 		currentIngredient: []
 // 	},
 //    auth: {
-// 
+//       isLoading: true, // флажок что данные пользователя загрузились. false - значит все давнные загрузились
+//       isAuth: false, // авторизован? если данные о пользователе есть то true а если нет то false
+//       user: {
+//       	name:'',
+//       	email:'',
+//       },
 //    },
 // }

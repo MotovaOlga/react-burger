@@ -4,16 +4,7 @@ import { Input, Button,  ShowIcon, HideIcon, EditIcon } from '@ya.praktikum/reac
 import { Link, NavLink, Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserAction, updateUserAction, logoutAction} from "../../services/actions/auth";
-import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
-import {
-	// registerRequest,
-	// loginRequest,
-	logoutRequest,
-	// refreshTokenRequest,
-	// fetchWithRefreshToken,
-	getUserRequest,
-	updateUserRequest, 
-} from '../../utils/api';
+import {	logoutRequest,	getUserRequest, updateUserRequest, } from '../../utils/api';
 
 export const Profile = () => {
 	const dispatch = useDispatch();
@@ -23,48 +14,25 @@ export const Profile = () => {
 		email   : "",
 		password: "",
    };
-	// const user = useSelector((store) => store.auth.user);
-	const [user, setUser] = useState(emptyState); // стейт
+	const {user, isLoading, isAuth} = useSelector((state) => state.auth);
+
+	// const user = useSelector((store) => store.auth.user); // стейт
+	// const isLoading = useSelector((store) => store.auth.isLoading); // стейт
+	// const [user, setUser] = useState(emptyState); // стейт
 	const [newState, setNewState] = useState(emptyState); // новый стейт
-	const [isLoading, setIsLoading] = React.useState(true);
-
-	// тогда при обновлении страницы данные о пользователе исчезать не будут и при переходе на эту страницу всегда будут свежие данные
+	// const [isLoading, setIsLoading] = React.useState(true);
 	useEffect(() => {
-		const fetchUser = async () => {
-			try {
-				const data = await getUserRequest();
-				if(data.success){
-					console.log('user, ', data.user);
-					setUser(data.user);
-					setNewState(data.user);
-					dispatch(updateUserAction(data.user)); // нужно ли мне вообще это хранить в сторе?
-				}
-			} catch (error) {
-				console.log('getUser failed', error);
-				// если вернеться ошибка, тогда удалить токен, очистить стор и перенаправить на страницу логина?????????????????????????????
-				// обработать исходя с того какой код ошибки
-				// 403 не авторизован
-			} finally {
-				setIsLoading(false); // Устанавливаем загрузку завершенной
-			}
-		};
-
-		fetchUser ();
-	}, [dispatch]); // вызывает при ...
+		setNewState(user); // заполним поля инпутов
+	}, []);
 
 	// прелоудер, можно еще создать отдельный компонент <Preloader />
 	if(isLoading){
 		return <p>Loading...</p>
 	}
 
-	// useEffect(()=>{
-	// 	console.log('useEffect PROFILE'); //Отладка
-	// 	setNewState({
-	// 		name: user.name || '',
-	// 		email: user.email || '',
-	// 		password: '',
-	// 	});
-   // },[]);
+	// if(isAuth){
+	// 	return <Navigate to={'/login'}></Navigate>
+	// }
 
 	const handleIOnIconClick = (e) => {
 		console.log('onIconClick');
@@ -115,26 +83,11 @@ export const Profile = () => {
 	const handleReset = (e) => {
 		console.log('handleReset'); //Отладка
 		e.preventDefault();
-		setNewState(user); // без пароля будет
+		setNewState(user); // без пароля 
    };
-
-   // useEffect(()=>{
-	// 	console.log('useEffect PROFILE'); //Отладка
-	// 	setNewState({
-	// 		name: user.name || '',
-	// 		email: user.email || '',
-	// 		password: '',
-	// 	});
-   // },[]);
-
-
-   // useEffect(()=>{
-	// 	dispatch(getUserAction())
-   // },[]);
 
 	// Выход 
    // Для выхода из системы передайте в теле запроса значение refreshToken: { "token": "значение refreshToken" } 
-   // Для выхода из системы или обновления токена используется именно refreshToken, который можно получить после успешной регистрации или авторизации.
    // Тело ответа сервера при выходе из системы: { "success": true, "message": "Successful logout" } 
 	const handleLogout = async (e) => {
 		e.preventDefault();
