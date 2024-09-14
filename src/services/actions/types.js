@@ -26,6 +26,7 @@ export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const UPDATE_USER = 'UPDATE_USER';
+export const SET_EMAIL_SUBMITTED = 'SET_EMAIL_SUBMITTED';
 
 
 

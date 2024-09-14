@@ -28,7 +28,7 @@ export const ResetPassword = () => {
 	      }
 			return data;
 		} catch (error) {
-		   console.log('resetPasswordRequest failed', error);
+		   // console.log('resetPasswordRequest failed', error);
 			// может быть неправильным код из письма
 			alert('Неверный код. Проробуйте еще раз.');
 			setFormData(emptyState);

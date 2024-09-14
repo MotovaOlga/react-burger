@@ -13,7 +13,6 @@ export const Login = () => {
    const navigate = useNavigate();
 	const emptyState = { email: "", password: "", };
 	const [formData, setFormData] = useState(emptyState);
-	// const isAuth = useSelector(state => state.auth.isAuth)
 
 	const fieldChange = (e) => {
 		setFormData({
@@ -22,6 +21,7 @@ export const Login = () => {
 		})
    };
   
+
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		try {
@@ -30,28 +30,14 @@ export const Login = () => {
 			// Обработка успешного ответа
 			if (data.success) {
 				dispatch(loginAction(data.user));
-
-            // После успешной аутентификации перенаправляем пользователя на предыдущую страницу
-				// console.log('location.state ', location.state); //Отладка
-				// console.log('location.state?.from?.pathname || / ', location.state?.from?.pathname || '/'); //Отладка
-
-				const from = location.state?.from?.pathname || '/';
-            navigate(from, { replace: true });
 	      }
 
 		} catch (error) {
-		   console.log('Login request failed', error);
+		   // console.log('Login request failed', error);
 		   alert('Неверные данные. Проробуйте еще раз.');
 		   setFormData(emptyState);
 		}
 	};
-
-	// console.log('isAuth ', isAuth);
-	// if (isAuth) {
-	// 	return (
-	// 	  <Navigate to={'/'}/>
-	// 	);
-	// }
 
 	return (
 		<>

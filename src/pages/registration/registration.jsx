@@ -38,7 +38,7 @@ export const Registration = () => {
             navigate(from, { replace: true });
 	      }
 		} catch (error) {
-		   console.log('Register failed', error);
+		   // console.log('Register failed', error);
 			alert('Что-то пошло не так. Проробуйте еще раз.');
 			setFormData(emptyState);
 		}

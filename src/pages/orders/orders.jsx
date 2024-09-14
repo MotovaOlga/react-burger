@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import styles from './orders.module.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { NavLink, Link, useNavigate } from 'react-router-dom'
-import {	logoutRequest,	updateUserRequest, } from '../../utils/api';
-import { updateUserAction, logoutAction} from "../../services/actions/auth";
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'
+import {	logoutRequest	} from '../../utils/api';
+import { logoutAction} from "../../services/actions/auth";
 
 
 export const Orders = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	let location = useLocation();
 
 	// Выход 
    // Для выхода из системы передайте в теле запроса значение refreshToken: { "token": "значение refreshToken" } 
@@ -25,7 +26,8 @@ export const Orders = () => {
 				navigate('/login'); // Навигация на страницу входа
 	      }
 		} catch (error) {
-			console.log('Logout request failed', error);
+		   alert('Что-то пошло не так. Проробуйте еще раз.');
+			// console.log('Logout request failed', error);
 		}
 	};
 
@@ -39,18 +41,26 @@ export const Orders = () => {
 			   		<li>
 							<NavLink 
 							to={'/profile'} 
-							className={({isActive}) => isActive ? 'text_color_primary' : 'text'}
+							className={
+								location.pathname === "/profile"
+								? 'text_color_primary'
+								:'text-inactive-color'
+							}
 							>
 								Профиль
 							</NavLink></li>
 			   		<li>
 							<NavLink 
 							to={'/profile/orders'} 
-							className={({isActive}) => isActive ? 'text_color_primary' : 'text'}
+							className={
+								location.pathname === "/profile/orders"
+								? 'text_color_primary'
+								:'text-inactive-color'
+							}
 							>
 								История заказов
 							</NavLink></li>
-			   		<li><button onClick={handleLogout}>Выход</button></li>
+						<li><button onClick={handleLogout} className={`${styles.buttonLogout} text_type_main-medium text-inactive-color`}>Выход</button></li>
 			   	</ul>
 			   </div>
 

@@ -12,7 +12,7 @@ import { ForgotPassword } from '../../pages/forgot-password/forgot-password'
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details'
 import { ProtectedRouteElement } from '../protected-route/protected-route';
-import { updateUserAction, logoutAction} from "../../services/actions/auth";
+import { updateUserAction, logoutAction, setLocationAction} from "../../services/actions/auth";
 import {	getUserRequest } from '../../utils/api';
 import { Orders } from '../../pages/orders/orders'
 

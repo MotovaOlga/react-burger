@@ -28,3 +28,9 @@
 .inputs li {
 	padding-bottom: 24px;
 }
+
+.buttonLogout {
+	background-color: var(--background-alt);
+	color: var(--text-inactive-color);
+	line-height: 64px;
+}

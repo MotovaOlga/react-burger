@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from './profile.module.css'
 import { Input, Button,  ShowIcon, HideIcon, EditIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { NavLink, Link, useNavigate } from 'react-router-dom'
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUserAction, logoutAction} from "../../services/actions/auth";
 import {	logoutRequest,	updateUserRequest, } from '../../utils/api';
@@ -10,12 +10,13 @@ import {	logoutRequest,	updateUserRequest, } from '../../utils/api';
 export const Profile = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	let location = useLocation();
 	const emptyState = {
 		name    : "",
 		email   : "",
 		password: "",
    };
-	const {user, isLoading, isAuth} = useSelector((state) => state.auth);
+	const {user, isLoading } = useSelector((state) => state.auth);
 	const [newState, setNewState] = useState(emptyState); // новый стейт
 	const [isChanged, setIsChanged] = useState(false); // отслеживаем изменения чтобы показывать/скрывать кнопки 'Сохранить' и 'Отменить'
 
@@ -32,10 +33,6 @@ export const Profile = () => {
 	if(isLoading){
 		return <p>Loading...</p>
 	}
-
-	// if(isAuth){
-	// 	return <Navigate to={'/login'}></Navigate>
-	// }
 
 	// const handleIOnIconClick = (e) => {
 	// 	e.preventDefault();
@@ -61,11 +58,10 @@ export const Profile = () => {
 				setIsChanged(false); //скрываем кнопки 'Сохранить' и 'Отменить'
 	      }
 		} catch (error) {
-		   console.log('updateUserRequest failed', error);
+		   // console.log('updateUserRequest failed', error);
 		   alert('Что-то пошло не так. Проробуйте еще раз.');
 			setNewState(user);
 		}
-
    };
 
 	// Отменить изменения
@@ -90,10 +86,10 @@ export const Profile = () => {
 				navigate('/login'); // Навигация на страницу входа
 	      }
 		} catch (error) {
-			console.log('Logout request failed', error);
+			// console.log('Logout request failed', error);
+		   alert('Что-то пошло не так. Проробуйте еще раз.');
 		}
 	};
-
 
 	return (
 		<div className={`${styles.wrapper} text_color_inactive`}>
@@ -105,18 +101,26 @@ export const Profile = () => {
 			   		<li>
 							<NavLink 
 							to={'/profile'} 
-							className={({isActive}) => isActive ? 'text_color_primary' : 'text'}
+							className={ 
+								location.pathname === "/profile"
+								? 'text_color_primary'
+								:'text-inactive-color'
+							}
 							>
 								Профиль
 							</NavLink></li>
 			   		<li>
 							<NavLink 
 							to={'/profile/orders'} 
-							className={({isActive}) => isActive ? 'text_color_primary' : 'text'}
+							className={
+								location.pathname === "/profile/orders"
+								? 'text_color_primary'
+								:'text-inactive-color'
+							}
 							>
 								История заказов
 							</NavLink></li>
-			   		<li><button onClick={handleLogout}>Выход</button></li>
+			   		<li><button onClick={handleLogout} className={`${styles.buttonLogout} text_type_main-medium text-inactive-color`}>Выход</button></li>
 			   	</ul>
 					<p className={`text_type_main-default pt-20`}>В этом разделе вы можете изменить свои персональные данные</p>
 			   </div>

@@ -4,6 +4,7 @@ import {
    LOGIN,
    LOGOUT,
 	UPDATE_USER,
+	SET_EMAIL_SUBMITTED,
 } from '../actions/types';
 
 
@@ -26,6 +27,12 @@ export const updateUserAction = (user) => ({
 	type: UPDATE_USER,
 	payload: { user },
 });
+
+export const setEmailSubmitted = (status) => ({
+	type: SET_EMAIL_SUBMITTED,
+	payload: status
+});
+
 
 // isAuth?
 // export const checkUserAction = (user) => ({

@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import styles from './forgot-password.module.css';
+import { useDispatch } from 'react-redux'
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { forgotPasswordRequest } from '../../utils/api';
+import { setEmailSubmitted } from "../../services/actions/auth";
+
 
 export const ForgotPassword = () => {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const emptyState = { email: "", };
 	const [email, setEmail] = useState(emptyState);
@@ -23,12 +27,14 @@ export const ForgotPassword = () => {
 			const data =  await forgotPasswordRequest(email);
 			// Обработка успешного ответа
 			if (data.success) {
+				dispatch(setEmailSubmitted(true)); // Устанавливаем, что email был отправлен
 				// В случае успеха пользователь направляется на маршрут /reset-password
 				navigate('/reset-password');
 	      }
 			return data;
 		} catch (error) {
-		   console.log('forgotPasswordRequest failed', error);
+		   alert('Что-то пошло не так. Проробуйте еще раз.');
+		   // console.log('forgotPasswordRequest failed', error);
 		}
    };
 
