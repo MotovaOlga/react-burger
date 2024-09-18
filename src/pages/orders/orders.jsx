@@ -51,7 +51,7 @@ export const Orders = () => {
 
 				{/* правый  столбец */}
 			   <div className={`${styles.inputs}`}>
-					<h1>История заказов</h1>
+					<h2>История заказов</h2>
 					<p>...</p>
 			   </div>
 			</div>
