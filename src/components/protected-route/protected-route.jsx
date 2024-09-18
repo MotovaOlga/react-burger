@@ -23,12 +23,11 @@ export const ProtectedRouteElement = ({onlyAuth = false, component}) => {
 		return <Navigate to={'/login'} state={{ from: location.pathname }}></Navigate>
 	}
  
-	// уже авторизованного пользователя из /login, /registration, /forgot-password, /reset-password будем отправлять на главную страницу / лиюо на ту которой он был
+	// уже авторизованного пользователя из /login, /registration, /forgot-password, /reset-password будем отправлять на главную страницу / или на ту которой он был
 	if(!onlyAuth && isAuth){ // !true && true, маршрут только для неавторизованных пользователей, а он авторизован, тогда -> to /
 		// console.log('!onlyAuth && isAuth to /'); // Отладка
-		const pastLocation = location.state?.from || '/';
-		// console.log('pastLocation ', pastLocation); //Отладка
-		return <Navigate to={pastLocation}></Navigate>
+		const from = location.state?.from || '/';
+		return <Navigate to={from}></Navigate>
 	}
 
 	// /reset-password доступен неавторизованным пользователям и только после посещения маршрута /forgot-password и ввода адреса электронной почты для восстановления пароля

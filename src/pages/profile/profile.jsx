@@ -3,8 +3,8 @@ import styles from './profile.module.css'
 import { Input, Button,  ShowIcon, HideIcon, EditIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateUserAction, logoutAction} from "../../services/actions/auth";
-import {	logoutRequest,	updateUserRequest, } from '../../utils/api';
+import { fetchLogout, fetchUpdateUser, updateUserAction, logoutAction} from "../../services/actions/auth";
+import { logoutRequest,	updateUserRequest, } from '../../utils/api';
 // import Orders from '../orders/orders'
 
 export const Profile = () => {
@@ -50,18 +50,8 @@ export const Profile = () => {
 	// Сохранить изменения
    const handleSubmit = async (e) => {
 		e.preventDefault();
-		try {
-			const data = await updateUserRequest(newState);
-			// Обработка успешного ответа
-			if (data.success) {
-				dispatch(updateUserAction(data.user)); 
-				setIsChanged(false); //скрываем кнопки 'Сохранить' и 'Отменить'
-	      }
-		} catch (error) {
-		   // console.log('updateUserRequest failed', error);
-		   alert('Что-то пошло не так. Проробуйте еще раз.');
-			setNewState(user);
-		}
+		dispatch(fetchUpdateUser(newState));
+		setIsChanged(false); //скрываем кнопки 'Сохранить' и 'Отменить'
    };
 
 	// Отменить изменения
@@ -72,23 +62,9 @@ export const Profile = () => {
    };
 
 	// Выход 
-   // Для выхода из системы передайте в теле запроса значение refreshToken: { "token": "значение refreshToken" } 
-   // Тело ответа сервера при выходе из системы: { "success": true, "message": "Successful logout" } 
 	const handleLogout = async (e) => {
 		e.preventDefault();
-		try {
-			const data = await logoutRequest();
-			if (data.success) {
-				// Очищаем стор
-				dispatch(logoutAction());
-
-				// Навигация на страницу входа
-				navigate('/login'); // Навигация на страницу входа
-	      }
-		} catch (error) {
-			// console.log('Logout request failed', error);
-		   alert('Что-то пошло не так. Проробуйте еще раз.');
-		}
+		dispatch(fetchLogout());
 	};
 
 	return (
@@ -126,45 +102,45 @@ export const Profile = () => {
 			   </div>
 
 				{/* правый  столбец */}
-			   <div className={`${styles.inputs}`}>
-			      <ul>
-			   		<li>
+				<form onSubmit={handleSubmit} className={`${styles.inputs}`}>
+					<ul>
+						<li>
 							<Input
-						   type={"text"}
-						   placeholder={"Имя"}
+							type={"text"}
+							placeholder={"Имя"}
 							onChange={handleInputChange}
 							value={newState.name ||''}
-                     name={"name"}
-                     size={"default"}
+							name={"name"}
+							size={"default"}
 							icon={"EditIcon"}
 							// onIconClick={handleIOnIconClick}
-						   />
+							/>
 							</li>
 						<li>
 							<Input
-						   type={"email"}
-						   placeholder={"Логин"}
+							type={"email"}
+							placeholder={"Логин"}
 							onChange={handleInputChange}
 							value={newState.email ||''}
-                     name={"email"}
-                     size={"default"}
+							name={"email"}
+							size={"default"}
 							icon={"EditIcon"}
 							// onIconClick={handleIOnIconClick}
-						   />
+							/>
 							</li>
 						<li>
 							<Input
-						   type={"password"}
-						   placeholder={"Пароль"}
+							type={"password"}
+							placeholder={"Пароль"}
 							onChange={handleInputChange}
 							value={newState.password ||''}
-                     name={"password"}
-                     size={"default"}
+							name={"password"}
+							size={"default"}
 							icon={"EditIcon"}
 							// onIconClick={handleIOnIconClick}
-						   />
+							/>
 							</li>
-			   	</ul>
+					</ul>
 					{isChanged && (
 						<>
 							<Button
@@ -178,14 +154,14 @@ export const Profile = () => {
 							<Button
 								type={'primary'}
 								size={'large'}
-								onClick={handleSubmit}
-								htmlType={'button'}
+								// onClick={handleSubmit}
+								htmlType={'submit'}
 								>
 								Сохранить
 							</Button>
 						</>
 					)}
-			   </div>
+				</form>
 			</div>
 		</div>
 	)

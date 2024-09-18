@@ -1,35 +1,20 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styles from './orders.module.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'
-import {	logoutRequest	} from '../../utils/api';
-import { logoutAction} from "../../services/actions/auth";
+import { NavLink, useLocation } from 'react-router-dom'
+import { fetchLogout} from "../../services/actions/auth";
 
 
 export const Orders = () => {
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	let location = useLocation();
 
 	// Выход 
-   // Для выхода из системы передайте в теле запроса значение refreshToken: { "token": "значение refreshToken" } 
-   // Тело ответа сервера при выходе из системы: { "success": true, "message": "Successful logout" } 
 	const handleLogout = async (e) => {
 		e.preventDefault();
-		try {
-			const data = await logoutRequest();
-			if (data.success) {
-				// Очищаем стор
-				dispatch(logoutAction());
-
-				// Навигация на страницу входа
-				navigate('/login'); // Навигация на страницу входа
-	      }
-		} catch (error) {
-		   alert('Что-то пошло не так. Проробуйте еще раз.');
-			// console.log('Logout request failed', error);
-		}
+		dispatch(fetchLogout());
 	};
+
 
 	return (
 		<div className={`${styles.wrapper} text_color_inactive`}>

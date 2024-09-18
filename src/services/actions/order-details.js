@@ -1,6 +1,7 @@
 // Action Types
-import { ORDER_LOADING, ORDER_LOAD_SUCCESS, ORDER_LOAD_ERROR, ORDER_NUMBER_UPDATE  } from './types'
+import { ORDER_LOADING, ORDER_LOAD_SUCCESS, ORDER_LOAD_ERROR  } from './types'
 import { getOrderRequest} from '../../utils/api'
+import { clearIngredients} from '../actions/burger-constructor'
 
 //будем передевать массив айдишников
 
@@ -18,10 +19,15 @@ import { getOrderRequest} from '../../utils/api'
 export const orderRequest = (orderIngredients) => async dispatch => {
 	dispatch(orderLoading()); // Запускаем процесс загрузки
 	try {
-	  const response = await getOrderRequest(orderIngredients); // Ждём ответа от API
-	  dispatch(orderLoadSuccess(response)); // Передаём данные в Redux
-	} catch (error) {
-	  dispatch(orderLoadError(error)); // Передаём ошибку в Redux
+		const response = await getOrderRequest(orderIngredients); // Ждём ответа от API
+		dispatch(orderLoadSuccess(response)); // Передаём данные в Redux
+		// console.log('response ', response);
+		if(response.success) {
+			// console.log('orderClear');
+			dispatch(clearIngredients()); // Очищаем бургер конструктор после того как заказ отправлен
+		}
+	}  catch (error) {
+		dispatch(orderLoadError(error)); // Передаём ошибку в Redux
 	}
 };
 
@@ -38,3 +44,4 @@ export const orderLoadError = (error) => ({
 export const orderLoading = () => ({
 	type: ORDER_LOADING,
 });
+

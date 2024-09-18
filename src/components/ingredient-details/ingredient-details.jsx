@@ -1,22 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ingredient-details.module.css'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { ingredientsRequest } from '../../services/actions/ingredients';
+// import { ingredientsRequest } from '../../services/actions/ingredients';
 
 
 const IngredientDetails = () => {
-	const dispatch = useDispatch();
 	const {ingredients, globalLoading, globalError} = useSelector((state) => state.ingredients);
 	const [isLoading, setIsLoading] = useState(true);
 	const { id } = useParams();
-	// console.log('{ id }: ', { id }); //Отладка
 	const ingredient = ingredients.find((item) => item._id === id);
-	// console.log('ingredient: ', ingredient); // отладка
-
-	useEffect(() => {
-		dispatch(ingredientsRequest());
-   }, [dispatch]);
 
 	useEffect(() => {
 		setIsLoading(globalLoading); // Синхронизируем isLoading с глобальным isLoading

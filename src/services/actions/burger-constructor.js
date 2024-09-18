@@ -1,5 +1,5 @@
 // Action Types
-import { ADD_INGREDIENT, DELETE_INGREDIENT, MOVE_INGREDIENT } from './types'
+import { ADD_INGREDIENT, DELETE_INGREDIENT, MOVE_INGREDIENT, CLEAR_INGREDIENTS } from './types'
 
 // Action Creators
 export const addIngredient = (ingredient) => ({
@@ -15,6 +15,10 @@ export const deleteIngredient = (ingredientKey) => ({
 export const moveIngredient = (dragIndex, hoverIndex) => ({
 	type: MOVE_INGREDIENT,
 	payload: {dragIndex, hoverIndex},
+}); 
+
+export const clearIngredients = () => ({
+	type: CLEAR_INGREDIENTS,
 }); 
 
 

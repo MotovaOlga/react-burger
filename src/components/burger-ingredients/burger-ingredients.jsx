@@ -85,7 +85,7 @@ const BurgerIngredients = () => {
 
 	
 	return(
-		<div className={`${styles.burgerIngredients} mr-5` }>
+		<div className={`${styles.burgerIngredients} mr-5 ml-5` }>
 
 		  <p className={`${styles.headerIngredients} text_type_main-large mt-10`}>Соберите бургер</p>
 		  <section>

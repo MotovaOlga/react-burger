@@ -15,6 +15,7 @@ import { ProtectedRouteElement } from '../protected-route/protected-route';
 import { updateUserAction, logoutAction, setLocationAction} from "../../services/actions/auth";
 import {	getUserRequest } from '../../utils/api';
 import { Orders } from '../../pages/orders/orders'
+import { ingredientsRequest } from '../../services/actions/ingredients';
 
 
 const App = () => {
@@ -24,6 +25,10 @@ const App = () => {
 	const state = location.state || {};
 	const [loading, setLoading] = useState(true);
 	// console.log('App - location: ', location); //Отладка
+
+	useEffect(() => {
+		dispatch(ingredientsRequest());
+	}, []);
 
 	// с помощью getUser при обновлении страницы данные о пользователе из стора исчезать не будут и на странице всегда будут свежие данные
 	useEffect(() => {
@@ -59,7 +64,6 @@ const App = () => {
 
 	return (
 		<>
-		
 			<div className={`${styles.app} text_type_main-default`}>
 			   <AppHeader />
 				<Routes location={state?.backgroundLocation || location}>

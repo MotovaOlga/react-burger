@@ -5,11 +5,23 @@
 }
 
 .mainBox {
-	width: 66%;
+	max-width: 1240px;
 	max-height: 912px;
 	overflow: hidden;
 
 	display: flex;
 	flex-direction: row;
+	align-items: center;
 	justify-content: space-between;
+}
+
+/* Адаптивные стили */
+@media (max-width: 1200px) {
+	.mainBox {
+		width: 100%; /* Занимает 100% ширины родителя при маленьких экранах */
+		max-height: none; /* Убираем ограничение по высоте на маленьких экранах */
+		overflow: auto; /* Позволяет прокрутку, если содержимое выходит за пределы блока */
+		flex-direction: column;
+		justify-content: center;
+	}
 }

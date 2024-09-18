@@ -269,15 +269,16 @@ export const forgotPasswordRequest = async (email) => {
 // пользователь вводит новый пароль и код из имейла
 // Тело запроса: { "password": "", "token": "" }
 // Тело успешного ответа: { "success": true, "message": "Password successfully reset" } 
-export const resetPasswordRequest = async (password, token) => { 
+export const resetPasswordRequest = async (formData) => { 
 	const url = `${apiConfig.baseUrl}/password-reset/reset`;
+
 	try {
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: {
 				 'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(password, token),
+			body: JSON.stringify(formData),
 	   });
 		const data = await getResponse(response);
 		return data;

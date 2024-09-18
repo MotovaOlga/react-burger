@@ -31,14 +31,13 @@ export const ResetPassword = () => {
 		   // console.log('resetPasswordRequest failed', error);
 			// может быть неправильным код из письма
 			alert('Неверный код. Проробуйте еще раз.');
-			setFormData(emptyState);
 		}
    };
 
 	return (
 		<>
-		   <div className={`${styles.wrapper} text text_type_main-default text_color_inactive`}>
-		   	<header className={`text text_type_main-medium text_color_primary pb-6`}>Восстановление пароля</header>
+			<form onSubmit={handleSubmit} className={`${styles.wrapper} text text_type_main-default text_color_inactive`}>
+				<h2 className={`text text_type_main-medium text_color_primary pb-6`}>Восстановление пароля</h2>
 				<div className={`pb-6`}>
 				   <Input
 				   type={"password"}
@@ -65,8 +64,8 @@ export const ResetPassword = () => {
 				<Button
 					type={'primary'}
 					size={'large'}
-					onClick={handleSubmit}
-					htmlType={'button'}
+					// onClick={handleSubmit}
+					htmlType={'submit'}
 					>
 						Сохранить
 					</Button>
@@ -74,9 +73,7 @@ export const ResetPassword = () => {
 				<span className={`${styles.additionalActions} pt-20`}>Вспомнили пароль?
 				   <Link to={'/login'} className="text_color_accent pl-2">Войти</Link>
 				</span>
-					
-		   </div>
-		   	
+			</form>
 		</>
 	)
 

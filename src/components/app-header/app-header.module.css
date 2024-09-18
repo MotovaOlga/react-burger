@@ -1,3 +1,7 @@
+header {
+	width: 100vw;
+}
+
 nav {
 	background-color: var(--background);
 	width: 100%;
@@ -10,13 +14,23 @@ nav {
 }
 
 .appHeader {
-	width: 70%;
+	width: 1240px;
 	height: 88px;
 
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-content: center;
+}
+
+/* Адаптивные стили */
+@media (max-width: 960px) {
+	.appHeader {
+		width: 100%; /* Занимает 100% ширины родителя при маленьких экранах */
+		height: auto; 
+		max-height: none; /* Убираем ограничение по высоте на маленьких экранах */
+		flex-direction: column;
+	}
 }
 
 .navBox {

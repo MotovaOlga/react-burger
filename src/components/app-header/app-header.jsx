@@ -8,7 +8,7 @@ const AppHeader = () => {
 	const { pathname } = useLocation();
 
 	return(
-		<>		
+		<header>		
 		   <nav>
 		   	<div className={styles.appHeader}>
 		   		
@@ -31,8 +31,12 @@ const AppHeader = () => {
 		   		</div>
 		   		
                {/* лого */}
-		   		<div className={styles.navBox}>					
-		   			<Logo/>
+		   		<div className={styles.navBox}>	
+						<NavLink
+							to="/"
+							>
+							<Logo/>
+							</NavLink>				
 		   		</div>
    
                {/* корзина */}
@@ -47,7 +51,7 @@ const AppHeader = () => {
    
 		   	</div>	
 		   </nav>
-		</>
+		</header>
 	)
 }
 

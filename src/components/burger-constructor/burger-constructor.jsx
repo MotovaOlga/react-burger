@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo }from 'react';
-import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import { ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css'
 // import data  from '../../utils/data.js';
 import Modal from '../modal/modal'
@@ -11,7 +11,6 @@ import { orderRequest } from '../../services/actions/order-details';
 import { v4 as uuidv4 } from 'uuid';
 import { BurgerConstructorCard } from './burger-constructor-card/burger-constructor-card'
 import { useNavigate, useLocation } from 'react-router-dom'
-
 
 const BurgerConstructor = () => {
 	const dispatch = useDispatch();	
@@ -30,6 +29,7 @@ const BurgerConstructor = () => {
 		if(!isAuth){
 			alert('Пройдите авторизацию.');
 			navigate('/login'); // Навигация на страницу входа
+			return; // Прерываем выполнение функции
 		};
 		if (
 			arrBurgerConstructorIngredients &&
@@ -116,12 +116,12 @@ const BurgerConstructor = () => {
 						   {/* булка-top*/}
 							{arrBurgerConstructorIngredients.bun ? (
                         <li key="top">
-									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun} /> 
+									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun} type={'top'} /> 
 									{/* moveCard={()=>{return;}} index={''} */}
 								</li>
                      ) : (
 								<li key={'top'} >
-								   <ConstructorElement text={'Выберите булку'} isLocked={true}/>
+								   <ConstructorElement text={'Выберите булку'} type={"top"} isLocked={true}/>
 							   </li>
 					      )}
 							
@@ -139,18 +139,18 @@ const BurgerConstructor = () => {
 					         	}})
 							):(
 								<li key={'filings'} >
-								   <ConstructorElement text={'Выберите начинку'} type="bottom" isLocked={false}/>
+								   <ConstructorElement text={'Выберите начинку'} isLocked={false}/>
 							   </li>
 							)}
                      
                      {/* булка-bottom*/}
 							{arrBurgerConstructorIngredients.bun ? (
 								<li key="bottom">
-									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun}/>
+									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun} type={'bottom'}/>
                         </li>
                      ) : (
 								<li key={'bottom'} >
-								   <ConstructorElement text={'Выберите булку'} type="bottom" isLocked={true}/>
+								   <ConstructorElement text={'Выберите булку'} type={"bottom"} isLocked={true}/>
 							   </li>
 					      )}
             </ul>
