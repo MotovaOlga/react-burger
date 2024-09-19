@@ -139,7 +139,7 @@ const BurgerConstructor = () => {
 					         	}})
 							):(
 								<li key={'filings'} >
-								   <ConstructorElement text={'Выберите начинку'} isLocked={false}/>
+								   <ConstructorElement text={'Выберите начинку'} isLocked={true}/>
 							   </li>
 							)}
                      

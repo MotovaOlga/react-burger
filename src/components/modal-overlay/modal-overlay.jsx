@@ -4,7 +4,7 @@ import styles from './modal-overlay.module.css'
 
 // это подложка под модальное окно
 const ModalOverlay = ({onClose}) => {
-	return(
+	return (
 		<div className={styles.modalOverlay} onClick={onClose}/>
 	)
 };

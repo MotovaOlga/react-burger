@@ -35,46 +35,44 @@ export const ResetPassword = () => {
    };
 
 	return (
-		<>
-			<form onSubmit={handleSubmit} className={`${styles.wrapper} text text_type_main-default text_color_inactive`}>
-				<h2 className={`text text_type_main-medium text_color_primary pb-6`}>Восстановление пароля</h2>
-				<div className={`pb-6`}>
-				   <Input
-				   type={"password"}
-				   placeholder={"Введите новый пароль"}
-					onChange={handleInputChange}
-					value={formData.password ||''}
-					name={"password"}
-				   size={"default"}
-				   icon={"HideIcon"}
-				   />
-				</div>
-				<div className={`pb-6`}>
-				   <Input
-				   type={"text"}
-				   placeholder={"Введите код из письма"}
-					onChange={handleInputChange}
-					value={formData.token ||''}
-					name={"token"}
-				   size={"default"}
-				   // icon={"EditIcon"}
-				   />
-				</div>
-				
-				<Button
-					type={'primary'}
-					size={'large'}
-					// onClick={handleSubmit}
-					htmlType={'submit'}
-					>
-						Сохранить
-					</Button>
+		<form onSubmit={handleSubmit} className={`${styles.wrapper} text text_type_main-default text_color_inactive`}>
+			<h2 className={`text text_type_main-medium text_color_primary pb-6`}>Восстановление пароля</h2>
+			<div className={`pb-6`}>
+				<Input
+				type={"password"}
+				placeholder={"Введите новый пароль"}
+				onChange={handleInputChange}
+				value={formData.password ||''}
+				name={"password"}
+				size={"default"}
+				icon={"HideIcon"}
+				/>
+			</div>
+			<div className={`pb-6`}>
+				<Input
+				type={"text"}
+				placeholder={"Введите код из письма"}
+				onChange={handleInputChange}
+				value={formData.token ||''}
+				name={"token"}
+				size={"default"}
+				// icon={"EditIcon"}
+				/>
+			</div>
+			
+			<Button
+				type={'primary'}
+				size={'large'}
+				// onClick={handleSubmit}
+				htmlType={'submit'}
+				>
+					Сохранить
+				</Button>
 
-				<span className={`${styles.additionalActions} pt-20`}>Вспомнили пароль?
-				   <Link to={'/login'} className="text_color_accent pl-2">Войти</Link>
-				</span>
-			</form>
-		</>
+			<span className={`${styles.additionalActions} pt-20`}>Вспомнили пароль?
+				<Link to={'/login'} className="text_color_accent pl-2">Войти</Link>
+			</span>
+		</form>
 	)
 
 };

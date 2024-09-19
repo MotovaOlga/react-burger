@@ -93,7 +93,8 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard, type}) => {
 				?	<div className={`${styles.burgerConstructorCard} pr-4`}>
 						<ConstructorElement
 						className={styles.constructorElement}
-						text={ingredient.name || 'Выберите булку'}
+						text={`${ingredient.name || 'Выберите булку'} ${type === 'top' ? ' (верх)' : type === 'bottom' ? ' (низ)' : ''}`}
+						// text={ingredient.name || 'Выберите булку'}
 						price={ingredient.price || 0}
 						thumbnail={ingredient.image_mobile || ''}
 						type={type} // Передаем корректный тип
@@ -116,20 +117,6 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard, type}) => {
 					</div>
          }
 		</>
-      
-		//    <div className={`${styles.burgerConstructorCard} pr-4`} ref={ref} style={{ ...styles, opacity } } data-handler-id={handlerId}>
-		// 	<DragIcon />
-		// 	<ConstructorElement
-		// 	  className={styles.constructorElement}
-		// 	  text={ingredient.name || 'Выберите ' + (isBun ? 'булку' : 'начинку')}
-		// 	  price={ingredient.price || 0}
-		// 	  thumbnail={ingredient.image_mobile || ''}
-		// 	  type={isBun ? 'top' : ''} // Передаем корректный тип
-		// 	  isLocked={isBun}
-		// 	  handleClose={!isBun ? (() => handleDeleteIngredient(ingredient.key)) : undefined}
-		// 	  moveCard={!isBun ? (() => moveCard(ingredient.key)) : undefined}
-		// 	/>
-		// </div>
    );
 };
 

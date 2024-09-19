@@ -39,56 +39,54 @@ export const Registration = () => {
 
 
 	return (
-		<>
-			<form onSubmit={handleRegister} className={`${styles.wrapper} text text_type_main-default text_color_inactive`}>
-				<h2 className={`text text_type_main-medium text_color_primary pb-6`}>Регистрация</h2>
-				<div className={`pb-6`}>
-				   <Input
-				   type={"text"}
-				   placeholder={"Имя"}
-				   name={"name"}
-					value={formData.name}
+		<form onSubmit={handleRegister} className={`${styles.wrapper} text text_type_main-default text_color_inactive`}>
+			<h2 className={`text text_type_main-medium text_color_primary pb-6`}>Регистрация</h2>
+			<div className={`pb-6`}>
+				<Input
+				type={"text"}
+				placeholder={"Имя"}
+				name={"name"}
+				value={formData.name}
+				onChange={fieldChange}
+				size={"default"}
+				// icon={"EditIcon"}
+				/>
+			</div>
+			<div className={`pb-6`}>
+				<Input
+				type={"email"}
+				placeholder={"E-mail"}
+				name={"email"}
+				value={formData.email}
+				onChange={fieldChange}
+				size={"default"}
+				// icon={"EditIcon"}
+				/>
+			</div>
+			<div className={`pb-6`}>
+				<Input
+					type={"password"}
+					placeholder={"Пароль"}
+					name={"password"}
+					value={formData.password}
 					onChange={fieldChange}
-				   size={"default"}
-				   // icon={"EditIcon"}
-				   />
-				</div>
-				<div className={`pb-6`}>
-				   <Input
-				   type={"email"}
-				   placeholder={"E-mail"}
-					name={"email"}
-				   value={formData.email}
-				   onChange={fieldChange}
-				   size={"default"}
-				   // icon={"EditIcon"}
-				   />
-				</div>
-				<div className={`pb-6`}>
-				   <Input
-				   	type={"password"}
-				   	placeholder={"Пароль"}
-						name={"password"}
-				   	value={formData.password}
-						onChange={fieldChange}
-                  size={"default"}
-				   	icon={"ShowIcon"}
-				   	/>
-				</div>
-				
-				<Button
-					type={'primary'}
-					size={'large'}
-					// onClick={handleRegister}
-					htmlType={'submit'}
-					>
-						Зарегистрироваться
-					</Button>
+					size={"default"}
+					icon={"ShowIcon"}
+					/>
+			</div>
+			
+			<Button
+				type={'primary'}
+				size={'large'}
+				// onClick={handleRegister}
+				htmlType={'submit'}
+				>
+					Зарегистрироваться
+				</Button>
 
-				<span className={`${styles.additionalActions} pt-20`}>Уже зарегистрированы?
-				   <Link to={'/login'} className="text_color_accent pl-2">Войти</Link>
-				</span>
-			</form>
-		</>
+			<span className={`${styles.additionalActions} pt-20`}>Уже зарегистрированы?
+				<Link to={'/login'} className="text_color_accent pl-2">Войти</Link>
+			</span>
+		</form>
 	)
 };

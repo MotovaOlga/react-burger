@@ -12,6 +12,7 @@ import {
 	logoutRequest, 
 	updateUserRequest, 
 	registerRequest, 
+	getUserRequest
 } from '../../utils/api';
 
 
@@ -117,6 +118,23 @@ export const fetchRegister = (formData) => async (dispatch) => {
 		alert('Что-то пошло не так. Проробуйте еще раз.');
 		// setFormData(emptyState);
 	}
+};
+
+export const fetchUser = () => async (dispatch) => {
+	try {
+		const data = await getUserRequest();
+		if(data.success){
+			dispatch(updateUserAction(data.user)); // нужно ли мне вообще это хранить в сторе?
+		}
+	} catch (error) {
+		// console.log('User not found, error - ', error);
+		// если вернеться ошибка, тогда удалить токен, очистить стор
+		// очищаем local storage
+		localStorage.removeItem('accessToken'); //лучше перенести это в api
+		localStorage.removeItem('refreshToken'); //лучше перенести это в api
+		// Очищаем стор
+		dispatch(logoutAction());
+	} 
 };
 
 
