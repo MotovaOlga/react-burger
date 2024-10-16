@@ -7,7 +7,7 @@ import styles from './burger-constructor-card.module.css'
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrop, useDrag } from "react-dnd";
 
-export const BurgerConstructorCard = ({ ingredient, index, moveCard}) => {
+export const BurgerConstructorCard = ({ ingredient, index, moveCard, type}) => {
 	const dispatch = useDispatch();	 
 	const handleDeleteIngredient = (ingredientKey) => {   
 		// console.log('Deleting ingredient with KEY:', ingredientKey);
@@ -88,19 +88,35 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard}) => {
 	drag(drop(ref));
 	
    return (
-      <div className={`${styles.burgerConstructorCard} pr-4`} ref={ref} style={{ ...styles, opacity } } data-handler-id={handlerId}>
-         <DragIcon />
-         <ConstructorElement
-           className={styles.constructorElement}
-           text={ingredient.name || 'Выберите ' + (isBun ? 'булку' : 'начинку')}
-           price={ingredient.price || 0}
-           thumbnail={ingredient.image_mobile || ''}
-           type={isBun ? 'top' : ''} // Передаем корректный тип
-           isLocked={isBun}
-           handleClose={!isBun ? (() => handleDeleteIngredient(ingredient.key)) : undefined}
-			  moveCard={!isBun ? (() => moveCard(ingredient.key)) : undefined}
-         />
-      </div>
+		<> 
+			{ isBun 
+				?	<div className={`${styles.burgerConstructorCard} pr-4`}>
+						<ConstructorElement
+						className={styles.constructorElement}
+						text={`${ingredient.name || 'Выберите булку'} ${type === 'top' ? ' (верх)' : type === 'bottom' ? ' (низ)' : ''}`}
+						// text={ingredient.name || 'Выберите булку'}
+						price={ingredient.price || 0}
+						thumbnail={ingredient.image_mobile || ''}
+						type={type} // Передаем корректный тип
+						isLocked={isBun}
+						/>
+					</div>
+				:	
+					<div className={`${styles.burgerConstructorCard} pr-4`} ref={ref} style={{ ...styles, opacity } } data-handler-id={handlerId}>
+						<DragIcon />
+						<ConstructorElement
+						className={styles.constructorElement}
+						text={ingredient.name || 'Выберите начинку'}
+						price={ingredient.price || 0}
+						thumbnail={ingredient.image_mobile || ''}
+						// type={isBun ? 'top' : ''} // Передаем корректный тип
+						isLocked={isBun}
+						handleClose={!isBun ? (() => handleDeleteIngredient(ingredient.key)) : undefined}
+						moveCard={!isBun ? (() => moveCard(ingredient.key)) : undefined}
+						/>
+					</div>
+         }
+		</>
    );
 };
 

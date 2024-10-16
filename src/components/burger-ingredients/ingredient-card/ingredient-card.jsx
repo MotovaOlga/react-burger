@@ -32,6 +32,7 @@ const IngredientCard = ({ ingredient, getIngredientCount }) => {
 			</div>
 			
 			<img src={ingredient?.image || 'Unknown'} alt={ingredient?.name}/>
+			
 			<div className={`${styles.price} p-1`}>
 				<div>
 					<span className={`text_type_digits-default`}>{ingredient?.price || 0}</span>

@@ -1,0 +1,17 @@
+.wrapper {
+	padding-top: 200px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 480px;
+}
+
+.additionalActions {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+} 
+
+

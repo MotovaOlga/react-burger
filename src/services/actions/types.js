@@ -4,8 +4,7 @@
 export const ADD_INGREDIENT = 'ADD_INGREDIENT';
 export const DELETE_INGREDIENT = 'DELETE_INGREDIENT';
 export const MOVE_INGREDIENT = 'MOVE_INGREDIENT';
-// export const SET_INGREDIENT = 'SET_INGREDIENT';
-// export const INIT_INGREDIENTS = 'INIT_INGREDIENTS';
+export const CLEAR_INGREDIENTS = 'CLEAR_INGREDIENTS';
 
 //ingredient-details.js
 export const ADD_CURRENT_INGREDIENT = 'ADD_CURRENT_INGREDIENT';
@@ -21,7 +20,14 @@ export const INGREDIENTS_LOAD_ERROR = 'INGREDIENTS_LOAD_ERROR';
 export const ORDER_LOADING = 'ORDER_LOADING';
 export const ORDER_LOAD_SUCCESS = 'ORDER_LOAD_SUCCESS';
 export const ORDER_LOAD_ERROR = 'ORDER_LOAD_ERROR';
-export const ORDER_NUMBER_UPDATE = 'ORDER_NUMBER_UPDATE'; // как это сделать? очистить полность бургер конструктор?! и номер заказа?
+
+//auth.js
+export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
+export const UPDATE_USER = 'UPDATE_USER';
+export const SET_EMAIL_SUBMITTED = 'SET_EMAIL_SUBMITTED';
+
 
 
 

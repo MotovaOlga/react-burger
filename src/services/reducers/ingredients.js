@@ -1,5 +1,4 @@
 import { INGREDIENTS_REQUEST, INGREDIENTS_LOADING, INGREDIENTS_LOAD_SUCCESS, INGREDIENTS_LOAD_ERROR } from '../actions/types'
-// import data from '../../utils/data';
 
 // данные, которыми инициализируется хранилище
 // const initialState = {

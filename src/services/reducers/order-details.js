@@ -1,4 +1,4 @@
-import { ORDER_LOADING, ORDER_LOAD_SUCCESS, ORDER_LOAD_ERROR, ORDER_NUMBER_UPDATE  } from '../actions/types' 
+import { ORDER_LOADING, ORDER_LOAD_SUCCESS, ORDER_LOAD_ERROR  } from '../actions/types' 
 
 const initialState = {
 	   order: null, 
@@ -40,6 +40,7 @@ export const orderDetailsReducer = (state = initialState, action) => {
 					loading: true,
 					error: null
 			  };
+
 		 default:
 			  return state;
 	}
