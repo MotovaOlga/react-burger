@@ -1,4 +1,4 @@
-import { ADD_INGREDIENT, DELETE_INGREDIENT, MOVE_INGREDIENT } from '../actions/types'
+import { ADD_INGREDIENT, DELETE_INGREDIENT, MOVE_INGREDIENT, CLEAR_INGREDIENTS } from '../actions/types'
 import data from '../../utils/data'
 
 const initialState = {
@@ -39,6 +39,11 @@ export const burgerConstructorReducer = (state = initialState, action) => {
 			return {
 				...state, 
 				burgerConstructor: updatedIngredientsMove,				
+			};
+
+		case CLEAR_INGREDIENTS:
+			return {
+				...initialState,
 			};
 
 	   default:

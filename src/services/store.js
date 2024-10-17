@@ -25,6 +25,9 @@ import {thunk} from 'redux-thunk';
 //    ingredientDetails: {
 // 		ingredientDetails: [],
 // 	},
+//    auth: {
+// 
+//    },
 // }
 
 export const store = createStore(

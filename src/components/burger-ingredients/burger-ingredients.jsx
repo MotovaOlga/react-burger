@@ -1,14 +1,9 @@
-import React, { useRef, useMemo, useEffect} from 'react';
-import PropTypes from "prop-types";
-import {ingredientType} from '../../utils/types'
+import React, { useRef, useMemo } from 'react';
 import { Tab }  from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css'
 import IngredientList from './ingredient-list/ingredient-list'
-import Modal from '../modal/modal'
-import IngredientDetails from '../ingredient-details/ingredient-details'
 import { useDispatch, useSelector } from 'react-redux'
 import { addCurrentIngredient, clearCurrentIngredient } from '../../services/actions/ingredient-details'
-import { ingredientsRequest } from '../../services/actions/ingredients';
 
 
 const BurgerIngredients = () => { 
@@ -20,27 +15,17 @@ const BurgerIngredients = () => {
 	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
 	
 	const [currentTab, setCurrentTab] = React.useState('Buns');
-	const [isModalOpen, setIsModalOpen] = React.useState(false);
 
 	const arrBun = useMemo(() => ingredients.filter(product => product.type === 'bun'),[ingredients]);
 	const arrMain = useMemo(() => ingredients.filter(product => product.type === 'main'),[ingredients]);
 	const arrSauce = useMemo(() => ingredients.filter(product => product.type === 'sauce'),[ingredients]);
 
-	// функции модального окна close/open 
-	// после close ощищаем стор-ingredientDetails
-	const onClose = () => {
-		setIsModalOpen(false);
-		dispatch(clearCurrentIngredient());
-	};
 	// при open найти ингридиент по id и передать его в стор-ingredientDetails объект currentIngredient
 	const onOpen = (id) => {
 		//надо найти в api этот ингредиент с заданым id
 		if (id) {
 			const currentIngredient = ingredients.find((item) => item._id === id);
-		   // console.log('currentIngredient: ', currentIngredient); // отладка
 		   dispatch(addCurrentIngredient(currentIngredient));
-
-			setIsModalOpen(true);
 		}
 	};
 
@@ -92,9 +77,7 @@ const BurgerIngredients = () => {
 		} else {
 			if ( burgerConstructor &&	burgerConstructor.length > 0 ) {
 				const ingredientId = ingredient._id;
-				// const count = burgerConstructor.filter((item) => item._id === ingredientId).length;
 				return burgerConstructor.filter(item => item._id === ingredientId).length;
-				// return 110;
 		   }
 		  return 0;
 		}
@@ -102,15 +85,7 @@ const BurgerIngredients = () => {
 
 	
 	return(
-		<div className={`${styles.burgerIngredients} mr-5` }>
-			
-			{/* модальное окно */}
-			{
-				isModalOpen && 
-				<Modal onClose={onClose} title={'Детали ингредиента'}>
-					<IngredientDetails/>
-				</Modal>
-			}
+		<div className={`${styles.burgerIngredients} mr-5 ml-5` }>
 
 		  <p className={`${styles.headerIngredients} text_type_main-large mt-10`}>Соберите бургер</p>
 		  <section>
