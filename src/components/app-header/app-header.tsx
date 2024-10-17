@@ -1,16 +1,12 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './app-header.module.css'
 import { NavLink, useLocation } from 'react-router-dom'
 
 
-<<<<<<< HEAD:src/components/app-header/app-header.tsx
-const AppHeader: React.FC = () => {
-=======
-const AppHeader = () => {
+const AppHeader: FC = () => {
 	const { pathname } = useLocation();
-
->>>>>>> main:src/components/app-header/app-header.jsx
+	
 	return(
 		<header>		
 		   <nav>

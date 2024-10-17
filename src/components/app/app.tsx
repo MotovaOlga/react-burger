@@ -1,10 +1,4 @@
-<<<<<<< HEAD:src/components/app/app.tsx
 import React, { FC, useState, useEffect } from 'react';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-=======
-import React, { useState, useEffect } from 'react';
->>>>>>> main:src/components/app/app.jsx
 import AppHeader from '../app-header/app-header';
 import styles from './app.module.css'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,29 +15,16 @@ import { ProtectedRouteElement } from '../protected-route/protected-route';
 import { fetchUser} from "../../services/actions/auth";
 import { Orders } from '../../pages/orders/orders'
 import { ingredientsRequest } from '../../services/actions/ingredients';
-<<<<<<< HEAD:src/components/app/app.tsx
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { IRootState } from '../../utils/types'
+import { IRootState, AppDispatch } from '../../utils/types';
 
 
 const App: FC = () => {
-	const dispatch: any = useDispatch(); // Replace 'any'
-
-	// И отрисовывать BurgerIngredients и BurgerConstructor только если запрос завершился и пришли ингредиенты
-	const {ingredients, loading: globalLoading, error: globalError} = useSelector((state: IRootState) => state.ingredients);
-	const [loading, setLoading] = useState<boolean>(true);
-=======
-
-
-const App = () => {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
    const navigate = useNavigate();
 	let location = useLocation();
 	const state = location.state || {};
-	const loading = useSelector((state) => state.auth.isLoading);
+	const loading = useSelector((state: IRootState) => state.auth.isLoading);
 	// console.log('App - loading: ', loading); //Отладка
->>>>>>> main:src/components/app/app.jsx
 
 	useEffect(() => {
 		dispatch(ingredientsRequest());
@@ -95,7 +76,3 @@ const App = () => {
 }
  
 export default App;
-
-
-      
-

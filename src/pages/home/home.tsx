@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import BurgerConstructor from '../../components/burger-constructor/burger-constructor';
 import BurgerIngredients from '../../components/burger-ingredients/burger-ingredients';
 import styles from './home.module.css'
 import { useSelector } from 'react-redux'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { IRootState, AppDispatch } from '../../utils/types';
 
-export const Home = () => {
+
+export const Home: FC = () => {
 	// И отрисовывать BurgerIngredients и BurgerConstructor только если запрос завершился и пришли ингредиенты
-	const {ingredients, globalLoading, globalError} = useSelector((state) => state.ingredients);
-	const [loading, setLoading] = useState(true);
+	const {ingredients, loading: globalLoading, error: globalError} = useSelector((state: IRootState) => state.ingredients);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
 		setLoading(globalLoading); // Синхронизируем локальное состояние с глобальным

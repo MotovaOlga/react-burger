@@ -1,24 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState, ChangeEvent, FormEvent, MouseEvent } from 'react'
 import styles from './profile.module.css'
 import { Input, Button,  ShowIcon, HideIcon, EditIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchLogout, fetchUpdateUser, updateUserAction, logoutAction} from "../../services/actions/auth";
-import { logoutRequest,	updateUserRequest, } from '../../utils/api';
+// import { logoutRequest,	updateUserRequest, } from '../../utils/api';
 // import Orders from '../orders/orders'
+import { IRootState, AppDispatch, IUser } from '../../utils/types';
 
-export const Profile = () => {
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
+
+export const Profile: FC = () => {
+	const dispatch = useDispatch<AppDispatch>();	
+	// const navigate = useNavigate();
 	let location = useLocation();
-	const emptyState = {
+	const emptyState: IUser = {
 		name    : "",
 		email   : "",
 		password: "",
    };
-	const {user, isLoading } = useSelector((state) => state.auth);
-	const [newState, setNewState] = useState(emptyState); // новый стейт
-	const [isChanged, setIsChanged] = useState(false); // отслеживаем изменения чтобы показывать/скрывать кнопки 'Сохранить' и 'Отменить'
+	const {user, isLoading } = useSelector((state: IRootState) => state.auth);
+	const [newState, setNewState] = useState<IUser>(emptyState); // новый стейт
+	const [isChanged, setIsChanged] = useState<boolean>(false); // отслеживаем изменения чтобы показывать/скрывать кнопки 'Сохранить' и 'Отменить'
 
 	useEffect(() => {
 		setNewState(user); // заполним поля инпутов
@@ -39,7 +41,7 @@ export const Profile = () => {
 	// 	console.log('onIconClick');
 	// }
 
-   const handleInputChange = (e) => {
+   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setNewState(prevState => ({
 			...prevState,
@@ -48,21 +50,21 @@ export const Profile = () => {
    };
 
 	// Сохранить изменения
-   const handleSubmit = async (e) => {
+   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		dispatch(fetchUpdateUser(newState));
 		setIsChanged(false); //скрываем кнопки 'Сохранить' и 'Отменить'
    };
 
 	// Отменить изменения
-	const handleReset = (e) => {
+	const handleReset = (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		setNewState(user); // без пароля 
 		setIsChanged(false); //скрываем кнопки 'Сохранить' и 'Отменить'
    };
 
 	// Выход 
-	const handleLogout = async (e) => {
+	const handleLogout = async (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		dispatch(fetchLogout());
 	};
@@ -106,38 +108,38 @@ export const Profile = () => {
 					<ul>
 						<li>
 							<Input
-							type={"text"}
-							placeholder={"Имя"}
-							onChange={handleInputChange}
-							value={newState.name ||''}
-							name={"name"}
-							size={"default"}
-							icon={"EditIcon"}
-							// onIconClick={handleIOnIconClick}
+							   type={"text"}
+							   placeholder={"Имя"}
+							   onChange={handleInputChange}
+							   value={newState.name ||''}
+							   name={"name"}
+							   size={"default"}
+							   icon={"EditIcon"}
+							   // onIconClick={handleIOnIconClick}
 							/>
 							</li>
 						<li>
 							<Input
-							type={"email"}
-							placeholder={"Логин"}
-							onChange={handleInputChange}
-							value={newState.email ||''}
-							name={"email"}
-							size={"default"}
-							icon={"EditIcon"}
-							// onIconClick={handleIOnIconClick}
+							   type={"email"}
+							   placeholder={"Логин"}
+							   onChange={handleInputChange}
+							   value={newState.email ||''}
+							   name={"email"}
+							   size={"default"}
+							   icon={"EditIcon"}
+							   // onIconClick={handleIOnIconClick}
 							/>
 							</li>
 						<li>
 							<Input
-							type={"password"}
-							placeholder={"Пароль"}
-							onChange={handleInputChange}
-							value={newState.password ||''}
-							name={"password"}
-							size={"default"}
-							icon={"EditIcon"}
-							// onIconClick={handleIOnIconClick}
+							   type={"password"}
+							   placeholder={"Пароль"}
+							   onChange={handleInputChange}
+							   value={newState.password ||''}
+							   name={"password"}
+							   size={"default"}
+							   icon={"EditIcon"}
+							   // onIconClick={handleIOnIconClick}
 							/>
 							</li>
 					</ul>

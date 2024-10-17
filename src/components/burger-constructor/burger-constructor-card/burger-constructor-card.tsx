@@ -1,27 +1,27 @@
-import React, { useRef } from 'react';
-import PropTypes from "prop-types";
-import {ingredientTypeWithKey} from '../../../utils/types'
+import React, { FC, useRef } from 'react';
 import { useDispatch } from 'react-redux'
 import { deleteIngredient } from '../../../services/actions/burger-constructor'
 import styles from './burger-constructor-card.module.css'
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrop, useDrag } from "react-dnd";
+import { TBurgerConstructorCardProps } from '../../../utils/types';
 
-export const BurgerConstructorCard = ({ ingredient, index, moveCard, type}) => {
+
+export const BurgerConstructorCard: FC<TBurgerConstructorCardProps> = ({ ingredient, index, moveCard, type}) => {
 	const dispatch = useDispatch();	 
-	const handleDeleteIngredient = (ingredientKey) => {   
-		// console.log('Deleting ingredient with KEY:', ingredientKey);
+	
+	const handleDeleteIngredient = (ingredientKey: string|undefined) => {   
 		dispatch(deleteIngredient(ingredientKey));
 	}
 
 	const isBun = ingredient.type === 'bun';
 
 	// сортировка
-	const ref = useRef(null)
+	const ref = useRef<HTMLDivElement>(null)
 	
 	const [{ handlerId }, drop] = useDrop({
 	   accept: 'ingredient',
-	   hover: (item, monitor) => {
+	   hover: (item: { index: number; key: string }, monitor) => {
 		   if (!ref.current) return;
 			if (isBun) return;
 		   const dragIndex = item.index; // это индекс элемента, который перетаскивается.
@@ -33,14 +33,14 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard, type}) => {
 		   // Don't replace items with themselves
 		   if (dragIndex === hoverIndex) return;
 		   // Determine rectangle on screen
-		   const hoverBoundingRect = ref.current?.getBoundingClientRect()
+		   const hoverBoundingRect = ref.current?.getBoundingClientRect();
 		   // Get vertical middle
-		   const hoverMiddleY =
-		  	(hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
+		   const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
 		   // Determine mouse position
-		   const clientOffset = monitor.getClientOffset()
+		   const clientOffset = monitor.getClientOffset();
+			if (!clientOffset) return;
 		   // Get pixels to the top
-		   const hoverClientY = clientOffset.y - hoverBoundingRect.top
+		   const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 		   // Only perform the move when the mouse has crossed half of the items height
 		   // When dragging downwards, only move when the cursor is below 50%
 		   // When dragging upwards, only move when the cursor is above 50%
@@ -52,10 +52,8 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard, type}) => {
 		
 		   // Time to actually perform the action
 		   if (moveCard) {
-				// if(item.key){
-					moveCard(dragIndex, hoverIndex);
-				// }
-			 }
+				moveCard(dragIndex, hoverIndex);
+			}
 
 		   // Note: we're mutating the monitor item here!
 		   // Generally it's better to avoid mutations,
@@ -71,7 +69,6 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard, type}) => {
 	   collect: (monitor) => ({
 		   handlerId: monitor.getHandlerId(),
 			didDrop: monitor.didDrop(),
-
       }),
 	})
 
@@ -92,7 +89,7 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard, type}) => {
 			{ isBun 
 				?	<div className={`${styles.burgerConstructorCard} pr-4`}>
 						<ConstructorElement
-						className={styles.constructorElement}
+						// className={styles.constructorElement}
 						text={`${ingredient.name || 'Выберите булку'} ${type === 'top' ? ' (верх)' : type === 'bottom' ? ' (низ)' : ''}`}
 						// text={ingredient.name || 'Выберите булку'}
 						price={ingredient.price || 0}
@@ -103,26 +100,19 @@ export const BurgerConstructorCard = ({ ingredient, index, moveCard, type}) => {
 					</div>
 				:	
 					<div className={`${styles.burgerConstructorCard} pr-4`} ref={ref} style={{ ...styles, opacity } } data-handler-id={handlerId}>
-						<DragIcon />
+						<DragIcon type='primary' />
 						<ConstructorElement
-						className={styles.constructorElement}
-						text={ingredient.name || 'Выберите начинку'}
-						price={ingredient.price || 0}
-						thumbnail={ingredient.image_mobile || ''}
-						// type={isBun ? 'top' : ''} // Передаем корректный тип
-						isLocked={isBun}
-						handleClose={!isBun ? (() => handleDeleteIngredient(ingredient.key)) : undefined}
-						moveCard={!isBun ? (() => moveCard(ingredient.key)) : undefined}
+						   // className={`${styles.constructorElement}`}
+						   text={ingredient.name || 'Выберите начинку'}
+						   price={ingredient.price || 0}
+						   thumbnail={ingredient.image_mobile || ''}
+						   // type={isBun ? '' : ''} // Передаем корректный тип
+						   isLocked={isBun}
+						   handleClose={!isBun ? (() => handleDeleteIngredient(ingredient.key)) : undefined}
 						/>
 					</div>
          }
 		</>
    );
 };
-
-// BurgerConstructorCard.propTypes = {
-// 	ingredient: ingredientTypeWithKey.isRequired,
-// 	index: PropTypes.number,
-// 	moveCard: PropTypes.func,
-// };
 

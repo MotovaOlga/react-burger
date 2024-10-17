@@ -1,13 +1,14 @@
 import React from "react";
 import { useSelector } from 'react-redux'
 import {Navigate, useLocation} from "react-router-dom";
+import { IRootState, TProtectedRouteElementProps } from '../../utils/types';
 
 
-export const ProtectedRouteElement = ({onlyAuth = false, component}) => { 
+export const ProtectedRouteElement: React.FC<TProtectedRouteElementProps> = ({onlyAuth = false, component}) => { 
 	// если onlyAuth = true что маршрут доступен только для авторизованных пользователей
 	// если onlyAuth = false что маршрут доступен только для неавторизованных пользователей
 
-	const {user, isLoading, isAuth, emailSubmitted} = useSelector((state) => state.auth);
+	const {user, isLoading, isAuth, emailSubmitted} = useSelector((state: IRootState) => state.auth);
 	const location = useLocation();
 	// console.log('location - ', location);
 	// console.log('isAuth - ', isAuth);

@@ -1,25 +1,13 @@
-<<<<<<< HEAD:src/components/ingredient-details/ingredient-details.tsx
-import React, { FC } from 'react';
-// import PropTypes from "prop-types";
-// import {ingredientType} from '../../utils/types'
-import styles from './ingredient-details.module.css'
-import { useSelector } from 'react-redux'
-import { IRootState } from '../../utils/types'
-
-
-const IngredientDetails: FC = () => {
-	const ingredient = useSelector((state: IRootState ) => state.ingredientDetails.currentIngredient);
-	// console.log('ingredient: ', ingredient); // отладка
-=======
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import styles from './ingredient-details.module.css'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 // import { ingredientsRequest } from '../../services/actions/ingredients';
+import { IRootState } from '../../utils/types';
 
 
-const IngredientDetails = () => {
-	const {ingredients, globalLoading, globalError} = useSelector((state) => state.ingredients);
+const IngredientDetails: FC = () => {
+	const {ingredients, loading: globalLoading, error: globalError} = useSelector((state: IRootState) => state.ingredients);
 	const [isLoading, setIsLoading] = useState(true);
 	const { id } = useParams();
 	const ingredient = ingredients.find((item) => item._id === id);
@@ -44,7 +32,6 @@ const IngredientDetails = () => {
 	if (!ingredient) {
 		return <p>Ingredient not found</p>; // Обработка случая, когда ингредиент не найден
 	}
->>>>>>> main:src/components/ingredient-details/ingredient-details.jsx
 
 	return (
 		<div className={`${styles.ingredientDetails}`}>

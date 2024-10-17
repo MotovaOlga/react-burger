@@ -1,10 +1,5 @@
-<<<<<<< HEAD:src/components/burger-constructor/burger-constructor.tsx
-import React, { FC, useRef, useCallback, useState, useEffect, useMemo }from 'react';
-import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-=======
-import React, { useCallback, useMemo }from 'react';
+import React, { FC, useState, useCallback, useMemo }from 'react';
 import { ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
->>>>>>> main:src/components/burger-constructor/burger-constructor.jsx
 import styles from './burger-constructor.module.css'
 // import data  from '../../utils/data.js';
 import Modal from '../modal/modal'
@@ -14,22 +9,15 @@ import { addIngredient, moveIngredient } from '../../services/actions/burger-con
 import { useDrop } from "react-dnd";
 import { orderRequest } from '../../services/actions/order-details';
 import { v4 as uuidv4 } from 'uuid';
-<<<<<<< HEAD:src/components/burger-constructor/burger-constructor.tsx
-import { BurgerConstructorCard } from './burger-constructor-card/burger-constructor-card';
-import { IRootState, IIngredient, } from '../../utils/types'
+import { BurgerConstructorCard } from './burger-constructor-card/burger-constructor-card'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { IRootState, AppDispatch, IIngredient } from '../../utils/types';
 
 
 const BurgerConstructor: FC = () => {
-	const dispatch: any = useDispatch(); // Replace 'any'	 
-=======
-import { BurgerConstructorCard } from './burger-constructor-card/burger-constructor-card'
-import { useNavigate, useLocation } from 'react-router-dom'
-
-const BurgerConstructor = () => {
-	const dispatch = useDispatch();	
+	const dispatch = useDispatch<AppDispatch>();	
 	const navigate = useNavigate();
-	const isAuth = useSelector((state) => state.auth.isAuth);
->>>>>>> main:src/components/burger-constructor/burger-constructor.jsx
+	const isAuth = useSelector((state: IRootState) => state.auth.isAuth);
 
 	// массив игредиентов BurgerConstructor
 	const arrBurgerConstructorIngredients = useSelector((state: IRootState) => state.burgerConstructor);
@@ -71,7 +59,7 @@ const BurgerConstructor = () => {
 		}
 	};
 
-	// сумма заказа - обернуть в хук useMemo
+	// сумма заказа
 	const orderAmount = useMemo(() => {
 		const bunPrice = arrBurgerConstructorIngredients.bun ? (arrBurgerConstructorIngredients.bun.price) * 2 : 0;
 		const burgerConstructorPrice = Array.isArray(arrBurgerConstructorIngredients.burgerConstructor) 
@@ -130,20 +118,12 @@ const BurgerConstructor = () => {
 						   {/* булка-top*/}
 							{arrBurgerConstructorIngredients.bun ? (
                         <li key="top">
-<<<<<<< HEAD:src/components/burger-constructor/burger-constructor.tsx
-									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun} moveCard={moveCard} index={0} type="bun" /> 
-=======
 									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun} type={'top'} /> 
->>>>>>> main:src/components/burger-constructor/burger-constructor.jsx
 									{/* moveCard={()=>{return;}} index={''} */}
 								</li>
                      ) : (
 								<li key={'top'} >
-<<<<<<< HEAD:src/components/burger-constructor/burger-constructor.tsx
-								   <ConstructorElement text={'Выберите булку'} isLocked={true} thumbnail="" price={0}/>
-=======
-								   <ConstructorElement text={'Выберите булку'} type={"top"} isLocked={true}/>
->>>>>>> main:src/components/burger-constructor/burger-constructor.jsx
+								   <ConstructorElement text={'Выберите булку'} type={"top"} isLocked={true} price={0} thumbnail=''/>
 							   </li>
 					      )}
 							
@@ -154,37 +134,25 @@ const BurgerConstructor = () => {
 									   return (
 											<div key={product.key}>
 											   <li>
-									            <BurgerConstructorCard moveCard={moveCard} ingredient={product} index={index} type=""/>
+									            <BurgerConstructorCard moveCard={moveCard} ingredient={product} index={index}/>
 										      </li>
 											</div>
 									   );
 					         	}})
 							):(
 								<li key={'filings'} >
-<<<<<<< HEAD:src/components/burger-constructor/burger-constructor.tsx
-								   <ConstructorElement text={'Выберите начинку'} type="bottom" isLocked={false} thumbnail="" price={0}/>
-=======
-								   <ConstructorElement text={'Выберите начинку'} isLocked={true}/>
->>>>>>> main:src/components/burger-constructor/burger-constructor.jsx
+								   <ConstructorElement text={'Выберите начинку'} isLocked={true} price={0} thumbnail=''/>
 							   </li>
 							)}
                      
                      {/* булка-bottom*/}
 							{arrBurgerConstructorIngredients.bun ? (
 								<li key="bottom">
-<<<<<<< HEAD:src/components/burger-constructor/burger-constructor.tsx
-									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun} moveCard={moveCard} index={0} type="bun"/>
-                        </li>
-                     ) : (
-								<li key={'bottom'} >
-								   <ConstructorElement text={'Выберите булку'} type="bottom" isLocked={true} thumbnail="" price={0}/>
-=======
 									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun} type={'bottom'}/>
                         </li>
                      ) : (
 								<li key={'bottom'} >
-								   <ConstructorElement text={'Выберите булку'} type={"bottom"} isLocked={true}/>
->>>>>>> main:src/components/burger-constructor/burger-constructor.jsx
+								   <ConstructorElement text={'Выберите булку'} type={"bottom"} isLocked={true} price={0} thumbnail=''/>
 							   </li>
 					      )}
             </ul>

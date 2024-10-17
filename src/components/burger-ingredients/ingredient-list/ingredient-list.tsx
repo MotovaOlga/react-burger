@@ -1,12 +1,12 @@
 import React from 'react';
-import PropTypes from "prop-types";
-import {ingredientType} from '../../../utils/types'
 // import data  from '../../utils/data.js';
 import styles from './ingredient-list.module.css'
 import IngredientCard from '../ingredient-card/ingredient-card';
 import { Link, useLocation} from 'react-router-dom'
+import { TIngredientListProps } from '../../../utils/types';
 
-const IngredientList = ({ headerId, headerRef, ingredients, title, onOpen, getIngredientCount }) => {
+
+const IngredientList: React.FC<TIngredientListProps> = ({ headerId, headerRef, ingredients, title, onOpen, getIngredientCount }) => {
 	let location = useLocation();
 
 	return (
@@ -27,15 +27,6 @@ const IngredientList = ({ headerId, headerRef, ingredients, title, onOpen, getIn
 			</ul>
 		</article>
 	);	
-};
-
-IngredientList.propTypes = {
-	ingredients: PropTypes.arrayOf(ingredientType).isRequired,
-	getIngredientCount: PropTypes.func.isRequired,
-	headerId: PropTypes.string.isRequired,
-	headerRef: PropTypes.object.isRequired,
-	title: PropTypes.string.isRequired, 
-	onOpen: PropTypes.func.isRequired,
 };
 
 export default IngredientList;
