@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import AppHeader from '../app-header/app-header';
@@ -7,13 +7,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ingredientsRequest } from '../../services/actions/ingredients';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { IRootState } from '../../utils/types'
 
-const App = () => {
-	const dispatch = useDispatch();
+
+const App: FC = () => {
+	const dispatch: any = useDispatch(); // Replace 'any'
 
 	// И отрисовывать BurgerIngredients и BurgerConstructor только если запрос завершился и пришли ингредиенты
-	const {ingredients, globalLoading, globalError} = useSelector((state) => state.ingredients);
-	const [loading, setLoading] = useState(true);
+	const {ingredients, loading: globalLoading, error: globalError} = useSelector((state: IRootState) => state.ingredients);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
 		dispatch(ingredientsRequest());

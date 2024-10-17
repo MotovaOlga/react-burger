@@ -1,11 +1,13 @@
-import React from 'react';
-import PropTypes from "prop-types";
-import {ingredientType} from '../../utils/types'
+import React, { FC } from 'react';
+// import PropTypes from "prop-types";
+// import {ingredientType} from '../../utils/types'
 import styles from './ingredient-details.module.css'
 import { useSelector } from 'react-redux'
+import { IRootState } from '../../utils/types'
 
-const IngredientDetails = () => {
-	const ingredient = useSelector(state => state.ingredientDetails.currentIngredient);
+
+const IngredientDetails: FC = () => {
+	const ingredient = useSelector((state: IRootState ) => state.ingredientDetails.currentIngredient);
 	// console.log('ingredient: ', ingredient); // отладка
 
 	return (

@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState, useEffect, useMemo }from 'react';
+import React, { FC, useRef, useCallback, useState, useEffect, useMemo }from 'react';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css'
 // import data  from '../../utils/data.js';
@@ -9,17 +9,18 @@ import { addIngredient, moveIngredient } from '../../services/actions/burger-con
 import { useDrop } from "react-dnd";
 import { orderRequest } from '../../services/actions/order-details';
 import { v4 as uuidv4 } from 'uuid';
-import { BurgerConstructorCard } from './burger-constructor-card/burger-constructor-card'
+import { BurgerConstructorCard } from './burger-constructor-card/burger-constructor-card';
+import { IRootState, IIngredient, } from '../../utils/types'
 
 
-const BurgerConstructor = () => {
-	const dispatch = useDispatch();	 
+const BurgerConstructor: FC = () => {
+	const dispatch: any = useDispatch(); // Replace 'any'	 
 
 	// массив игредиентов BurgerConstructor
-	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
+	const arrBurgerConstructorIngredients = useSelector((state: IRootState) => state.burgerConstructor);
 
 	// модальное окно
-	const [isModalOpen, setIsModalOpen] = React.useState(false);
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const onClose = () => {
 		setIsModalOpen(false);
 	};
@@ -62,13 +63,13 @@ const BurgerConstructor = () => {
 
 	// DND
 	// сортировка
-	const moveCard = useCallback((dragIndex, hoverIndex) => {
+	const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
 		dispatch(moveIngredient(dragIndex, hoverIndex));
 	}, [])
 	
 
 	// добавление ингредиентов
-	const handleAddIngredient = (ingredient) => {
+	const handleAddIngredient = (ingredient: IIngredient) => {
 		// Создаем новый объект ингредиента с уникальным ключом
 		const ingredientWithKey = {
 			...ingredient,
@@ -81,7 +82,7 @@ const BurgerConstructor = () => {
 	// Хук useDrop работает с целевым элементом(компонент, в который мы перетаскиваем исходный элемент).
 		const [{ canDrop, dragItem, isHover }, dropTargetRef] = useDrop(() => ({
 		accept: 'ingredientCard', // строка, которая должна быть аналогична свойству type перетаскиваемого компонента.
-		drop: (ingredient) => (
+		drop: (ingredient: IIngredient) => (
 			handleAddIngredient(ingredient)
 		), // принимает данные перетаскиваемого компонента и monitor. срабатывает при «броске» перетаскиваемого элемента в целевой.
 		collect: (monitor) => ({ // набор вычислений для работы с пропсами
@@ -109,12 +110,12 @@ const BurgerConstructor = () => {
 						   {/* булка-top*/}
 							{arrBurgerConstructorIngredients.bun ? (
                         <li key="top">
-									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun} /> 
+									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun} moveCard={moveCard} index={0} type="bun" /> 
 									{/* moveCard={()=>{return;}} index={''} */}
 								</li>
                      ) : (
 								<li key={'top'} >
-								   <ConstructorElement text={'Выберите булку'} isLocked={true}/>
+								   <ConstructorElement text={'Выберите булку'} isLocked={true} thumbnail="" price={0}/>
 							   </li>
 					      )}
 							
@@ -125,25 +126,25 @@ const BurgerConstructor = () => {
 									   return (
 											<div key={product.key}>
 											   <li>
-									            <BurgerConstructorCard moveCard={moveCard} ingredient={product} index={index}/>
+									            <BurgerConstructorCard moveCard={moveCard} ingredient={product} index={index} type=""/>
 										      </li>
 											</div>
 									   );
 					         	}})
 							):(
 								<li key={'filings'} >
-								   <ConstructorElement text={'Выберите начинку'} type="bottom" isLocked={false}/>
+								   <ConstructorElement text={'Выберите начинку'} type="bottom" isLocked={false} thumbnail="" price={0}/>
 							   </li>
 							)}
                      
                      {/* булка-bottom*/}
 							{arrBurgerConstructorIngredients.bun ? (
 								<li key="bottom">
-									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun}/>
+									<BurgerConstructorCard ingredient={arrBurgerConstructorIngredients.bun} moveCard={moveCard} index={0} type="bun"/>
                         </li>
                      ) : (
 								<li key={'bottom'} >
-								   <ConstructorElement text={'Выберите булку'} type="bottom" isLocked={true}/>
+								   <ConstructorElement text={'Выберите булку'} type="bottom" isLocked={true} thumbnail="" price={0}/>
 							   </li>
 					      )}
             </ul>
