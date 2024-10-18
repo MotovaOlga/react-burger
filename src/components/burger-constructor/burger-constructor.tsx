@@ -6,7 +6,7 @@ import Modal from '../modal/modal'
 import OrderDetails from '../order-details/order-details'
 import { useDispatch, useSelector } from 'react-redux'
 import { addIngredient, moveIngredient } from '../../services/actions/burger-constructor'
-import { useDrop } from "react-dnd";
+import { useDrop, DropTargetMonitor } from "react-dnd";
 import { orderRequest } from '../../services/actions/order-details';
 import { v4 as uuidv4 } from 'uuid';
 import { BurgerConstructorCard } from './burger-constructor-card/burger-constructor-card'
@@ -88,12 +88,15 @@ const BurgerConstructor: FC = () => {
 
 	// перетаскивание
 	// Хук useDrop работает с целевым элементом(компонент, в который мы перетаскиваем исходный элемент).
-		const [{ canDrop, dragItem, isHover }, dropTargetRef] = useDrop(() => ({
+		const [{ canDrop, dragItem, isHover }, dropTargetRef] = useDrop<
+		   IIngredient,
+		   unknown,
+		   { canDrop:boolean; dragItem:IIngredient; isHover:boolean }>(() => ({
 		accept: 'ingredientCard', // строка, которая должна быть аналогична свойству type перетаскиваемого компонента.
 		drop: (ingredient: IIngredient) => (
 			handleAddIngredient(ingredient)
 		), // принимает данные перетаскиваемого компонента и monitor. срабатывает при «броске» перетаскиваемого элемента в целевой.
-		collect: (monitor) => ({ // набор вычислений для работы с пропсами
+		collect: (monitor: DropTargetMonitor) => ({ // набор вычислений для работы с пропсами
 			canDrop: monitor.canDrop(), // возвращает булевое значение true в случае, если в этот момент никакой элемент не перетаскивается.
          dragItem: monitor.getItem(),
          isHover: monitor.isOver(),

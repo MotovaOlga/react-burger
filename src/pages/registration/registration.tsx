@@ -41,6 +41,8 @@ export const Registration: FC = () => {
 				   onChange={fieldChange}
 				   size={"default"}
 				   // icon={"EditIcon"}
+					onPointerEnterCapture={undefined} 
+					onPointerLeaveCapture={undefined}
 				/>
 			</div>
 			<div className={`pb-6`}>
@@ -52,6 +54,8 @@ export const Registration: FC = () => {
 				   onChange={fieldChange}
 				   size={"default"}
 				   // icon={"EditIcon"}
+					onPointerEnterCapture={undefined} 
+					onPointerLeaveCapture={undefined}
 				/>
 			</div>
 			<div className={`pb-6`}>
@@ -59,10 +63,12 @@ export const Registration: FC = () => {
 					type={"password"}
 					placeholder={"Пароль"}
 					name={"password"}
-					value={formData.password}
+					value={formData.password ?? ''}
 					onChange={fieldChange}
 					size={"default"}
 					icon={"ShowIcon"}
+					onPointerEnterCapture={undefined} 
+					onPointerLeaveCapture={undefined}
 					/>
 			</div>
 			

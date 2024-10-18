@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, ChangeEvent, FormEvent, MouseEvent } from 'react'
+import React, { FC, useEffect, useState, ChangeEvent, FormEvent, MouseEvent, SyntheticEvent } from 'react'
 import styles from './profile.module.css'
 import { Input, Button,  ShowIcon, HideIcon, EditIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'
@@ -57,7 +57,7 @@ export const Profile: FC = () => {
    };
 
 	// Отменить изменения
-	const handleReset = (e: MouseEvent<HTMLButtonElement>) => {
+	const handleReset = (e: SyntheticEvent) => {
 		e.preventDefault();
 		setNewState(user); // без пароля 
 		setIsChanged(false); //скрываем кнопки 'Сохранить' и 'Отменить'
@@ -116,6 +116,8 @@ export const Profile: FC = () => {
 							   size={"default"}
 							   icon={"EditIcon"}
 							   // onIconClick={handleIOnIconClick}
+								onPointerEnterCapture={undefined} 
+					         onPointerLeaveCapture={undefined}
 							/>
 							</li>
 						<li>
@@ -128,6 +130,8 @@ export const Profile: FC = () => {
 							   size={"default"}
 							   icon={"EditIcon"}
 							   // onIconClick={handleIOnIconClick}
+								onPointerEnterCapture={undefined} 
+					         onPointerLeaveCapture={undefined}
 							/>
 							</li>
 						<li>
@@ -140,6 +144,8 @@ export const Profile: FC = () => {
 							   size={"default"}
 							   icon={"EditIcon"}
 							   // onIconClick={handleIOnIconClick}
+								onPointerEnterCapture={undefined} 
+					         onPointerLeaveCapture={undefined}
 							/>
 							</li>
 					</ul>

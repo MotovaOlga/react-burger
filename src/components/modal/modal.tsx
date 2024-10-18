@@ -24,8 +24,7 @@ const Modal: FC<TModalProps> = ({title, children, onClose}) => {
 
 	// Проверяем, что portal не null
 	if (!portal) {
-		// return null; 
-		return
+		return null; 
 	}
   
 	return createPortal(

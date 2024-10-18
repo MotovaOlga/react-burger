@@ -34,10 +34,12 @@ export const Login: FC = () => {
 			<h2 className={`text text_type_main-medium text_color_primary pb-6`}>Вход</h2>
 			<div className={`pb-6`}>
 				<Input
+					value={formData.email}				
+					onChange={fieldChange}
+					onPointerEnterCapture={undefined} 
+					onPointerLeaveCapture={undefined}
 				   type={"email"}
 				   placeholder={"E-mail"}
-				   onChange={fieldChange}
-				   value={formData.email}
 				   name={"email"}
 				   size={"default"}
 				   // icon={"EditIcon"}
@@ -52,6 +54,8 @@ export const Login: FC = () => {
 					value={formData.password}
 					size={"default"}
 					icon={"ShowIcon"}
+					onPointerEnterCapture={undefined} 
+					onPointerLeaveCapture={undefined}
 					/>
 			</div>
 			

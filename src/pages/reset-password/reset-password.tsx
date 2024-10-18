@@ -9,7 +9,7 @@ export const ResetPassword: FC = () => {
 	const emptyState = { password: "", token: "", };
 	const [formData, setFormData] = useState(emptyState);
 
-	const handleInputChange = (e) => {
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormData(prevState => ({
 			...prevState,
@@ -17,7 +17,7 @@ export const ResetPassword: FC = () => {
 		}));
    };
 
-	const handleSubmit = async (e: ChangeEvent<HTMLInputElement>) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>)=> {
 		e.preventDefault();
 		try {
 			const data =  await resetPasswordRequest(formData);
@@ -46,6 +46,8 @@ export const ResetPassword: FC = () => {
 				   name={"password"}
 				   size={"default"}
 				   icon={"HideIcon"}
+					onPointerEnterCapture={undefined} 
+					onPointerLeaveCapture={undefined}
 				/>
 			</div>
 			<div className={`pb-6`}>
@@ -57,6 +59,8 @@ export const ResetPassword: FC = () => {
 				   name={"token"}
 				   size={"default"}
 				   // icon={"EditIcon"}
+					onPointerEnterCapture={undefined} 
+					onPointerLeaveCapture={undefined}
 				/>
 			</div>
 			

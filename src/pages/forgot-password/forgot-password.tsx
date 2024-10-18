@@ -6,15 +6,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { fetchForgotPassword } from "../../services/actions/auth";
 import { IRootState, AppDispatch } from '../../utils/types';
 
-interface IFormData {
-	email: string;
-}
+// interface IFormData {
+// 	email: string;
+// }
 
 export const ForgotPassword: FC = () => {
 	const dispatch = useDispatch<AppDispatch>();	
 	const navigate = useNavigate();
-	const emptyState: IFormData = { email: "", };
-	const [email, setEmail] = useState<IFormData>(emptyState);
+	// const emptyState: IFormData = { email: "", };
+	const [email, setEmail] = useState<{email: string}>({ email: '' });
 	const emailSubmitted = useSelector((state: IRootState) => state.auth.emailSubmitted);
 
 	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,14 +45,16 @@ export const ForgotPassword: FC = () => {
 			<h2 className={`text text_type_main-medium text_color_primary pb-6`}>Восстановление пароля</h2>
 			<div className={`pb-6`}>
 				<Input
-				   type={"email"}
-				   placeholder={"Укажите e-mail"}
-				   onChange={handleInputChange}
-				   // onChange={ (e) => handleInputChange(e.target.value)}
-				   value={email.email ||''}
-				   name={"email"}
-				   size={"default"}
-				/>
+				   value={email.email}
+					onChange={handleInputChange}
+					onPointerEnterCapture={undefined} 
+				   onPointerLeaveCapture={undefined}
+               // onChange={e => setEmail({email: e.target.value})}
+               type={'text'}
+               placeholder={'Укажите e-mail'}
+               name={'email'}
+               size={'default'}
+            />
 			</div>
 			
 			<Button

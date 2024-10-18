@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { deleteIngredient } from '../../../services/actions/burger-constructor'
 import styles from './burger-constructor-card.module.css'
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDrop, useDrag } from "react-dnd";
+import { useDrop, useDrag, DropTargetMonitor } from "react-dnd";
 import { TBurgerConstructorCardProps } from '../../../utils/types';
 
 
@@ -11,7 +11,9 @@ export const BurgerConstructorCard: FC<TBurgerConstructorCardProps> = ({ ingredi
 	const dispatch = useDispatch();	 
 	
 	const handleDeleteIngredient = (ingredientKey: string|undefined) => {   
-		dispatch(deleteIngredient(ingredientKey));
+		if (ingredientKey) {
+			dispatch(deleteIngredient(ingredientKey));
+	   }
 	}
 
 	const isBun = ingredient.type === 'bun';
@@ -24,8 +26,8 @@ export const BurgerConstructorCard: FC<TBurgerConstructorCardProps> = ({ ingredi
 	   hover: (item: { index: number; key: string }, monitor) => {
 		   if (!ref.current) return;
 			if (isBun) return;
-		   const dragIndex = item.index; // это индекс элемента, который перетаскивается.
-		   const hoverIndex = index; // это индекс элемента, над которым в данный момент находится перетаскиваемый элемент
+		   const dragIndex: number = item.index; // это индекс элемента, который перетаскивается.
+		   const hoverIndex: number = index || 0; // это индекс элемента, над которым в данный момент находится перетаскиваемый элемент
 
 		   // console.log('item.id:', item.id);
 		   // console.log('item:', item);
@@ -66,7 +68,7 @@ export const BurgerConstructorCard: FC<TBurgerConstructorCardProps> = ({ ingredi
 		//    console.log('hoverIndex:', hoverIndex),
 		//    moveCard(dragIndex, hoverIndex)
 	   // ), // принимает данные перетаскиваемого компонента и monitor. срабатывает при «броске» перетаскиваемого элемента в целевой.
-	   collect: (monitor) => ({
+	   collect: (monitor: DropTargetMonitor) => ({
 		   handlerId: monitor.getHandlerId(),
 			didDrop: monitor.didDrop(),
       }),
@@ -86,8 +88,8 @@ export const BurgerConstructorCard: FC<TBurgerConstructorCardProps> = ({ ingredi
 	
    return (
 		<> 
-			{ isBun 
-				?	<div className={`${styles.burgerConstructorCard} pr-4`}>
+			{ isBun ? (
+					<div className={`${styles.burgerConstructorCard} pr-4`}>
 						<ConstructorElement
 						// className={styles.constructorElement}
 						text={`${ingredient.name || 'Выберите булку'} ${type === 'top' ? ' (верх)' : type === 'bottom' ? ' (низ)' : ''}`}
@@ -98,8 +100,8 @@ export const BurgerConstructorCard: FC<TBurgerConstructorCardProps> = ({ ingredi
 						isLocked={isBun}
 						/>
 					</div>
-				:	
-					<div className={`${styles.burgerConstructorCard} pr-4`} ref={ref} style={{ ...styles, opacity } } data-handler-id={handlerId}>
+			)  :	(
+					<div className={`${styles.burgerConstructorCard} pr-4`} ref={ref} style={{ ...styles, opacity }} data-handler-id={handlerId}>
 						<DragIcon type='primary' />
 						<ConstructorElement
 						   // className={`${styles.constructorElement}`}
@@ -111,7 +113,7 @@ export const BurgerConstructorCard: FC<TBurgerConstructorCardProps> = ({ ingredi
 						   handleClose={!isBun ? (() => handleDeleteIngredient(ingredient.key)) : undefined}
 						/>
 					</div>
-         }
+			)}
 		</>
    );
 };
