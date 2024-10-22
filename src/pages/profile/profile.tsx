@@ -1,11 +1,9 @@
-import React, { FC, useEffect, useState, ChangeEvent, FormEvent, MouseEvent, SyntheticEvent } from 'react'
+import { FC, useEffect, useState, ChangeEvent, FormEvent, MouseEvent, SyntheticEvent } from 'react'
 import styles from './profile.module.css'
 import { Input, Button,  ShowIcon, HideIcon, EditIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchLogout, fetchUpdateUser, updateUserAction, logoutAction} from "../../services/actions/auth";
-// import { logoutRequest,	updateUserRequest, } from '../../utils/api';
-// import Orders from '../orders/orders'
+import { fetchLogout, fetchUpdateUser} from "../../services/actions/auth";
 import { IRootState, AppDispatch, IUser } from '../../utils/types';
 
 

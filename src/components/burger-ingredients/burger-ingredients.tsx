@@ -8,13 +8,10 @@ import { IRootState, IIngredient } from '../../utils/types';
 
 
 const BurgerIngredients: FC = () => { 
-	const dispatch = useDispatch();	 
-	
+	const dispatch = useDispatch();	 	
 	const ingredients = useSelector((state: IRootState) => state.ingredients.ingredients); 
-
 	// массив игредиентов BurgerConstructor
-	const arrBurgerConstructorIngredients = useSelector((state: IRootState) => state.burgerConstructor);
-	
+	const arrBurgerConstructorIngredients = useSelector((state: IRootState) => state.burgerConstructor);	
 	const [currentTab, setCurrentTab] = useState<string>('Buns');
 
 	const arrBun = useMemo(() => ingredients.filter((product: IIngredient) => product.type === 'bun'),[ingredients]);

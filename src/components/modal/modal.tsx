@@ -1,4 +1,4 @@
-import React, { FC, useEffect}  from 'react';
+import { FC, useEffect}  from 'react';
 import {createPortal} from 'react-dom';
 import styles from './modal.module.css'
 import close from '../../images/close.svg'

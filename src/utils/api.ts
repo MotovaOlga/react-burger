@@ -1,18 +1,30 @@
+import { 
+	IIngredient, 
+	IOrderResponse, 
+	IAuthResponse, 
+	IForgotPasswordResponse, 
+	IApiConfig, 
+	IFormData, 
+	INewFormData, 
+	IFormDataLogin, 
+	IFormDataReset, 
+} from './types'
+
 // api config
-const apiConfig = {
+const apiConfig: IApiConfig = {
    // Константа для URL-адреса домена
 	baseUrl: "https://norma.nomoreparties.space/api",
 };
 
 // функция которая обрабатывает-проверяет ответ
-const getResponse = (response) => {
+const getResponse = (response: Response) => {
 	// console.log('getResponse - response: ', response); //Отладка
 	return (response.ok) ? response.json() : Promise.reject(`Error ${response.status}`);
 };
 
 
 // запрос ингредиентов
-export const getIngredientsRequest = async () => {
+export const getIngredientsRequest = async (): Promise<IIngredient[]> => {
 	const url = `${apiConfig.baseUrl}/ingredients`;
 	try {
 		// Выполняем запрос и получаем полный ответ
@@ -21,13 +33,13 @@ export const getIngredientsRequest = async () => {
 		const data = await getResponse(response);
 		// Извлекаем массив data из полученного объекта
 		return data.data; // Предполагаем, что массив ингредиентов находится в поле data
-	} catch (error) {
+	} catch (error: unknown) { //тип unknown даст возможность проводить проверки типов внутри блока catch if (error instanceof Error) {}
 		throw error; // Перебрасываем ошибку, чтобы обработать её в месте вызова
 	}
 };
 
 // запрос номера заказа
-export const getOrderRequest = async (orderData) => {
+export const getOrderRequest = async (orderData: string[]): Promise<IOrderResponse> => {
 	const url = `${apiConfig.baseUrl}/orders`;
 	try {
 		// Выполняем запрос и получаем полный ответ
@@ -41,7 +53,7 @@ export const getOrderRequest = async (orderData) => {
 		// Обрабатываем ответ
 		const data = await getResponse(response);
 		return data;
-	} catch (error) {
+	} catch (error: unknown) {
 		//  throw error; // Перебрасываем ошибку, чтобы обработать её в месте вызова
 		return Promise.reject(error);
 	}
@@ -68,7 +80,7 @@ export const getOrderRequest = async (orderData) => {
 
 
 //formData = {"email": "", "password": "", "name": "" }
-export const registerRequest = async (formData) => {
+export const registerRequest = async (formData: IFormData): Promise<IAuthResponse> => {
 	const url = `${apiConfig.baseUrl}/auth/register`;
 
 	try {
@@ -94,12 +106,12 @@ export const registerRequest = async (formData) => {
 			}
 			return data;
 		});
-	} catch (error) {
+	} catch (error: any) {
 		throw new Error(`Error ${error.status}`);
 	} 
 };
 
-export const loginRequest = async ({ email, password }) => { 
+export const loginRequest = async ({ email, password }: IFormDataLogin): Promise<IAuthResponse> => { 
 	const url = `${apiConfig.baseUrl}/auth/login`;
 
 	try {
@@ -125,14 +137,14 @@ export const loginRequest = async ({ email, password }) => {
 			}
 			return data;
 		});
-	} catch (error) {
+	} catch (error: any) {
 		throw new Error(`Error ${error.status}`);
 	} 
 
 };
 
 // Для выхода из системы передайте в теле запроса значение refreshToken
-export const logoutRequest = async () => {
+export const logoutRequest = async (): Promise<IAuthResponse>  => {
 	const url = `${apiConfig.baseUrl}/auth/logout`;
 
 	try {
@@ -154,13 +166,13 @@ export const logoutRequest = async () => {
 		   }
 		   return data;
 	   });
-	} catch (error) {
+	} catch (error: any) {
 		throw new Error(`Error ${error.status}`);
 	} 
 };
 
 // отправляю refreshToken и получаю 2 новых токена: refreshToken и accessToken
-export const refreshTokenRequest = async () => {
+export const refreshTokenRequest = async (): Promise<IAuthResponse> => {
 	const url = `${apiConfig.baseUrl}/auth/token`;
 
 	try {
@@ -176,27 +188,27 @@ export const refreshTokenRequest = async () => {
 			.then(getResponse)
 			.then((refreshData) => {
 				if(refreshData.success) {
-			      let accessToken = refreshData.accessToken.split('Bearer ')[1];
-					let refreshToken = refreshData.refreshToken;
+			      let accessToken: string = refreshData.accessToken.split('Bearer ')[1];
+					let refreshToken: string = refreshData.refreshToken;
 					localStorage.setItem('accessToken', accessToken);
 					localStorage.setItem('refreshToken', refreshToken);
 				} 
 				return refreshData;
 			});
-	} catch (error) {
+	} catch (error: any) {
 		throw new Error(`Error ${error.status}`);
 	} 
 };
 
 // если токена вообще нет то считаем что пользователь не авторизован
-export const fetchWithRefreshToken = async (url, options) => {
+export const fetchWithRefreshToken = async (url: string, options: RequestInit) => {
 	try {
 		const response = await fetch(url, options);
 	   if (!response.ok) {
 			throw new Error(`Error ${response.status}`);
       }
 		return await getResponse(response);
-	} catch (error) {
+	} catch (error: any) {
 		// Если сервер возвращает ошибку 403, это может указывать на то, что токен истек или недостаточно прав для выполнения запроса.
 		if (error.message.includes('Error 403')) {
 			try {
@@ -217,9 +229,9 @@ export const fetchWithRefreshToken = async (url, options) => {
 };
 
 // Сервер вернёт такой ответ: {"success": true, "user": { "email": "", "name": "" }} 
-export const getUserRequest = async () => {
+export const getUserRequest = async (): Promise<IAuthResponse> => {
 	const url = `${apiConfig.baseUrl}/auth/user`;
-	const accessToken = 'Bearer ' + localStorage.getItem('accessToken');
+	const accessToken = `Bearer ${localStorage.getItem('accessToken')}`;
    const options = {
 	   method: 'GET',
 	   headers: {
@@ -232,9 +244,9 @@ export const getUserRequest = async () => {
 };
 
 // сервер вернёт обновлённого пользователя: {"success": true, "user": { "email": "", "name": "" }}
-export const updateUserRequest = async (newFormData) => { //({name, email, password}) => {
+export const updateUserRequest = async (newFormData: INewFormData): Promise<IAuthResponse> => { //({name, email, password}) => {
 	const url = `${apiConfig.baseUrl}/auth/user`;
-	const accessToken = 'Bearer ' + localStorage.getItem('accessToken');
+	const accessToken = `Bearer ${localStorage.getItem('accessToken')}`;
    const options = {
 	   method: 'PATCH',
 	   headers: {
@@ -249,7 +261,7 @@ export const updateUserRequest = async (newFormData) => { //({name, email, passw
 
 // Тело запроса: { "email": "" } 
 // Тело успешного ответа: { "success": true, "message": "Reset email sent" }
-export const forgotPasswordRequest = async (email) => { 
+export const forgotPasswordRequest = async (email: { email: string }): Promise<IForgotPasswordResponse> => { 
 	const url = `${apiConfig.baseUrl}/password-reset`;
 	try {
 		const response = await fetch(url, {
@@ -260,7 +272,7 @@ export const forgotPasswordRequest = async (email) => {
 			body: JSON.stringify(email),
 	   });
 		return await getResponse(response);
-	} catch (error) {
+	} catch (error: any) {
 		throw new Error(`Error ${error.status}`);
 	} 
 };
@@ -269,7 +281,7 @@ export const forgotPasswordRequest = async (email) => {
 // пользователь вводит новый пароль и код из имейла
 // Тело запроса: { "password": "", "token": "" }
 // Тело успешного ответа: { "success": true, "message": "Password successfully reset" } 
-export const resetPasswordRequest = async (formData) => { 
+export const resetPasswordRequest = async (formData: IFormDataReset) => { 
 	const url = `${apiConfig.baseUrl}/password-reset/reset`;
 
 	try {
@@ -282,7 +294,7 @@ export const resetPasswordRequest = async (formData) => {
 	   });
 		const data = await getResponse(response);
 		return data;
-	} catch (error) {
+	} catch (error: any) {
 		throw new Error(`Error ${error.status}`);
 	} 
 };

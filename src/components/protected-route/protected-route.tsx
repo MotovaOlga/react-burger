@@ -5,15 +5,8 @@ import { IRootState, TProtectedRouteElementProps } from '../../utils/types';
 
 
 export const ProtectedRouteElement: React.FC<TProtectedRouteElementProps> = ({onlyAuth = false, component}) => { 
-	// если onlyAuth = true что маршрут доступен только для авторизованных пользователей
-	// если onlyAuth = false что маршрут доступен только для неавторизованных пользователей
-
 	const {user, isLoading, isAuth, emailSubmitted} = useSelector((state: IRootState) => state.auth);
 	const location = useLocation();
-	// console.log('location - ', location);
-	// console.log('isAuth - ', isAuth);
-	// console.log('onlyAuth - ', onlyAuth);
-	// console.log('user - ', user);
 
 	if(isLoading) {
 		return <p>Loading...</p>

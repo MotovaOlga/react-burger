@@ -4,17 +4,13 @@ import { useDispatch } from 'react-redux';
 import { Input, Button,  ShowIcon, HideIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
 import { fetchLogin } from '../../services/actions/auth'
-import { IRootState, AppDispatch } from '../../utils/types';
+import { AppDispatch, IFormDataLogin } from '../../utils/types';
 
-interface IFormData {
-	email: string;
-	password: string;
-}
 
 export const Login: FC = () => {
 	const dispatch = useDispatch<AppDispatch>();	
-	const emptyState: IFormData = { email: "", password: "", };
-	const [formData, setFormData] = useState<IFormData>(emptyState);
+	const emptyState: IFormDataLogin = { email: "", password: "", };
+	const [formData, setFormData] = useState<IFormDataLogin>(emptyState);
 
 	const fieldChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setFormData({

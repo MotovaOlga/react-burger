@@ -8,8 +8,8 @@ import { IRootState } from '../../utils/types';
 
 const IngredientDetails: FC = () => {
 	const {ingredients, loading: globalLoading, error: globalError} = useSelector((state: IRootState) => state.ingredients);
-	const [isLoading, setIsLoading] = useState(true);
-	const { id } = useParams();
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const { id } = useParams<string>();
 	const ingredient = ingredients.find((item) => item._id === id);
 
 	useEffect(() => {

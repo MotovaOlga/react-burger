@@ -1,11 +1,11 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import BurgerConstructor from '../../components/burger-constructor/burger-constructor';
 import BurgerIngredients from '../../components/burger-ingredients/burger-ingredients';
 import styles from './home.module.css'
 import { useSelector } from 'react-redux'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { IRootState, AppDispatch } from '../../utils/types';
+import { IRootState } from '../../utils/types';
 
 
 export const Home: FC = () => {

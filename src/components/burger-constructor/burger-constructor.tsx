@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback, useMemo }from 'react';
+import { FC, useState, useCallback, useMemo }from 'react';
 import { ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css'
 // import data  from '../../utils/data.js';

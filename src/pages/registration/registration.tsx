@@ -4,7 +4,7 @@ import { Input, Button,  ShowIcon, HideIcon } from '@ya.praktikum/react-develope
 import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchRegister } from '../../services/actions/auth'
-import { IRootState, AppDispatch, IUser } from '../../utils/types';
+import { AppDispatch, IUser } from '../../utils/types';
 
 
 export const Registration: FC = () => {

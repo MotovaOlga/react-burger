@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import { FC, useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import styles from './forgot-password.module.css';
 import { useDispatch, useSelector } from 'react-redux'
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -6,9 +6,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { fetchForgotPassword } from "../../services/actions/auth";
 import { IRootState, AppDispatch } from '../../utils/types';
 
-// interface IFormData {
-// 	email: string;
-// }
 
 export const ForgotPassword: FC = () => {
 	const dispatch = useDispatch<AppDispatch>();	

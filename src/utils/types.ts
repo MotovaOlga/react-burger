@@ -39,11 +39,11 @@ export const ingredientTypeWithKey = PropTypes.shape({
 
 
 // ******************************************************
-
 export interface IIngredient {
 	_id: string;
 	name: string;
-	type: string;
+	type: 'bun' | 'main' | 'sauce'; 
+	// type: string;
 	proteins: number;
 	fat: number;
 	carbohydrates: number;
@@ -56,8 +56,30 @@ export interface IIngredient {
 	key?: string;
 };
 
-
 export type AppDispatch = typeof store.dispatch;
+
+export interface IApiConfig {
+	baseUrl: string;
+}
+
+export interface IFormData {
+	name: string;
+   email: string;
+	password: string;
+}
+export interface INewFormData {
+	name?: string;
+   email?: string;
+	password?: string;
+}
+export interface IFormDataLogin {
+   email: string;
+	password: string;
+}
+export interface IFormDataReset {
+   token: string;
+	password: string;
+}
 
 // *** state ***
 export interface IRootState {
@@ -67,8 +89,10 @@ export interface IRootState {
    ingredientDetails: IIngredientDetailsState;
 	auth: IAuthState;
 };
-interface IError {
-	message: string; // Добавьте другие свойства, если необходимо
+export interface IError {
+	success: boolean;
+	message?: string;
+	status?: string;
  }
 export interface IIngredientsState {
 	ingredients: IIngredient[];
@@ -87,7 +111,7 @@ export interface IOrder {
 	};
 }
 export interface IOrderDetailsState {
-	order: IOrder|null;
+	order: IOrder | null;
 	loading: boolean;
 	error: IError | null;
 };
@@ -102,9 +126,10 @@ export interface IUser {
 export interface IAuthState {
 	isLoading: boolean; 
    isAuth: boolean; 
-   user: IUser;
 	emailSubmitted?: boolean;
+   user: IUser;
 };
+
 
 // *** Props ***
 // export const BurgerConstructorCard = ({ ingredient, index, moveCard, type}) => {
@@ -114,31 +139,26 @@ export type TBurgerConstructorCardProps = {
 	moveCard?: (dragIndex: number, hoverIndex: number) => void;
 	type?: 'top' | 'bottom';
 };
-
 // const Modal: FC<> = ({title, children, onClose}) => {
 export type TModalProps = {
 	title: string;
 	children: ReactNode;
 	onClose: () => void;
 };
-
 // const ModalOverlay: React.FC = ({onClose}) => {
 export type TModalOverlayProps = {
 	onClose: () => void;
 };
-
 // export const ProtectedRouteElement: React.FC = ({onlyAuth = false, component}) => { 
 export type TProtectedRouteElementProps = {
 	onlyAuth: boolean;
 	component: any;
 };
-
 // const IngredientCard: React.FC = ({ ingredient, getIngredientCount }) => {
 export type TIngredientCardProps = {
 	ingredient: IIngredient;
 	getIngredientCount: (ingredient: IIngredient) => number;
 };
-
 // const IngredientList: React.FC<> = ({ headerId, headerRef, ingredients, title, onOpen, getIngredientCount }) => {
 export type TIngredientListProps = {
 	headerId: string;
@@ -148,3 +168,35 @@ export type TIngredientListProps = {
 	onOpen: (id: string) => void;
 	getIngredientCount: (ingredient: IIngredient) => number;
 };
+export interface SetCookieProps {
+	expires?: number | Date | string; // может быть числом (в секундах) или объектом Date или строкой
+	[key: string]: any; // позволяет добавлять другие свойства, если необходимо
+}
+
+
+// *** response ***
+export interface IOrderResponse {	
+	success: boolean;
+	name: string;
+	order: {
+		number: number; // или string?
+	};
+}
+export interface IAuthResponse {
+	success: boolean;
+	accessToken?: string;
+	refreshToken?: string;
+	user?: {
+		email: string;
+		name: string;
+	};
+}
+export interface IForgotPasswordResponse {
+	success: boolean;
+	message: string;
+}
+export interface IResetPasswordResponse {
+	success: boolean;
+	message: string;
+}
+

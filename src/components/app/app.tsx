@@ -40,7 +40,7 @@ const App: FC = () => {
 		return <p>Loading...</p>
 	}
 
-	const handleModalClose = () => {
+	const handleModalClose: () => void = () => {
 		navigate(-1);
 	};
 

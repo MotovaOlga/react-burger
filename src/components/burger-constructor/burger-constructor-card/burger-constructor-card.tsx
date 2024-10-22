@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import { FC, useRef } from 'react';
 import { useDispatch } from 'react-redux'
 import { deleteIngredient } from '../../../services/actions/burger-constructor'
 import styles from './burger-constructor-card.module.css'
@@ -16,7 +16,7 @@ export const BurgerConstructorCard: FC<TBurgerConstructorCardProps> = ({ ingredi
 	   }
 	}
 
-	const isBun = ingredient.type === 'bun';
+	const isBun: boolean = (ingredient.type === 'bun');
 
 	// сортировка
 	const ref = useRef<HTMLDivElement>(null)

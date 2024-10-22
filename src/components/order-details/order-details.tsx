@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect }from 'react';
+import { FC, useState, useEffect }from 'react';
 import { useSelector } from 'react-redux'
 import styles from './order-details.module.css'
 import orderAccpeted from '../../images/orderAccpeted.svg'
