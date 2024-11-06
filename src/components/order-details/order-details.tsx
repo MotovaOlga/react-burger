@@ -1,12 +1,13 @@
-import React, { useState, useEffect }from 'react';
+import { FC, useState, useEffect }from 'react';
 import { useSelector } from 'react-redux'
 import styles from './order-details.module.css'
 import orderAccpeted from '../../images/orderAccpeted.svg'
+import { IRootState } from '../../utils/types';
 
 
-const OrderDetails = () => {
-	const order = useSelector(state => state.orderDetails.order); // Получаем состояние из Redux
-	const [orderNumber, setOrderNumber] = useState(null); 
+const OrderDetails: FC = () => {
+	const order = useSelector((state: IRootState) => state.orderDetails.order); // Получаем состояние из Redux
+	const [orderNumber, setOrderNumber] = useState<number | null>(null); 
 
 	useEffect(() => {
 		if (order) {

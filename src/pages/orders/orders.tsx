@@ -1,20 +1,20 @@
-import React from 'react'
+import React, { FormEvent } from 'react'
 import styles from './orders.module.css'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { NavLink, useLocation } from 'react-router-dom'
 import { fetchLogout} from "../../services/actions/auth";
+import { AppDispatch } from '../../utils/types';
 
 
-export const Orders = () => {
-	const dispatch = useDispatch();
+export const Orders: React.FC = () => {
+	const dispatch = useDispatch<AppDispatch>();	
 	let location = useLocation();
 
 	// Выход 
-	const handleLogout = async (e) => {
+	const handleLogout = async (e: FormEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		dispatch(fetchLogout());
 	};
-
 
 	return (
 		<div className={`${styles.wrapper} text_color_inactive`}>

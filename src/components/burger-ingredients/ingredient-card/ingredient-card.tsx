@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from "prop-types";
-import {ingredientType} from '../../../utils/types'
 import { Counter, CurrencyIcon }  from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './ingredient-card.module.css'
 import { useDrag } from "react-dnd";
+import { TIngredientCardProps } from '../../../utils/types';
 
-const IngredientCard = ({ ingredient, getIngredientCount }) => {
+
+const IngredientCard: React.FC<TIngredientCardProps> = ({ ingredient, getIngredientCount }) => {
 	// DND
 	// Хук useDrag позволяет добавлять элементам функциональность перетаскивания
 	const [{ isDragging }, dragRef] = useDrag(() => ({
@@ -28,7 +28,7 @@ const IngredientCard = ({ ingredient, getIngredientCount }) => {
 	return (
 		<div ref={dragRef} style={{ opacity: isDragging ? 0.5 : 1 }}>
 			<div style={{ display: getIngredientCount(ingredient) ? 'block' : 'none', }} className={`${styles.counterWrapper} p-4`} >
-			   <Counter count={getIngredientCount(ingredient) || 0} size="dedault"/>
+			   <Counter count={getIngredientCount(ingredient) || 0} size="default"/>
 			</div>
 			
 			<img src={ingredient?.image || 'Unknown'} alt={ingredient?.name}/>
@@ -44,11 +44,6 @@ const IngredientCard = ({ ingredient, getIngredientCount }) => {
 			<p>{ingredient?.name || 'Unknown'}</p>
 		</div>
 	);	
-};
-
-IngredientCard.propTypes = {
-	ingredient: ingredientType.isRequired,
-	getIngredientCount: PropTypes.func.isRequired
 };
 
 export default IngredientCard;

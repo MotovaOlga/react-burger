@@ -1,15 +1,17 @@
-import React, { useState } from 'react'
+import { FC, useState, ChangeEvent, FormEvent } from 'react'
 import styles from './reset-password.module.css'
 import { Input, Button,  ShowIcon, HideIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { resetPasswordRequest } from '../../utils/api';
+import { IFormDataReset, IResetPasswordResponse } from '../../utils/types';
 
-export const ResetPassword = () => {
+
+export const ResetPassword: FC = () => {
 	const navigate = useNavigate();
-	const emptyState = { password: "", token: "", };
-	const [formData, setFormData] = useState(emptyState);
+	const emptyState: IFormDataReset = { password: "", token: "", };
+	const [formData, setFormData] = useState<IFormDataReset>(emptyState);
 
-	const handleInputChange = (e) => {
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormData(prevState => ({
 			...prevState,
@@ -17,10 +19,10 @@ export const ResetPassword = () => {
 		}));
    };
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>)=> {
 		e.preventDefault();
 		try {
-			const data =  await resetPasswordRequest(formData);
+			const data: IResetPasswordResponse =  await resetPasswordRequest(formData);
 			// Обработка успешного ответа
 			if (data.success) {
 				// В случае успеха пользователь направляется на маршрут /login
@@ -39,24 +41,28 @@ export const ResetPassword = () => {
 			<h2 className={`text text_type_main-medium text_color_primary pb-6`}>Восстановление пароля</h2>
 			<div className={`pb-6`}>
 				<Input
-				type={"password"}
-				placeholder={"Введите новый пароль"}
-				onChange={handleInputChange}
-				value={formData.password ||''}
-				name={"password"}
-				size={"default"}
-				icon={"HideIcon"}
+				   type={"password"}
+				   placeholder={"Введите новый пароль"}
+				   onChange={handleInputChange}
+				   value={formData.password ||''}
+				   name={"password"}
+				   size={"default"}
+				   icon={"HideIcon"}
+					onPointerEnterCapture={undefined} 
+					onPointerLeaveCapture={undefined}
 				/>
 			</div>
 			<div className={`pb-6`}>
 				<Input
-				type={"text"}
-				placeholder={"Введите код из письма"}
-				onChange={handleInputChange}
-				value={formData.token ||''}
-				name={"token"}
-				size={"default"}
-				// icon={"EditIcon"}
+				   type={"text"}
+				   placeholder={"Введите код из письма"}
+				   onChange={handleInputChange}
+				   value={formData.token ||''}
+				   name={"token"}
+				   size={"default"}
+				   // icon={"EditIcon"}
+					onPointerEnterCapture={undefined} 
+					onPointerLeaveCapture={undefined}
 				/>
 			</div>
 			

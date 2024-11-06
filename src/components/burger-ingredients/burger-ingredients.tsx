@@ -1,27 +1,25 @@
-import React, { useRef, useMemo } from 'react';
+import React, { FC, useState,  useRef, useMemo } from 'react';
 import { Tab }  from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css'
 import IngredientList from './ingredient-list/ingredient-list'
 import { useDispatch, useSelector } from 'react-redux'
 import { addCurrentIngredient, clearCurrentIngredient } from '../../services/actions/ingredient-details'
+import { IRootState, IIngredient } from '../../utils/types';
 
 
-const BurgerIngredients = () => { 
-	const dispatch = useDispatch();	 
-	
-	const ingredients = useSelector(state => state.ingredients.ingredients); 
-
+const BurgerIngredients: FC = () => { 
+	const dispatch = useDispatch();	 	
+	const ingredients = useSelector((state: IRootState) => state.ingredients.ingredients); 
 	// массив игредиентов BurgerConstructor
-	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
-	
-	const [currentTab, setCurrentTab] = React.useState('Buns');
+	const arrBurgerConstructorIngredients = useSelector((state: IRootState) => state.burgerConstructor);	
+	const [currentTab, setCurrentTab] = useState<string>('Buns');
 
-	const arrBun = useMemo(() => ingredients.filter(product => product.type === 'bun'),[ingredients]);
-	const arrMain = useMemo(() => ingredients.filter(product => product.type === 'main'),[ingredients]);
-	const arrSauce = useMemo(() => ingredients.filter(product => product.type === 'sauce'),[ingredients]);
+	const arrBun = useMemo(() => ingredients.filter((product: IIngredient) => product.type === 'bun'),[ingredients]);
+	const arrMain = useMemo(() => ingredients.filter((product: IIngredient) => product.type === 'main'),[ingredients]);
+	const arrSauce = useMemo(() => ingredients.filter((product: IIngredient) => product.type === 'sauce'),[ingredients]);
 
 	// при open найти ингридиент по id и передать его в стор-ingredientDetails объект currentIngredient
-	const onOpen = (id) => {
+	const onOpen = (id: string) => {
 		//надо найти в api этот ингредиент с заданым id
 		if (id) {
 			const currentIngredient = ingredients.find((item) => item._id === id);
@@ -30,10 +28,10 @@ const BurgerIngredients = () => {
 	};
 
 	// переключение табов
-	const lineRef = useRef(null);
-	const bunRef = useRef(null);
-	const sauceRef = useRef(null);
-	const mainRef = useRef(null);
+	const lineRef = useRef<HTMLDivElement>(null);
+	const bunRef = useRef<HTMLDivElement>(null);
+	const sauceRef = useRef<HTMLDivElement>(null);
+	const mainRef = useRef<HTMLDivElement>(null);
  
 	const handleScroll = () => { 
 		if (lineRef.current && bunRef.current && sauceRef.current && mainRef.current) {
@@ -60,14 +58,14 @@ const BurgerIngredients = () => {
 		}
 	};
 
-	const setTab = (tab) => {
+	const setTab = (tab: string) => {
 		setCurrentTab(tab);
 		const element = document.querySelector(`#${tab}`);
 		if (element) element.scrollIntoView({ behavior: "smooth", block: "start"  });
 	};
 
 	// подсчет выбранных ингредиентов
-	const getIngredientCount = (ingredient) => {
+	const getIngredientCount = (ingredient: IIngredient) => {
 		if (!ingredient || !ingredient._id) return 0; // Если ingredient не определён, возвращаем 0
 	  
 		const { bun, burgerConstructor } = arrBurgerConstructorIngredients || {};
@@ -91,9 +89,9 @@ const BurgerIngredients = () => {
 		  <section>
 			   <div className={`${styles.TabsBox} mt-5`} ref={lineRef}>
 
-			   	<Tab active={currentTab === 'Buns'} onClick={()=>setTab("Buns")}>Булки</Tab>
-					<Tab active={currentTab === 'Fillings'} onClick={()=>setTab("Fillings")}>Начинки</Tab>	
-			   	<Tab active={currentTab === 'Sauces'} onClick={()=>setTab("Sauces")}>Соусы</Tab>
+			   	<Tab value='Buns' active={currentTab === 'Buns'} onClick={()=>setTab("Buns")}>Булки</Tab>
+					<Tab value='Fillings' active={currentTab === 'Fillings'} onClick={()=>setTab("Fillings")}>Начинки</Tab>	
+			   	<Tab value='Sauces' active={currentTab === 'Sauces'} onClick={()=>setTab("Sauces")}>Соусы</Tab>
 			   </div>
 			   <div className={styles.ingredientsList} onScroll={()=>handleScroll()}>
 			   	{/* Булки */}			   	

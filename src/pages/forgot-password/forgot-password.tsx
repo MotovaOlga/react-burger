@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import { FC, useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import styles from './forgot-password.module.css';
 import { useDispatch, useSelector } from 'react-redux'
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchForgotPassword } from "../../services/actions/auth";
+import { IRootState, AppDispatch } from '../../utils/types';
 
 
-export const ForgotPassword = () => {
-	const dispatch = useDispatch();
+export const ForgotPassword: FC = () => {
+	const dispatch = useDispatch<AppDispatch>();	
 	const navigate = useNavigate();
-	const emptyState = { email: "", };
-	const [email, setEmail] = useState(emptyState);
-	const emailSubmitted = useSelector((state) => state.auth.emailSubmitted);
+	// const emptyState: IFormData = { email: "", };
+	const [email, setEmail] = useState<{email: string}>({ email: '' });
+	const emailSubmitted = useSelector((state: IRootState) => state.auth.emailSubmitted);
 
-	const handleInputChange = (e) => {
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setEmail(prevState => ({
 			...prevState,
@@ -21,7 +22,7 @@ export const ForgotPassword = () => {
 		}));
    };
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if(email) {
 			dispatch(fetchForgotPassword(email));
@@ -41,19 +42,21 @@ export const ForgotPassword = () => {
 			<h2 className={`text text_type_main-medium text_color_primary pb-6`}>Восстановление пароля</h2>
 			<div className={`pb-6`}>
 				<Input
-				type={"email"}
-				placeholder={"Укажите e-mail"}
-				onChange={handleInputChange}
-				value={email.email ||''}
-				name={"email"}
-				size={"default"}
-				/>
+				   value={email.email}
+					onChange={handleInputChange}
+					onPointerEnterCapture={undefined} 
+				   onPointerLeaveCapture={undefined}
+               // onChange={e => setEmail({email: e.target.value})}
+               type={'text'}
+               placeholder={'Укажите e-mail'}
+               name={'email'}
+               size={'default'}
+            />
 			</div>
 			
 			<Button
 				type={'primary'}
 				size={'large'}
-				// onClick={handleSubmit}
 				htmlType={'submit'}
 				>
 					Восстановить

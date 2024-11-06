@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import styles from './ingredient-details.module.css'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 // import { ingredientsRequest } from '../../services/actions/ingredients';
+import { IRootState } from '../../utils/types';
 
 
-const IngredientDetails = () => {
-	const {ingredients, globalLoading, globalError} = useSelector((state) => state.ingredients);
-	const [isLoading, setIsLoading] = useState(true);
-	const { id } = useParams();
+const IngredientDetails: FC = () => {
+	const {ingredients, loading: globalLoading, error: globalError} = useSelector((state: IRootState) => state.ingredients);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const { id } = useParams<string>();
 	const ingredient = ingredients.find((item) => item._id === id);
 
 	useEffect(() => {

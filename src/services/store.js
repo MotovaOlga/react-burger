@@ -1,9 +1,7 @@
 import { rootReducer } from './reducer';
 import { createStore, applyMiddleware } from 'redux';
 // import data from '../utils/data';
-// import { configureStore } from '@reduxjs/toolkit'
 import { composeWithDevTools } from '@redux-devtools/extension';
-// import { customMiddleware } from './middleware/custom-middleware';
 import {thunk} from 'redux-thunk';
 
 // // данные, которыми инициализируется хранилище
@@ -32,7 +30,7 @@ import {thunk} from 'redux-thunk';
 
 export const store = createStore(
 	rootReducer,
-	// initialState,
-	// composeWithDevTools(applyMiddleware(customMiddleware(thunk))),
 	composeWithDevTools(applyMiddleware(thunk)),
 )
+
+// export type AppDispatch = typeof store.dispatch;

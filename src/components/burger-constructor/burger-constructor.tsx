@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo }from 'react';
+import { FC, useState, useCallback, useMemo }from 'react';
 import { ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css'
 // import data  from '../../utils/data.js';
@@ -6,22 +6,24 @@ import Modal from '../modal/modal'
 import OrderDetails from '../order-details/order-details'
 import { useDispatch, useSelector } from 'react-redux'
 import { addIngredient, moveIngredient } from '../../services/actions/burger-constructor'
-import { useDrop } from "react-dnd";
+import { useDrop, DropTargetMonitor } from "react-dnd";
 import { orderRequest } from '../../services/actions/order-details';
 import { v4 as uuidv4 } from 'uuid';
 import { BurgerConstructorCard } from './burger-constructor-card/burger-constructor-card'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { IRootState, AppDispatch, IIngredient } from '../../utils/types';
 
-const BurgerConstructor = () => {
-	const dispatch = useDispatch();	
+
+const BurgerConstructor: FC = () => {
+	const dispatch = useDispatch<AppDispatch>();	
 	const navigate = useNavigate();
-	const isAuth = useSelector((state) => state.auth.isAuth);
+	const isAuth = useSelector((state: IRootState) => state.auth.isAuth);
 
 	// массив игредиентов BurgerConstructor
-	const arrBurgerConstructorIngredients = useSelector(state => state.burgerConstructor);
+	const arrBurgerConstructorIngredients = useSelector((state: IRootState) => state.burgerConstructor);
 
 	// модальное окно
-	const [isModalOpen, setIsModalOpen] = React.useState(false);
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const onClose = () => {
 		setIsModalOpen(false);
 	};
@@ -57,7 +59,7 @@ const BurgerConstructor = () => {
 		}
 	};
 
-	// сумма заказа - обернуть в хук useMemo
+	// сумма заказа
 	const orderAmount = useMemo(() => {
 		const bunPrice = arrBurgerConstructorIngredients.bun ? (arrBurgerConstructorIngredients.bun.price) * 2 : 0;
 		const burgerConstructorPrice = Array.isArray(arrBurgerConstructorIngredients.burgerConstructor) 
@@ -69,13 +71,13 @@ const BurgerConstructor = () => {
 
 	// DND
 	// сортировка
-	const moveCard = useCallback((dragIndex, hoverIndex) => {
+	const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
 		dispatch(moveIngredient(dragIndex, hoverIndex));
 	}, [])
 	
 
 	// добавление ингредиентов
-	const handleAddIngredient = (ingredient) => {
+	const handleAddIngredient = (ingredient: IIngredient) => {
 		// Создаем новый объект ингредиента с уникальным ключом
 		const ingredientWithKey = {
 			...ingredient,
@@ -86,12 +88,15 @@ const BurgerConstructor = () => {
 
 	// перетаскивание
 	// Хук useDrop работает с целевым элементом(компонент, в который мы перетаскиваем исходный элемент).
-		const [{ canDrop, dragItem, isHover }, dropTargetRef] = useDrop(() => ({
+		const [{ canDrop, dragItem, isHover }, dropTargetRef] = useDrop<
+		   IIngredient,
+		   unknown,
+		   { canDrop:boolean; dragItem:IIngredient; isHover:boolean }>(() => ({
 		accept: 'ingredientCard', // строка, которая должна быть аналогична свойству type перетаскиваемого компонента.
-		drop: (ingredient) => (
+		drop: (ingredient: IIngredient) => (
 			handleAddIngredient(ingredient)
 		), // принимает данные перетаскиваемого компонента и monitor. срабатывает при «броске» перетаскиваемого элемента в целевой.
-		collect: (monitor) => ({ // набор вычислений для работы с пропсами
+		collect: (monitor: DropTargetMonitor) => ({ // набор вычислений для работы с пропсами
 			canDrop: monitor.canDrop(), // возвращает булевое значение true в случае, если в этот момент никакой элемент не перетаскивается.
          dragItem: monitor.getItem(),
          isHover: monitor.isOver(),
@@ -121,7 +126,7 @@ const BurgerConstructor = () => {
 								</li>
                      ) : (
 								<li key={'top'} >
-								   <ConstructorElement text={'Выберите булку'} type={"top"} isLocked={true}/>
+								   <ConstructorElement text={'Выберите булку'} type={"top"} isLocked={true} price={0} thumbnail=''/>
 							   </li>
 					      )}
 							
@@ -139,7 +144,7 @@ const BurgerConstructor = () => {
 					         	}})
 							):(
 								<li key={'filings'} >
-								   <ConstructorElement text={'Выберите начинку'} isLocked={true}/>
+								   <ConstructorElement text={'Выберите начинку'} isLocked={true} price={0} thumbnail=''/>
 							   </li>
 							)}
                      
@@ -150,7 +155,7 @@ const BurgerConstructor = () => {
                         </li>
                      ) : (
 								<li key={'bottom'} >
-								   <ConstructorElement text={'Выберите булку'} type={"bottom"} isLocked={true}/>
+								   <ConstructorElement text={'Выберите булку'} type={"bottom"} isLocked={true} price={0} thumbnail=''/>
 							   </li>
 					      )}
             </ul>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import AppHeader from '../app-header/app-header';
 import styles from './app.module.css'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,14 +15,15 @@ import { ProtectedRouteElement } from '../protected-route/protected-route';
 import { fetchUser} from "../../services/actions/auth";
 import { Orders } from '../../pages/orders/orders'
 import { ingredientsRequest } from '../../services/actions/ingredients';
+import { IRootState, AppDispatch } from '../../utils/types';
 
 
-const App = () => {
-	const dispatch = useDispatch();
+const App: FC = () => {
+	const dispatch = useDispatch<AppDispatch>();
    const navigate = useNavigate();
 	let location = useLocation();
 	const state = location.state || {};
-	const loading = useSelector((state) => state.auth.isLoading);
+	const loading = useSelector((state: IRootState) => state.auth.isLoading);
 	// console.log('App - loading: ', loading); //Отладка
 
 	useEffect(() => {
@@ -39,7 +40,7 @@ const App = () => {
 		return <p>Loading...</p>
 	}
 
-	const handleModalClose = () => {
+	const handleModalClose: () => void = () => {
 		navigate(-1);
 	};
 
@@ -75,7 +76,3 @@ const App = () => {
 }
  
 export default App;
-
-
-      
-
